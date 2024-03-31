@@ -6,6 +6,11 @@
   become: yes
 
   tasks:
+    - name: Pull ratingus-web image
+      community.docker.docker_compose_v2_pull:
+        project_src: "{{ project_src }}"
+      register: output
+
     - name: Recreate services
       community.docker.docker_compose_v2:
         project_src: "{{ project_src }}"
