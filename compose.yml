@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    build: .
+    image: ghcr.io/burunyuu23/ratingus-web:latest
     container_name: frontend
     restart: always
     networks:
