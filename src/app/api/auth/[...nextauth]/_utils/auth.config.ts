@@ -6,11 +6,12 @@ import {authService, UserLogin} from "@/entity/Auth";
 
 const providers: Provider[] = [
     Credentials({
-        name: "Credentials",
+        name: "Login and password",
         credentials: {
             login: {label: "Логин", type: "text", placeholder: "Логин"},
             password: {label: "Пароль", type: "password"}
         },
+        // Здесь отправляем запрос на сервер для авторизации пользователя по логину и паролю и возвращаем jwt из которого потом будем парсить данные пользователя
         async authorize(credentials) {
             try {
                 const {jwt: token} = await authService.login(credentials as UserLogin);
