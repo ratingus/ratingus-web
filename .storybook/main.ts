@@ -17,5 +17,12 @@ const config: StorybookConfig = {
     autodocs: "tag",
   },
   staticDirs: ["../public"],
+  webpackFinal: async (config, { configType }) => {
+    if (config && config.output) {
+      config.output.publicPath =
+        configType === "PRODUCTION" ? "/_storybook/" : "/";
+    }
+    return config;
+  },
 };
 export default config;
