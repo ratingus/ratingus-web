@@ -1,20 +1,18 @@
-import {ReactNode} from "react";
+import { ReactNode } from "react";
 
-import {SessionProvider} from "./Session";
-import {MockingProvider} from './Mocking';
+import { SessionProvider } from "./Session";
+import { MockingProvider } from "./Mocking";
 
 type ProviderProps = {
-    children: ReactNode;
+  children: ReactNode;
 };
 
 const Provider = ({ children }: ProviderProps) => {
-    return (
-        <SessionProvider>
-            <MockingProvider>
-                {children}
-            </MockingProvider>
-        </SessionProvider>
-    );
+  return (
+    <SessionProvider>
+      <MockingProvider>{children}</MockingProvider>
+    </SessionProvider>
+  );
 };
 
 export default Provider;

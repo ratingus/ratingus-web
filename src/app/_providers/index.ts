@@ -1,1 +1,1 @@
-export { default as GlobalProvider } from './Provider';
+export { default as GlobalProvider } from "./Provider";
