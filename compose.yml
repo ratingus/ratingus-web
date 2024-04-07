@@ -5,6 +5,8 @@ services:
     image: ghcr.io/ratingus/ratingus-web:latest
     container_name: frontend
     restart: always
+    env_file:
+      - .env
     networks:
       - ratingus-network
     ports:
