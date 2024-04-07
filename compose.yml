@@ -9,6 +9,14 @@ services:
       - ratingus-network
     ports:
       - "3000:3000"
+  storybook:
+    image: ghcr.io/ratingus/ratingus-web-storybook:latest
+    container_name: storybook
+    restart: always
+    networks:
+      - ratingus-network
+    ports:
+      - "6006:80"
 
 networks:
   ratingus-network:
