@@ -13,7 +13,11 @@ services:
       - "3000:3000"
   storybook:
     image: ghcr.io/ratingus/ratingus-web-storybook:latest
+    volumes:
+      - ./storybook-nginx/storybook.conf:/etc/nginx/nginx.conf:ro
     container_name: storybook
+    env_file:
+      - .env
     restart: always
     networks:
       - ratingus-network
