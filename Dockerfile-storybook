@@ -8,4 +8,3 @@ RUN pnpm build-storybook
 
 FROM nginx:1.21.3-alpine AS runner
 COPY --from=builder /app/storybook-static /usr/share/nginx/html
-COPY --from=builder /app/storybook-nginx/storybook.conf /etc/nginx/nginx.conf
