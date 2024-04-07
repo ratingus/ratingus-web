@@ -1,1 +1,1 @@
-export { default as MockingProvider } from './ui';
+export { default as MockingProvider } from "./ui";

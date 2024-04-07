@@ -1,5 +1,4 @@
 ---
-
 - name: Update Docker Compose containers
   hosts: ratingus
   gather_facts: no
