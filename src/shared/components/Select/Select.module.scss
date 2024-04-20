@@ -53,6 +53,7 @@
     .react-select__option {
       padding: 2px;
       margin: 2px 0 3px 0;
+      cursor: pointer;
       &:active {
         background: $primary-main;
         color: $primary-paper;

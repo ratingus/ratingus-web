@@ -32,7 +32,7 @@
 }
 
 .important {
-  @include button($primary-paper, $primary-main, $background-main, $background-paper);
+  @include button($primary-main, $primary-paper, mix($background-main, $primary-paper, 25%), $status-caution);
 }
 
 .error {
@@ -54,6 +54,6 @@
   color: $text-primary !important;
 
   &.important {
-    color: $primary-main !important;
+    color: $primary-paper !important;
   }
 }
