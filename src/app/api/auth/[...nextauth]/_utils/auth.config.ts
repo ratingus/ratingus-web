@@ -1,9 +1,10 @@
-import { env } from "process";
+import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { env } from "process";
+
 import { Provider } from "next-auth/providers/index";
 
 import { authService, UserLogin } from "@/entity/Auth";
-import { NextAuthOptions } from "next-auth";
 
 const providers: Provider[] = [
   Credentials({
