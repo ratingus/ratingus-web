@@ -1,0 +1,95 @@
+
+.base {
+  width: max-content;
+
+  :global {
+    .react-select__single-value {
+      color: $text-primary;
+    }
+
+    .react-select__control {
+      background: $background-paper;
+      color: $text-primary;
+      border-radius: 20px;
+      padding: 2px 10px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .react-select__placeholder {
+      color: rgba($text-primary, 0.5);
+    }
+
+    .react-select__menu-list {
+      padding: 8px;
+      background: $background-paper;
+
+      & > *:not(:last-child) {
+        border-radius: 0;
+        position: relative;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          border-bottom: 1px solid $background-main;
+        }
+      }
+    }
+
+    .react-select__indicator {
+      color: $text-primary;
+      transition: transform 200ms ease-in-out;
+      &:hover {
+        color: $text-primary;
+      }
+      &-separator {
+        display: none;
+      }
+    }
+
+    .react-select__option {
+      padding: 2px;
+      margin: 2px 0 3px 0;
+      &:active {
+        background: $primary-main;
+        color: $primary-paper;
+      }
+      &--is-selected {
+        background: $primary-paper;
+        color: $text-primary;
+      }
+      &--is-focused {
+        background: $primary-main;
+        color: $primary-paper;
+      }
+    }
+  }
+}
+
+.focused {
+  :global {
+    .react-select__indicator {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+fieldset {
+  background: $background-paper;
+  border-radius: 20px;
+  border: none;
+  width: max-content;
+  padding: 0 8px 0 0;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
