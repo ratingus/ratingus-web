@@ -1,7 +1,7 @@
-import api from "@/shared/api/axios";
-
 import { LOGIN_PATH, LOGOUT_PATH, REGISTER_PATH } from "../constants";
 import { UserLogin } from "../types";
+
+import api from "@/shared/api/axios";
 
 const authService = {
   login: async (credentials: UserLogin) => {
