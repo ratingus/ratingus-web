@@ -1,0 +1,10 @@
+export declare const backgroundMain: string;
+export declare const backgroundPaper: string;
+export declare const primaryMain: string;
+export declare const primaryPaper: string;
+export declare const statusCaution: string;
+export declare const statusInfo: string;
+export declare const statusSuccess: string;
+export declare const statusWarning: string;
+export declare const textHelper: string;
+export declare const textPrimary: string;

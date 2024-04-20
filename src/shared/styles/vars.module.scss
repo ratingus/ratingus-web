@@ -1,0 +1,17 @@
+@import "./vars.scss";
+
+:export {
+  backgroundMain: $background-main;
+  backgroundPaper: $background-paper;
+
+  primaryMain: $primary-main;
+  primaryPaper: $primary-paper;
+
+  textPrimary: $text-primary;
+  textHelper: $text-helper;
+
+  statusWarning: $status-warning;
+  statusCaution: $status-caution;
+  statusInfo: $status-info;
+  statusSuccess: $status-success;
+}
