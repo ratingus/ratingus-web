@@ -1,0 +1,38 @@
+{
+  "extends": ["next/core-web-vitals", "plugin:storybook/recommended", "next", "prettier"],
+  "plugins": ["simple-import-sort"],
+  "rules": {
+    "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          // Packages. react related packages come first.
+          ["^react", "^@?\\w"],
+          // Internal packages.
+          ["App|index"],
+
+          ["^(core)(/.*|$)"],
+          ["^(styles)(/.*|$)"],
+          ["^(public)(/.*|$)"],
+          ["^(vendor)(/.*|$)"],
+          ["^(modules)(/.*|$)"],
+
+          ["^(components)(/.*|$)"],
+
+          // Side effect imports.
+          ["^\\u0000"],
+          // Parent imports. Like ..
+          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+          // Other relative imports. Put same-folder imports and .
+          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+          ["^(\\./styled/?)((/.*|$))", "^(\\./types/?)((/.*|$))"]
+        ]
+      }
+    ]
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  }
+}
