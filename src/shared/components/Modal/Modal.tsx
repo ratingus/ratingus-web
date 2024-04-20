@@ -17,7 +17,7 @@ type ModalProps = {
 };
 
 export const Modal = ({ className, children, modalName }: ModalProps) => {
-  const isModalActive = useAppSelector(selectIsModalActive)(modalName);
+  const isModalActive = useAppSelector(selectIsModalActive(modalName));
   const dispatch = useAppDispatch();
 
   if (!isModalActive) {

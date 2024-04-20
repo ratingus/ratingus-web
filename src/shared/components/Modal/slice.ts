@@ -1,5 +1,8 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { createSlice } from "@reduxjs/toolkit";
+import {
+  createDraftSafeSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 
 export const INFO_ABOUT_ORGANIZATION_MODAL = "infoAboutOrganizationModal";
 const PROFILE_EDIT_MODAL = "profileEditModal";
@@ -19,8 +22,6 @@ export const modalSlice = createSlice({
 
   selectors: {
     selectActiveModals: (state) => state.activeModals,
-    selectIsModalActive: (state) => (modalName: ModalName) =>
-      state.activeModals.includes(modalName),
   },
 
   reducers: {
@@ -52,6 +53,11 @@ export const {
   actionHideAll,
 } = modalSlice.actions;
 
-export const { selectActiveModals, selectIsModalActive } = modalSlice.selectors;
+export const { selectActiveModals } = modalSlice.selectors;
+
+export const selectIsModalActive = (modalName: ModalName) =>
+  createDraftSafeSelector([selectActiveModals], (activeModals) =>
+    activeModals.includes(modalName),
+  );
 
 export default modalSlice.reducer;
