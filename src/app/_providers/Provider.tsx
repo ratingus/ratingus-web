@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
 
-import { SessionProvider } from "./Session";
 import { MockingProvider } from "./Mocking";
+import { SessionProvider } from "./Session";
+import { StoreProvider } from "./Store";
 
 type ProviderProps = {
   children: ReactNode;
@@ -9,9 +10,11 @@ type ProviderProps = {
 
 const Provider = ({ children }: ProviderProps) => {
   return (
-    <SessionProvider>
-      <MockingProvider>{children}</MockingProvider>
-    </SessionProvider>
+    <StoreProvider>
+      <SessionProvider>
+        <MockingProvider>{children}</MockingProvider>
+      </SessionProvider>
+    </StoreProvider>
   );
 };
 
