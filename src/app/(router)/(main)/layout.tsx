@@ -2,9 +2,9 @@ import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { GlobalProvider } from "@/app/_providers";
+import "./globals.scss";
 
-import "./globals.css";
+import { GlobalProvider } from "@/app/_providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={inter.className}>
         <GlobalProvider>{children}</GlobalProvider>
       </body>
