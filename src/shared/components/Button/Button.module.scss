@@ -1,0 +1,59 @@
+@mixin button($background, $color, $hover-color, $active-color) {
+  background: $background;
+  color: $color;
+
+  &:not(.disable) {
+    &:hover, &.active {
+      color: $hover-color;
+    }
+    &:active {
+      color: $active-color;
+    }
+  }
+}
+
+.button {
+  border-radius: 20px;
+  padding: 4px 20px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &.disable {
+    filter: grayscale(.5) !important;
+    cursor: default !important;
+  }
+  @include button($background-main, $text-primary, $primary-main, $primary-paper);
+}
+
+.primary {
+  background: $background-paper;
+}
+
+.important {
+  @include button($primary-paper, $primary-main, $background-main, $background-paper);
+}
+
+.error {
+  @include button(mix($background-main, $status-warning, 75%), $text-primary, $status-warning, $primary-paper);
+}
+
+.ghost {
+  background: transparent;
+}
+
+.big {
+  padding: 15px 20px;
+}
+
+.loading {
+  margin-left: 8px;
+  width: 18px;
+  height: 18px;
+  color: $text-primary !important;
+
+  &.important {
+    color: $primary-main !important;
+  }
+}
