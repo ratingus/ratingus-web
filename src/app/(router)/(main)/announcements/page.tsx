@@ -20,6 +20,7 @@ export default function Announcements() {
     { classId },
     { refetchOnMountOrArgChange: true },
   );
+  console.log(announcements);
 
   return (
     <PageContainer isPanel className={styles.base}>
@@ -30,6 +31,7 @@ export default function Announcements() {
         {selectedOption.value === "add" ? (
           <CreateAnnouncement />
         ) : (
+          announcements &&
           announcements.map((announcement) => (
             <AnnouncementCard
               key={
