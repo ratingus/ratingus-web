@@ -14,3 +14,30 @@
       community.docker.docker_compose_v2:
         project_src: "{{ project_src }}"
       register: output
+
+
+    - name: Stop nginx service
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_src_nginx }}"
+        services:
+          - nginx
+        state: absent
+
+    - name: Remove nginx service
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_src_nginx }}"
+        services:
+          - nginx
+        state: absent
+        remove_volumes: yes
+
+    - name: Recreate nginx service
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_src_nginx }}"
+        services:
+          - nginx
+        state: present
+        build: yes
+        recreate: always
+        restart: always
+      register: output
