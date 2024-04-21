@@ -10,7 +10,8 @@
 }
 
 .panelBase {
-  padding: 12px;
+  border-radius: 20px;
+  position: relative;
 }
 .isPanel {
   background-color: $background-paper;
