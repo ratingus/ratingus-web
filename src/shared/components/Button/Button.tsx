@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 import cl from "classnames";
+import Link from "next/link";
 
 import styles from "./Button.module.scss";
 
@@ -13,6 +14,7 @@ type BaseButtonProps = DetailedHTMLProps<
 >;
 export type ButtonProps = BaseButtonProps & {
   variant?: "primary" | "important" | "secondary" | "error" | "ghost";
+  link?: string;
   sizeVariant?: "big" | "medium";
   isActive?: boolean;
   isDisable?: boolean;
@@ -27,9 +29,10 @@ const Button = ({
   isActive,
   isDisable,
   isLoading,
+  link,
   ...props
 }: ButtonProps) => {
-  return (
+  const ButtonComponent = (
     <button
       className={cl(
         baseClasses,
@@ -49,6 +52,14 @@ const Button = ({
       </>
     </button>
   );
+  if (link) {
+    return (
+      <Link href={link} passHref className={styles.link}>
+        {ButtonComponent}
+      </Link>
+    );
+  }
+  return ButtonComponent;
 };
 
 export default Button;

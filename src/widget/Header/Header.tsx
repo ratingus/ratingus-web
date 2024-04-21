@@ -32,60 +32,32 @@ const Header = () => {
         <ButtonGroup
           buttons={[
             {
-              key: ANNOUNCEMENT_PAGE_LINK,
-              children: (
-                <Link href={ANNOUNCEMENT_PAGE_LINK}>
-                  <AnnouncementIcon />
-                </Link>
-              ),
+              link: ANNOUNCEMENT_PAGE_LINK,
+              children: <AnnouncementIcon />,
             },
             {
-              key: DIARY_PAGE_LINK,
-              children: (
-                <Link href={DIARY_PAGE_LINK}>
-                  <DiaryIcon />
-                </Link>
-              ),
+              link: DIARY_PAGE_LINK,
+              children: <DiaryIcon />,
             },
             {
-              key: CALENDAR_PAGE_LINK,
-              children: (
-                <Link href={CALENDAR_PAGE_LINK}>
-                  <CalendarIcon />
-                </Link>
-              ),
+              link: CALENDAR_PAGE_LINK,
+              children: <CalendarIcon />,
             },
             {
-              key: JOURNAL_PAGE_LINK,
-              children: (
-                <Link href={JOURNAL_PAGE_LINK}>
-                  <JournalIcon />
-                </Link>
-              ),
+              link: JOURNAL_PAGE_LINK,
+              children: <JournalIcon />,
             },
             {
-              key: SETTINGS_PAGE_LINK,
-              children: (
-                <Link href={SETTINGS_PAGE_LINK}>
-                  <SettingsIcon />
-                </Link>
-              ),
+              link: SETTINGS_PAGE_LINK,
+              children: <SettingsIcon />,
             },
             {
-              key: ADMIN_PANEL_PAGE_LINK,
-              children: (
-                <Link href={ADMIN_PANEL_PAGE_LINK}>
-                  <AdminPanelIcon />
-                </Link>
-              ),
+              link: ADMIN_PANEL_PAGE_LINK,
+              children: <AdminPanelIcon />,
             },
             {
-              key: PROFILE_PAGE_LINK,
-              children: (
-                <Link href={PROFILE_PAGE_LINK}>
-                  <EmptyProfileIcon />
-                </Link>
-              ),
+              link: PROFILE_PAGE_LINK,
+              children: <EmptyProfileIcon />,
             },
           ]}
         />
