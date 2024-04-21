@@ -4,6 +4,14 @@ const nextConfig = {
   sassOptions: {
     additionalData: `@import "@/shared/styles/vars.scss";`,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i.ibb.co",
+      },
+    ],
+  },
   webpack: (config, { isServer }) => {
     if (isServer) {
       if (Array.isArray(config.resolve.alias)) {
