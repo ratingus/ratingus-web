@@ -9,11 +9,13 @@ type SchoolsProps = {};
 const Schools = ({}: SchoolsProps) => {
   const schools = [
     {
+      id: 0,
       schoolName: "Школа №31415",
       role: "Ученик",
       classes: ["Класс 9а"],
     },
     {
+      id: 1,
       schoolName: "Муз. шк.",
       role: "Ученик",
       classes: ["Скрипка", "Хор"],
