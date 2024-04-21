@@ -1,13 +1,13 @@
-import { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import { DetailedHTMLProps, TextareaHTMLAttributes } from "react";
 import cl from "classnames";
 
-import styles from "./Input.module.scss";
+import styles from "./Textarea.module.scss";
 
-const baseClasses = cl(styles.input);
+const baseClasses = cl(styles.base);
 
 type BaseInputProps = DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
+  TextareaHTMLAttributes<HTMLTextAreaElement>,
+  HTMLTextAreaElement
 >;
 type InputProps = BaseInputProps & {
   className?: string;
@@ -15,14 +15,14 @@ type InputProps = BaseInputProps & {
   variant?: "white" | "dark" | "ghost";
 };
 
-export const Input = ({
+export const Textarea = ({
   className,
   sizeVariant = "medium",
   variant = "white",
   ...props
 }: InputProps) => {
   return (
-    <input
+    <textarea
       className={cl(
         baseClasses,
         className,
