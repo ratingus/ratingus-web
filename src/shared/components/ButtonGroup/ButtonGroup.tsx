@@ -25,15 +25,17 @@ export const ButtonGroup = ({
             key,
             variant: propsVariant,
             sizeVariant: propsSizeVariant,
+            link,
             ...buttonProps
           },
           index,
         ) => (
           <Button
-            key={key || index}
+            key={key || link || index}
             {...buttonProps}
             variant={propsVariant || variant}
             sizeVariant={propsSizeVariant || sizeVariant}
+            link={link}
           />
         ),
       )}
