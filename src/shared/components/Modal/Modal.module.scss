@@ -12,12 +12,14 @@
   margin-right: -50%;
   transform: translate(-50%, -50%);
   box-shadow: 0 0 20px black;
+  z-index: 1;
 }
 
 .overlay {
   position: fixed;
   inset: 0px;
   background-color: rgba(#000, 0.5);
+  z-index: $modal--z-index;
 }
 
 .close {
