@@ -2,17 +2,20 @@ import React from "react";
 
 import styles from "./MiniSchoolCardInProfile.module.scss";
 
-import Button from "@/shared/components/Button/Button";
+import { School } from "@/entity/School/model";
+import ChooseSchool from "@/feature/ChooseSchool/ui/ChooseSchool";
 import { Label } from "@/shared/components/Label/Label";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 type MiniSchoolCardInProfileProps = {
-  schoolName: string;
+  id: School["id"];
+  schoolName: School["name"];
   role: string;
   classes: string[];
 };
 
 const MiniSchoolCardInProfile = ({
+  id,
   schoolName,
   role,
   classes,
@@ -20,7 +23,12 @@ const MiniSchoolCardInProfile = ({
   return (
     <div className={styles.base}>
       <Typography variant="h2" component="div">
-        <Button variant="ghost">{schoolName}</Button>
+        <ChooseSchool
+          buttonProps={{ variant: "ghost" }}
+          school={{ id, name: schoolName }}
+        >
+          {schoolName}
+        </ChooseSchool>
       </Typography>
       <Typography variant="h4" component="div">
         {role}

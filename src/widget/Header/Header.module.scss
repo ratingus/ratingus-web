@@ -1,6 +1,8 @@
 .base {
   display: flex;
   position: fixed;
+  z-index: $header--z-index;
+  filter: drop-shadow(0 0 20px black);
   justify-content: flex-end;
   align-items: center;
   width: 100dvw;

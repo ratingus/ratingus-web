@@ -9,7 +9,7 @@ const baseClasses = cl(styles.base);
 export type ButtonGroupProps = {
   buttons: ButtonProps[];
   className?: string;
-} & Pick<ButtonProps, "variant" | "sizeVariant">;
+} & Pick<ButtonProps, "variant" | "sizeVariant" | "isDisable">;
 
 export const ButtonGroup = ({
   buttons,

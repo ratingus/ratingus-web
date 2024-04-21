@@ -3,6 +3,16 @@
   width: max-content;
 
   :global {
+    .react-select__input {
+      & fieldset {
+        background: $background-paper;
+        border-radius: 20px;
+        border: none;
+        width: max-content;
+        padding: 0 8px 0 0;
+      }
+    }
+
     .react-select__single-value {
       color: $text-primary;
     }
@@ -15,12 +25,22 @@
       cursor: pointer;
       border: none;
     }
+    .react-select__input-container {
+      width: 0;
+    }
+    .react-select__multi-value {
+      border-radius: 20px;
+      background: transparent;
+    }
 
     .react-select__placeholder {
       color: rgba($text-primary, 0.5);
     }
 
     .react-select__menu-list {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
       padding: 8px;
       background: $background-paper;
 
@@ -51,6 +71,7 @@
     }
 
     .react-select__option {
+      width: 100%;
       padding: 2px;
       margin: 2px 0 3px 0;
       cursor: pointer;
@@ -78,13 +99,6 @@
   }
 }
 
-fieldset {
-  background: $background-paper;
-  border-radius: 20px;
-  border: none;
-  width: max-content;
-  padding: 0 8px 0 0;
-}
 
 @keyframes App-logo-spin {
   from {

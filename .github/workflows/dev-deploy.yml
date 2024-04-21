@@ -59,5 +59,5 @@ jobs:
             [ratingus]
             ratingus ansible_host=${{ secrets.SERVER_IP }} ansible_port=22 ansible_ssh_user=${{ secrets.SERVER_USERNAME }}
           options: |
-            -e project_src=${{ secrets.PROJECT_SRC_PATH }} |
+            -e project_src=${{ secrets.PROJECT_SRC_PATH }}
             -e project_src_nginx=${{ secrets.PROJECT_SRC_NGINX_PATH }}

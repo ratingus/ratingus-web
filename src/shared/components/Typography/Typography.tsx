@@ -8,6 +8,7 @@ import vars from "@/shared/styles/vars.module.scss";
 const baseClasses = cl(styles.base);
 
 type TypographyProps = {
+  className?: string;
   children: ReactNode;
   variant?: Variant;
   color?: keyof typeof vars;
@@ -29,6 +30,7 @@ type Variant =
   | "caption-medium";
 
 export const Typography = ({
+  className,
   variant,
   color = "textPrimary",
   children,
@@ -41,7 +43,12 @@ export const Typography = ({
   const mediumStyle = isMedium ? styles.medium : "";
   return (
     <Component
-      className={cl(baseClasses, styles[`variant-${variant}`], mediumStyle)}
+      className={cl(
+        baseClasses,
+        styles[`variant-${variant}`],
+        mediumStyle,
+        className,
+      )}
       style={{ color: vars[color] }}
       {...props}
     >

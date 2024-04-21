@@ -4,6 +4,8 @@ export type UserDetails = {
   name: string;
   surname: string;
   patronymic: string;
+  schoolId: number;
+  classId: number;
   birthdate: Date;
 };
 

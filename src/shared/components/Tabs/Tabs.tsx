@@ -11,7 +11,7 @@ import {
 
 const baseClasses = cl(styles.base);
 
-type TabOption<T> = {
+export type TabOption<T> = {
   value: T;
   label: string;
 };
@@ -21,13 +21,17 @@ type TabsProps<T> = {
   options: (TabOption<T> & {
     renderOption?: ReactNode;
   })[];
+  onChange?: (value: TabOption<T>) => void;
   className?: string;
+  loadingValue?: T;
 } & Omit<ButtonGroupProps, "buttons">;
 
 export const Tabs = <T = string,>({
   options,
   className,
   defaultOption,
+  onChange,
+  loadingValue,
   ...props
 }: TabsProps<T>) => {
   const [selectedValue, setSelectedValue] = useState<TabOption<T> | undefined>(
@@ -36,6 +40,7 @@ export const Tabs = <T = string,>({
 
   const handleLabelClick = (value: TabOption<T>) => {
     setSelectedValue(value);
+    onChange?.(value);
   };
 
   return (
@@ -44,6 +49,7 @@ export const Tabs = <T = string,>({
       buttons={options.map(({ value, label, renderOption }) => ({
         key: label,
         isActive: value === selectedValue?.value,
+        isLoading: value === loadingValue,
         onClick: () => handleLabelClick({ value, label }),
         children: renderOption || label,
       }))}

@@ -12,7 +12,7 @@ type BaseInputProps = DetailedHTMLProps<
 type InputProps = BaseInputProps & {
   className?: string;
   sizeVariant?: "big" | "medium";
-  variant?: "white" | "dark";
+  variant?: "white" | "dark" | "ghost";
 };
 
 export const Input = ({
