@@ -1,0 +1,44 @@
+.base {
+  background: $background-main;
+  padding: 16px 14px;
+  border-radius: 20px;
+  height: max-content;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  & div {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+}
+
+.form {
+  padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inputWrapper {
+  width: 100%;
+}
+.input {
+  padding: 30px;
+  width: calc(100% - 62px);
+}
+
+.textarea {
+  padding: 20px 30px 0;
+  width: calc(100% - 60px);
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
