@@ -7,6 +7,7 @@ import {
   actionShowModal,
   INFO_ABOUT_ORGANIZATION_MODAL,
 } from "@/shared/components/Modal/slice";
+import { Typography } from "@/shared/components/Typography/Typography";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 
 const Content = () => {
@@ -16,9 +17,13 @@ const Content = () => {
   };
   return (
     <>
-      <Button onClick={handleClick}>Открыть модалку</Button>
+      <Button variant="secondary" onClick={handleClick}>
+        Открыть модалку
+      </Button>
       <Modal modalName="infoAboutOrganizationModal">
-        <h2>Привет!</h2>
+        <Typography variant="h2" component="div">
+          Привет!
+        </Typography>
       </Modal>
     </>
   );
