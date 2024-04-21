@@ -35,8 +35,6 @@ export const Typography = ({
   component = "p",
   ...props
 }: TypographyProps) => {
-  console.log(vars);
-
   // @ts-ignore
   const Component: ElementType = component;
   const isMedium = variant?.includes("medium");
