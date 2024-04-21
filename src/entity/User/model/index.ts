@@ -1,11 +1,11 @@
 export type UserIdentity = {
+  id: number;
   name: string;
   surname: string;
   patronymic?: string;
 };
 
 export type UserDetails = UserIdentity & {
-  id: number;
   login: string;
   schoolId: number;
   classId: number;
@@ -16,6 +16,4 @@ export type User = UserDetails & {
   fio: string;
 };
 
-export type Teacher = UserIdentity & {
-  id: number;
-};
+export type Teacher = UserIdentity;
