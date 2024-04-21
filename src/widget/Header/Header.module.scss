@@ -1,0 +1,28 @@
+.base {
+  display: flex;
+  position: fixed;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100dvw;
+  height: $header-height;
+  background-color: $background-paper;
+}
+
+.iconWrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 145px;
+}
+.icon {
+  height: 145px;
+  color: $text-primary;
+  &:hover {
+    color: $primary-main;
+  }
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+}
