@@ -28,6 +28,8 @@ jobs:
 
   build_and_push_frontend:
     runs-on: ubuntu-latest
+    environment:
+      name: frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,7 +43,7 @@ jobs:
 
       - name: Build and push Frontend Docker image
         run: |
-          docker build -f Dockerfile -t ghcr.io/${{ github.repository_owner }}/ratingus-web .
+          docker build --build-arg NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }} --build-arg NEXTAUTH_URL=${{ env.NEXTAUTH_URL }} --build-arg NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} -f Dockerfile -t ghcr.io/${{ github.repository_owner }}/ratingus-web .
           docker push ghcr.io/${{ github.repository_owner }}/ratingus-web
 
   deploy:
