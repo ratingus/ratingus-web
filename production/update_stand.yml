@@ -37,7 +37,5 @@
         services:
           - nginx
         state: present
-        always_rebuild: yes
         recreate: always
-        restart: always
       register: output
