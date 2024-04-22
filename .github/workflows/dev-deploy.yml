@@ -34,6 +34,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create .env file
+        run: |
+          echo NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }} >> .env
+          echo NEXTAUTH_URL=${{ env.NEXTAUTH_URL }} >> .env
+          echo NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} >> .env
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -43,11 +49,11 @@ jobs:
 
       - name: Build and push Frontend Docker image
         run: |
-          docker build --build-arg NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }} --build-arg NEXTAUTH_URL=${{ env.NEXTAUTH_URL }} --build-arg NEXTAUTH_SECRET=${{ env.NEXTAUTH_SECRET }} -f Dockerfile -t ghcr.io/${{ github.repository_owner }}/ratingus-web .
+          docker build -f Dockerfile -t ghcr.io/${{ github.repository_owner }}/ratingus-web .
           docker push ghcr.io/${{ github.repository_owner }}/ratingus-web
 
   deploy:
-    needs: [build_and_push_storybook, build_and_push_frontend]
+    needs: [ build_and_push_storybook, build_and_push_frontend ]
     runs-on: ubuntu-latest
     environment:
       name: frontend

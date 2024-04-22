@@ -1,9 +1,5 @@
 FROM node:18.18.2-alpine AS builder
 
-ARG NEXT_PUBLIC_API_URL
-ARG NEXTAUTH_URL
-ARG NEXTAUTH_SECRET
-
 WORKDIR /app
 RUN apk add git
 RUN npm install -g pnpm
