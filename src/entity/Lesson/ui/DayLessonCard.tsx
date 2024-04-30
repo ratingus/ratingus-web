@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import styles from "./DayLessonCard.module.scss";
 
 import { DayLesson } from "@/entity/Lesson/model";
-import LessonCard from "@/entity/Lesson/ui/LessonCard";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getDateString, getDayAndMonth } from "@/shared/helpers/date";
 import { capitalize } from "@/shared/helpers/strings";
+import DiaryLessonCard from "@/widget/DiaryLessonCard/DiaryLessonCard";
 
 type DayLessonCardProps = DayLesson;
 
@@ -34,7 +34,7 @@ const DayLessonCard = ({ dateTime, studies }: DayLessonCardProps) => {
       </header>
       <div className={styles.lessons}>
         {studies.map((lesson) => (
-          <LessonCard key={lesson.id} {...lesson} />
+          <DiaryLessonCard key={lesson.id} {...lesson} />
         ))}
       </div>
     </div>

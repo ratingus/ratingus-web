@@ -41,7 +41,7 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
   return (
     <article className={styles.base}>
       <header className={styles.header}>
-        <div>
+        <div className={styles.for}>
           <Typography component="span" color="textHelper">
             От кого:
           </Typography>
@@ -49,13 +49,11 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
             {fio}
           </Typography>
         </div>
-        <div>
+        <div className={styles.for}>
           <Typography component="span" color="textHelper">
             Для кого:
-          </Typography>
-          <div>
-            <Select multiple options={options} />
-          </div>
+          </Typography>{" "}
+          <Select multiple options={options} />
         </div>
       </header>
       <form

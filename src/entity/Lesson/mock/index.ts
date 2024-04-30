@@ -87,7 +87,17 @@
 //
 // export default [getAnnouncementsHandler];
 
-import { DayLessonDetailed } from "@/entity/Lesson/model";
+import { DayLesson, DayLessonDetailed } from "@/entity/Lesson/model";
+
+export const generateDayLesson = (day: number): DayLesson => {
+  const dayLesson = generateDayLessonDetailed(day);
+  return {
+    dateTime: dayLesson.dateTime,
+    studies: dayLesson.studies.map(
+      ({ homework, note, mark, attendance, ...lesson }) => lesson,
+    ),
+  };
+};
 
 export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
   dateTime: new Date(Date.UTC(2024, 3, 29 + day - 1)),

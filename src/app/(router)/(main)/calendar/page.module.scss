@@ -1,0 +1,32 @@
+.base {
+  padding: 12px 16px;
+  height: calc(80dvh - 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar {
+  overflow: auto;
+  height: calc(100% - 12px * 2 - 68px);
+  display: flex;
+  gap: 10px;
+}
+.card {
+  border-radius: 20px;
+  border: 1px solid $background-main;
+  padding: 10px;
+}
+.dayLesson {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  height: max-content;
+}
+
+.lessons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 0;
+}

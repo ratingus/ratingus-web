@@ -5,6 +5,12 @@
   height: max-content;
 }
 
+.header div {
+  display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .block {
   display: grid;
 
