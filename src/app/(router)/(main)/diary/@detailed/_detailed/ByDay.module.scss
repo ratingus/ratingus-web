@@ -1,0 +1,41 @@
+.wrapper {
+  height: 100%;
+}
+.sliderWrapper {
+  display: flex;
+  justify-content: center;
+}
+.slider {
+  width: 50%;
+}
+
+.lessonsWrapper {
+  padding: 10px 0;
+  height: calc(100% - 28px - 18px - 12px);
+}
+.lessons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  @media screen and (max-width: 1440px) {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  gap: 10px;
+  justify-content: center;
+  justify-items: center;
+
+  overflow-y: auto;
+  height: 100%;
+}
+
+.sliderHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.sliderContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  gap: 40px;
+}
