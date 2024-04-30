@@ -1,7 +1,7 @@
 import type { Preview } from "@storybook/react";
 import { Roboto } from "next/font/google";
 
-import "@/app/(router)/(main)/globals.scss";
+import "@/app/(router)/globals.scss";
 
 // @ts-ignore
 import vars from "@/shared/styles/vars.module.scss";

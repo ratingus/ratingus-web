@@ -1,11 +1,10 @@
 "use client";
-import Image from "next/image";
-
 import Schools from "./(pieces)/Schools";
 import styles from "./page.module.scss";
 
 import { getUserBirthdate } from "@/entity/User/helpers";
 import { useUser } from "@/entity/User/hooks";
+import Avatar from "@/entity/User/ui/Avatar";
 import Button from "@/shared/components/Button/Button";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { Typography } from "@/shared/components/Typography/Typography";
@@ -21,15 +20,7 @@ export default function Profile() {
             <Button variant="secondary">Ввести код приглашения</Button>
           </Typography>
           <div>
-            <div className={styles.avatarWrapper}>
-              <Image
-                className={styles.avatar}
-                src="https://i.ibb.co/1rR0fx2/Frame-242.png"
-                width={128}
-                height={128}
-                alt="Аватар профиля"
-              />
-            </div>
+            <Avatar />
             <div className={styles.profileDataWrapper}>
               <Typography variant="h2" component="div">
                 {login}
