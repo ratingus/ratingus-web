@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 
+import { Metrika } from "./Metrica/ui";
 import { MockingProvider } from "./Mocking";
 import { SessionProvider } from "./Session";
 import { StoreProvider } from "./Store";
@@ -10,11 +11,16 @@ type ProviderProps = {
 
 const Provider = ({ children }: ProviderProps) => {
   return (
-    <StoreProvider>
-      <SessionProvider>
-        <MockingProvider>{children}</MockingProvider>
-      </SessionProvider>
-    </StoreProvider>
+    <>
+      <Suspense fallback={<></>}>
+        <Metrika />
+      </Suspense>
+      <StoreProvider>
+        <SessionProvider>
+          <MockingProvider>{children}</MockingProvider>
+        </SessionProvider>
+      </StoreProvider>
+    </>
   );
 };
 
