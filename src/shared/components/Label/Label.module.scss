@@ -1,0 +1,18 @@
+.base {
+  width: max-content;
+  padding: 2px 10px;
+  border-radius: 20px;
+  color: $text-primary;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.primary {
+  color: $background-main;
+  background: $primary-main;
+}
+
+.secondary {
+  background: $primary-paper;
+}

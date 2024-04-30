@@ -1,0 +1,36 @@
+.base {
+  padding: 12px;
+  height: calc(80dvh - 24px);
+  background: $background-main !important;
+  display: flex;
+  gap: 20px;
+}
+
+.week {
+  width: 320px;
+}
+
+.slider {
+  background: $background-paper;
+  width: calc(100% - 20px);
+  border-radius: 20px;
+  padding: 8px 10px !important;
+  margin-bottom: 20px;
+}
+
+.lessons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: calc(100% - 40px - 20px - 1px);
+  border-radius: 20px;
+  overflow-y: auto;
+}
+
+.detailed {
+  background: $background-paper;
+  width: calc(100dvw - 320px - 40px - 40px - 20px);
+  height: 100%;
+  border-radius: 20px;
+}
+

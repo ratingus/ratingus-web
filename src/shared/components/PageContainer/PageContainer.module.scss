@@ -1,0 +1,18 @@
+.base {
+  padding: ($header-height + 68px) 42px 12px;
+}
+
+.actionSlot {
+  padding: 12px 0 12px $header-icon-width;
+}
+.ignoreHeader {
+  padding-top: $header-height;
+}
+
+.panelBase {
+  border-radius: 20px;
+  position: relative;
+}
+.isPanel {
+  background-color: $background-paper;
+}

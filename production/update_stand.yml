@@ -1,0 +1,44 @@
+---
+- name: Update Docker Compose containers
+  hosts: ratingus
+  gather_facts: no
+  become: yes
+
+  tasks:
+    - name: Pull ratingus-web image
+      community.docker.docker_compose_v2_pull:
+        project_src: "{{ project_src }}"
+      register: output
+
+    - name: Recreate services
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_src }}"
+      register: output
+
+
+    - name: Stop nginx service
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_src_nginx }}"
+        services:
+          - nginx
+        state: absent
+
+    - name: Remove nginx service
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_src_nginx }}"
+        services:
+          - nginx
+        state: absent
+        remove_volumes: yes
+
+    - name: Recreate nginx service
+      community.docker.docker_compose_v2:
+        project_src: "{{ project_src_nginx }}"
+        services:
+          - nginx
+        state: present
+        recreate: always
+      register: output
+
+    - name: Remove dangling Docker images
+      shell: "docker image rm $(docker image ls -f dangling=true -q)"

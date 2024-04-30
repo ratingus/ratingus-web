@@ -1,0 +1,75 @@
+name: Update Docker Containers and Deploy
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build_and_push_storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          node-version: '18'
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Storybook Docker image
+        run: |
+          docker build -f Dockerfile-storybook -t ghcr.io/${{ github.repository_owner }}/ratingus-web-storybook .
+          docker push ghcr.io/${{ github.repository_owner }}/ratingus-web-storybook
+
+  build_and_push_frontend:
+    runs-on: ubuntu-latest
+    environment:
+      name: frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create .env file
+        run: |
+          echo NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }} >> .env
+          echo NEXTAUTH_URL=${{ vars.NEXTAUTH_URL }} >> .env
+          echo NEXTAUTH_SECRET=${{ vars.NEXTAUTH_SECRET }} >> .env
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Frontend Docker image
+        run: |
+          docker build -f Dockerfile -t ghcr.io/${{ github.repository_owner }}/ratingus-web .
+          docker push ghcr.io/${{ github.repository_owner }}/ratingus-web
+
+  deploy:
+    needs: [ build_and_push_storybook, build_and_push_frontend ]
+    runs-on: ubuntu-latest
+    environment:
+      name: frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update Docker Compose containers on server
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: update_stand.yml
+          directory: production/
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          inventory: |
+            [ratingus]
+            ratingus ansible_host=${{ secrets.SERVER_IP }} ansible_port=22 ansible_ssh_user=${{ secrets.SERVER_USERNAME }}
+          options: |
+            -e project_src=${{ secrets.PROJECT_SRC_PATH }}
+            -e project_src_nginx=${{ secrets.PROJECT_SRC_NGINX_PATH }}

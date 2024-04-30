@@ -1,0 +1,50 @@
+.base {
+  background: $background-main;
+  padding: 16px 14px;
+  border-radius: 20px;
+  height: max-content;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  & div {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+}
+
+.form {
+  padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.for {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  align-items: center;
+}
+
+.inputWrapper {
+  width: 100%;
+}
+.input {
+  padding: 30px;
+  width: calc(100% - 62px);
+}
+
+.textarea {
+  width: calc(100% - 15px * 2);
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

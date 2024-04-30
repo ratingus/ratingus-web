@@ -1,0 +1,31 @@
+.base {
+  display: flex;
+  position: fixed;
+  z-index: $header--z-index;
+  filter: drop-shadow(0 0 20px black);
+  justify-content: flex-end;
+  align-items: center;
+  width: 100dvw;
+  height: $header-height;
+  background-color: $background-paper;
+}
+
+.iconWrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 145px;
+}
+.icon {
+  height: 145px;
+  color: $text-primary;
+  &:hover {
+    color: $primary-main;
+  }
+}
+
+.nav {
+  padding-right: 42px;
+    display: flex;
+    align-items: center;
+}

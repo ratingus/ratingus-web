@@ -1,14 +1,28 @@
-version: '3.8'
+version: "3.8"
 
 services:
   frontend:
-    build: .
+    image: ghcr.io/ratingus/ratingus-web:latest
     container_name: frontend
     restart: always
+    env_file:
+      - .env
     networks:
       - ratingus-network
     ports:
       - "3000:3000"
+  storybook:
+    image: ghcr.io/ratingus/ratingus-web-storybook:latest
+    volumes:
+      - ./storybook-nginx/storybook.conf:/etc/nginx/nginx.conf:ro
+    container_name: storybook
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - ratingus-network
+    ports:
+      - "6006:80"
 
 networks:
   ratingus-network:

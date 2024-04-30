@@ -1,0 +1,33 @@
+@import "normalize.css";
+
+* {
+}
+
+html,
+body,
+main{
+	background: $background-main;
+	color: $text-primary;
+}
+.app {
+	padding-top: 154px;
+}
+
+a {
+}
+
+::-webkit-scrollbar {
+	width: 4px;
+	height: 4px;
+}
+::-webkit-scrollbar-track {
+	background-color: $background-main;
+}
+::-webkit-scrollbar-thumb {
+	background-color: $primary-main;
+	border-radius: 20px;
+	background-clip: content-box;
+}
+::-webkit-scrollbar-corner {
+	background-color: $background-main;
+}

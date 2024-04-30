@@ -1,0 +1,31 @@
+.base {
+  background: $background-main;
+  padding: 16px 14px;
+  border-radius: 20px;
+  height: max-content;
+}
+
+.header div {
+  display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.block {
+  display: grid;
+
+  & div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.classes {
+  display: flex;
+  gap: 8px
+}
+
+.content {
+  margin-top: 4px;
+}

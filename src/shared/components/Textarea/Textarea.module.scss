@@ -1,0 +1,28 @@
+.base {
+  border-radius: 20px;
+  resize: none;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.white {
+  color: $background-main;
+  background-color: $text-primary;
+  &::placeholder {
+    color: $text-helper;
+  }
+}
+.dark {
+  color: $text-primary;
+  background-color: $background-main;
+  &::placeholder {
+    color: rgba($text-primary, 0.5);
+  }
+}
+
+.big {
+  padding: 12px 20px 6px;
+}
+.medium {
+  padding: 6px 14px 3px;
+}

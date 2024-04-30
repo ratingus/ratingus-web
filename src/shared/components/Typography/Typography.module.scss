@@ -1,0 +1,45 @@
+.base {
+  text-align: left;
+}
+
+.variant- {
+  font-size: 16px; // Размер шрифта для корневого элемента (обычно <html>)
+  font-weight: 300;
+
+  &h {
+    font-weight: 500;
+    &1 {
+      font-size: 4rem; // 64px / 16px = 4rem
+    }
+    &2 {
+      font-size: 3rem; // 48px / 16px = 3rem
+    }
+    &3 {
+      font-size: 2rem; // 32px / 16px = 2rem
+    }
+
+    &4 {
+      font-size: 1.5rem; // 24px / 16px = 1.5rem
+    }
+
+    &5 {
+      font-size: 1.125rem; // 18px / 16px = 1.125rem
+    }
+  }
+
+  &body, &body-medium {
+    font-size: 1rem; // 16px / 16px = 1rem
+  }
+
+  &small, &small-medium {
+    font-size: 0.875rem; // 14px / 16px = 0.875rem
+  }
+
+  &caption, &caption-medium {
+    font-size: 0.75rem; // 12px / 16px = 0.75rem
+  }
+}
+
+.medium {
+  font-weight: 500;
+}
