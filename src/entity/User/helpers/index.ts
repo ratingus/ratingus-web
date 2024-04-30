@@ -9,3 +9,8 @@ export const getFioByUser = (user: UserIdentity) => {
   const { surname, name, patronymic } = user;
   return `${surname} ${name} ${patronymic}`;
 };
+
+export const getFiByUser = (user: UserIdentity) => {
+  const { surname, name } = user;
+  return `${surname} ${name}`;
+};

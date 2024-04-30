@@ -10,12 +10,12 @@ const baseClasses = cl(styles.base);
 type TypographyProps = {
   className?: string;
   children: ReactNode;
-  variant?: Variant;
+  variant?: TypographyVariant;
   color?: keyof typeof vars;
   component?: ElementType;
 };
 
-type Variant =
+export type TypographyVariant =
   | "h1"
   | "h2"
   | "h3"
