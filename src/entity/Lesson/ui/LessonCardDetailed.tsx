@@ -2,15 +2,15 @@ import { LessonDetailed } from "../model";
 
 import styles from "./LessonCardDetailed.module.scss";
 
-import LessonCard from "@/entity/Lesson/ui/LessonCard";
 import { Typography } from "@/shared/components/Typography/Typography";
+import DiaryLessonCard from "@/widget/DiaryLessonCard/DiaryLessonCard";
 
 type LessonCardProps = LessonDetailed;
 
 const LessonCardDetailed = (lesson: LessonCardProps) => {
   const { homework, note } = lesson;
   return (
-    <LessonCard
+    <DiaryLessonCard
       {...lesson}
       bottomSlot={
         // TODO: такой же блок в LessonBlockDetailed? Генералифицировать!
