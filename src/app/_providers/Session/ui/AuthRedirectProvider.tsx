@@ -3,7 +3,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import HeaderIcon from "@icons/header.svg";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type AuthRedirectProviderProps = {
   children: ReactNode;
@@ -11,6 +11,7 @@ type AuthRedirectProviderProps = {
 
 const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
   const router = useRouter();
+  const path = usePathname();
   const [isAuthRedirected, setIsAuthRedirected] = useState<boolean>();
 
   useEffect(() => {
@@ -19,10 +20,12 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
 
       if (!isUserLoggedIn) {
         router.push("/login");
+      } else if (path === "/") {
+        router.push("/announcements");
       }
       setIsAuthRedirected(true);
     }
-  }, [router]);
+  }, [router, path]);
 
   // TODO: вынести в loading.tsx и пока не загрузилось, вызывать лоадер некста, а не вот это вот что это вообще такое
   if (!isAuthRedirected) {
