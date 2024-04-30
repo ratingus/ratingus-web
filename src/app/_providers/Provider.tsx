@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode } from "react";
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 
 import { MockingProvider } from "./Mocking";
 import { SessionProvider } from "./Session";
