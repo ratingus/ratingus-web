@@ -1,0 +1,25 @@
+.body {
+  padding-top: 20px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.flexFlexov {
+    display: flex;
+    justify-content: space-between;
+
+}
+.flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.textarea {
+  width: calc(100% - 20px - 10px);
+}
