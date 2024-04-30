@@ -1,0 +1,18 @@
+.main {
+  display: flex;
+  flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  gap: 25px;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.button {
+  width: 100%;
+}
