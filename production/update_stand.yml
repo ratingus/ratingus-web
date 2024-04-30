@@ -39,3 +39,9 @@
         state: present
         recreate: always
       register: output
+
+    - name: Remove dangling Docker images
+      ansible.builtin.command: docker image rm $(docker image ls -f dangling=true -q)
+      become: yes
+      args:
+        warn: no
