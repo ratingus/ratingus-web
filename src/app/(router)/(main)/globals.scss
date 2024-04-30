@@ -15,3 +15,15 @@ main{
 
 a {
 }
+
+::-webkit-scrollbar {
+	width: 4px;
+}
+::-webkit-scrollbar-track {
+	background-color: $background-main;
+}
+::-webkit-scrollbar-thumb {
+	background-color: $primary-main;
+	border-radius: 20px;
+	background-clip: content-box;
+}

@@ -1,0 +1,40 @@
+.main {
+   background: $background-main;
+    width: calc(300px - 20px);
+    padding: 12px 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  height: max-content;
+}
+
+.flexStart {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  border-radius: 20px;
+  background: $background-paper;
+  padding: 4px 12px;
+}
+.block {
+    padding: 4px 12px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+    gap: 4px;
+    border-radius: 20px;
+    background: $background-paper;
+}
+.mainInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}

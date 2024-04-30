@@ -1,0 +1,31 @@
+.main {
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  background: $background-paper;
+  padding: 10px;
+  gap: 10px;
+  border-radius: 20px;
+}
+
+.block {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 20px;
+
+  &:hover {
+    background: $background-main;
+  }
+  &:active {
+    background: mix($background-main, $background-paper, 50);
+  }
+}
+
+.lessons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

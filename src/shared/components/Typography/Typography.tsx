@@ -34,12 +34,12 @@ export const Typography = ({
   variant,
   color = "textPrimary",
   children,
-  component = "p",
+  component = "div",
   ...props
 }: TypographyProps) => {
   // @ts-ignore
   const Component: ElementType = component;
-  const isMedium = variant?.includes("medium");
+  const isMedium = variant?.includes("-medium");
   const mediumStyle = isMedium ? styles.medium : "";
   return (
     <Component
