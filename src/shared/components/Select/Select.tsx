@@ -40,9 +40,11 @@ type SelectProps = BaseSelectProps & {
   className?: string;
   defaultValue?: SelectOption;
   options: SelectOption[];
+  variant?: "dark";
 };
 
 export const Select = ({
+  variant,
   className,
   options,
   defaultValue,
@@ -138,7 +140,12 @@ export const Select = ({
         MultiValueContainer: renderMultiValueContainer,
         MultiValueRemove: renderMultiValueRemoveIcon,
       }}
-      className={cl(baseClasses, className, isFocused && styles.focused)}
+      className={cl(
+        baseClasses,
+        className,
+        isFocused && styles.focused,
+        variant && styles[variant],
+      )}
       placeholder="Выберите значение"
       classNamePrefix="react-select"
       onFocus={handleFocus}
