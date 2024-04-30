@@ -1,7 +1,4 @@
-"use client";
 import { ReactNode } from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 
 import { MockingProvider } from "./Mocking";
 import { SessionProvider } from "./Session";
@@ -12,14 +9,6 @@ type ProviderProps = {
 };
 
 const Provider = ({ children }: ProviderProps) => {
-  const router = useRouter();
-  if (window !== undefined) {
-    const isLogged = Cookies.get("isLogged");
-    if (isLogged === undefined) {
-      router.push("/login");
-    }
-  }
-
   return (
     <StoreProvider>
       <SessionProvider>
