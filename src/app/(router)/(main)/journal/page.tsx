@@ -3,6 +3,9 @@ import React, { useState } from "react";
 
 import styles from "./page.module.scss";
 
+import ClassSelector from "@/feature/ClassSelector/ClassSelector";
+import SubjectSelector from "@/feature/SubjectSelector/SubjectSelector";
+import Button from "@/shared/components/Button/Button";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { TabOption, Tabs } from "@/shared/components/Tabs/Tabs";
 import LessonsTable from "@/widget/LessonsTable/LessonsTable";
@@ -40,6 +43,13 @@ export default function Journal() {
         />
       }
     >
+      <div className={styles.buttons}>
+        <ClassSelector />
+        <SubjectSelector />
+        <Button variant="secondary" className={styles.editButton}>
+          Редактировать
+        </Button>
+      </div>
       {tab.value === "students" ? <StudentsTable /> : <LessonsTable />}
     </PageContainer>
   );
