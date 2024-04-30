@@ -12,7 +12,10 @@ interface SchoolState {
 }
 
 const initialState = {
-  selectedSchool: null,
+  selectedSchool: {
+    id: 0,
+    name: "Школа №31415",
+  },
 } satisfies SchoolState as SchoolState;
 
 export const schoolSlice = createSlice({
