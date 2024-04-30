@@ -9,8 +9,8 @@ export const useUser = (): User => {
     name: "Имя",
     surname: "Фамилия",
     patronymic: "Отчество",
-    schoolId: 1,
-    classId: 1,
+    schoolId: 0,
+    classId: 9,
     birthdate: new Date(Date.UTC(2002, 2, 12)),
   };
   return {
