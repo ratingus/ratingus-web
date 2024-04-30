@@ -18,6 +18,7 @@ a {
 
 ::-webkit-scrollbar {
 	width: 4px;
+	height: 4px;
 }
 ::-webkit-scrollbar-track {
 	background-color: $background-main;
@@ -26,4 +27,7 @@ a {
 	background-color: $primary-main;
 	border-radius: 20px;
 	background-clip: content-box;
+}
+::-webkit-scrollbar-corner {
+	background-color: $background-main;
 }
