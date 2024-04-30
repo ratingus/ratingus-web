@@ -36,7 +36,21 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
         <Typography variant="h4">{getDayAndMonth(data.dateTime)}</Typography>
       </div>
       <div className={styles.sliderWrapper}>
-        <Slider className={styles.slider}>
+        <Slider
+          className={styles.slider}
+          swiperProps={{
+            onSlideChange: (swiper) => {
+              router.push(
+                "/diary?week=" +
+                  week +
+                  "&day=" +
+                  day +
+                  "&lesson=" +
+                  (swiper.activeIndex + 1),
+              );
+            },
+          }}
+        >
           {data.studies.map((study) => (
             <SwiperSlide key={study.timetableNumber}>
               <div>
