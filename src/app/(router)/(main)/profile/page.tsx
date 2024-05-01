@@ -1,4 +1,6 @@
 "use client";
+import Image from "next/image";
+
 import Schools from "./(pieces)/Schools";
 import styles from "./page.module.scss";
 
@@ -13,14 +15,20 @@ export default function Profile() {
   const { login, fio, birthdate } = useUser();
   return (
     <PageContainer isPanel>
-      <div className={styles.image} />
+      <Image
+        width={1370}
+        height={186}
+        src="/images/profile_empty_back_image.png"
+        className={styles.image}
+        alt="fas"
+      />
       <div className={styles.panel}>
         <div className={styles.panelNavigation}>
           <Typography variant="h4" component="span">
             <Button variant="secondary">Ввести код приглашения</Button>
           </Typography>
           <div>
-            <Avatar />
+            <Avatar avatarClassName={styles.avatar} />
             <div className={styles.profileDataWrapper}>
               <Typography variant="h2" component="div">
                 {login}

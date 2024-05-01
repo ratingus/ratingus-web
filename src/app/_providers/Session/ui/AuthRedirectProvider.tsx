@@ -18,7 +18,7 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
     if (typeof window !== "undefined") {
       const isUserLoggedIn = Cookies.get("isLogged") === "true";
 
-      if (!isUserLoggedIn) {
+      if (!isUserLoggedIn && !(path === "/login" || path === "/registration")) {
         router.push("/login");
       } else if (path === "/") {
         router.push("/announcements");
