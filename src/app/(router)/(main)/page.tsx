@@ -32,7 +32,7 @@ export default function Home() {
         Ratingus
       </Typography>
       <Content />
-      <Typography variant="caption-medium" component="div">
+      <Typography variant="caption" weight="bold" component="div">
         Всем привееет!
       </Typography>
     </PageContainer>

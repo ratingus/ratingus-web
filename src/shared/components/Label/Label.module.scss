@@ -16,3 +16,13 @@
 .secondary {
   background: $primary-paper;
 }
+
+.ghost {
+  color: $primary-main;
+  background: $background-main;
+}
+
+.error {
+  background: mix($background-main, $status-warning, 75%);
+  color: $status-warning;
+}

@@ -95,6 +95,7 @@ const Classes = () => {
                   <Typography variant="h3">Название класса:</Typography>
                   <div className={styles.formBlockWithInputs}>
                     <Input
+                      key={choosenClassIndex}
                       form="addRole"
                       name="class"
                       variant="dark"
