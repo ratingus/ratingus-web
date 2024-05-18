@@ -5,7 +5,9 @@ import { getDateString } from "@/shared/helpers/date";
 export const getUserBirthdate = (birthdate: Date) =>
   getDateString(birthdate, "DD MMMM YYYY");
 
-export const getFioByUser = (user: UserIdentity) => {
+export const getFioByUser = (
+  user: Pick<UserIdentity, "name" | "surname" | "patronymic">,
+) => {
   const { surname, name, patronymic } = user;
   return `${surname} ${name} ${patronymic}`;
 };

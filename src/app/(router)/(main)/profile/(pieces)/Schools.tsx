@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./Schools.module.scss";
 
-import MiniSchoolCardInProfile from "@/entity/School/ui/MiniSchoolCardInProfile";
+import MiniSchoolCard from "@/entity/School/ui/MiniSchoolCard";
 
 type SchoolsProps = {};
 
@@ -25,7 +25,7 @@ const Schools = ({}: SchoolsProps) => {
   return (
     <div className={styles.base}>
       {schools.map((school) => (
-        <MiniSchoolCardInProfile key={school.schoolName} {...school} />
+        <MiniSchoolCard key={school.schoolName} {...school} />
       ))}
     </div>
   );
