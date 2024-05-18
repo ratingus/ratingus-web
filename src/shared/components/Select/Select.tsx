@@ -36,11 +36,12 @@ type BaseSelectProps = DetailedHTMLProps<
   SelectHTMLAttributes<HTMLSelectElement>,
   HTMLSelectElement
 >;
-type SelectProps = BaseSelectProps & {
+type SelectProps = Omit<BaseSelectProps, "onChange"> & {
   className?: string;
   defaultValue?: SelectOption;
   options: SelectOption[];
   variant?: "dark";
+  onChange?: (value: SelectOption) => void;
 };
 
 export const Select = ({
@@ -49,6 +50,8 @@ export const Select = ({
   options,
   defaultValue,
   multiple,
+  onChange,
+  ...props
 }: SelectProps) => {
   const [selectedValue, setSelectedValue] = useState<SelectOption | undefined>(
     defaultValue,
@@ -58,6 +61,7 @@ export const Select = ({
   );
 
   const handleSetValue = (newValue: SelectOption) => {
+    onChange?.(newValue);
     if (newValue.value === selectedValue?.value) {
       setSelectedValue(newValue);
     } else {
@@ -69,7 +73,6 @@ export const Select = ({
     newValue: SelectOption[],
     action: ActionMeta<SelectOption>,
   ) => {
-    console.log(newValue);
     if (action.action === "select-option" && action.option) {
       setSelectedValues([...selectedValues, action.option]);
     } else if (action.action === "remove-value" && action.removedValue) {
@@ -86,7 +89,6 @@ export const Select = ({
     newValue: SingleValue<SelectOption> | MultiValue<SelectOption>,
     action: ActionMeta<SelectOption>,
   ) => {
-    console.log(action);
     handleBlur();
     newValue &&
       (multiple
@@ -133,6 +135,7 @@ export const Select = ({
   );
 
   return (
+    // @ts-ignore
     <ReactSelect<SelectOption, boolean>
       components={{
         ...animatedComponents,
@@ -146,6 +149,7 @@ export const Select = ({
         isFocused && styles.focused,
         variant && styles[variant],
       )}
+      {...props}
       placeholder="Выберите значение"
       classNamePrefix="react-select"
       onFocus={handleFocus}

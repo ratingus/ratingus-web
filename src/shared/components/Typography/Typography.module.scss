@@ -27,19 +27,29 @@
     }
   }
 
-  &body, &body-medium {
+  &body {
     font-size: 1rem; // 16px / 16px = 1rem
   }
 
-  &small, &small-medium {
+  &small {
     font-size: 0.875rem; // 14px / 16px = 0.875rem
   }
 
-  &caption, &caption-medium {
+  &caption {
     font-size: 0.75rem; // 12px / 16px = 0.75rem
   }
 }
 
-.medium {
-  font-weight: 500;
+.italic {
+  font-style: italic;
+}
+
+.normal {
+  font-weight: normal;
+}
+.lighter {
+  font-weight: lighter;
+}
+.bold {
+  font-weight: bold;
 }

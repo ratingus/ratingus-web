@@ -12,7 +12,7 @@ type BaseLabelProps = DetailedHTMLProps<
 type LabelProps = BaseLabelProps & {
   className?: string;
   children: ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "ghost" | "error";
 };
 
 export const Label = ({

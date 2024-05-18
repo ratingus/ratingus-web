@@ -13,7 +13,11 @@ type TypographyProps = {
   variant?: TypographyVariant;
   color?: keyof typeof vars;
   component?: ElementType;
+  italic?: boolean;
+  weight?: TypographyWeight;
 };
+
+export type TypographyWeight = "bold" | "lighter" | "normal";
 
 export type TypographyVariant =
   | "h1"
@@ -23,11 +27,8 @@ export type TypographyVariant =
   | "h5"
   | "h6"
   | "body"
-  | "body-medium"
   | "small"
-  | "small-medium"
-  | "caption"
-  | "caption-medium";
+  | "caption";
 
 export const Typography = ({
   className,
@@ -35,18 +36,19 @@ export const Typography = ({
   color = "textPrimary",
   children,
   component = "div",
+  italic,
+  weight,
   ...props
 }: TypographyProps) => {
   // @ts-ignore
   const Component: ElementType = component;
-  const isMedium = variant?.includes("-medium");
-  const mediumStyle = isMedium ? styles.medium : "";
   return (
     <Component
       className={cl(
         baseClasses,
         styles[`variant-${variant}`],
-        mediumStyle,
+        weight && styles[weight],
+        italic && styles.italic,
         className,
       )}
       style={{ color: vars[color] }}

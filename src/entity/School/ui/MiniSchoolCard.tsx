@@ -1,10 +1,10 @@
 import React from "react";
 
-import styles from "./MiniSchoolCardInProfile.module.scss";
+import styles from "./MiniSchoolCard.module.scss";
+import MiniSchoolCardRole from "./MiniSchoolCardRole";
 
 import { School } from "@/entity/School/model";
 import ChooseSchool from "@/feature/ChooseSchool/ui/ChooseSchool";
-import { Label } from "@/shared/components/Label/Label";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 type MiniSchoolCardInProfileProps = {
@@ -14,7 +14,7 @@ type MiniSchoolCardInProfileProps = {
   classes: string[];
 };
 
-const MiniSchoolCardInProfile = ({
+const MiniSchoolCard = ({
   id,
   schoolName,
   role,
@@ -30,18 +30,9 @@ const MiniSchoolCardInProfile = ({
           {schoolName}
         </ChooseSchool>
       </Typography>
-      <Typography variant="h4" component="div">
-        {role}
-      </Typography>
-      <div className={styles.classes}>
-        {classes.map((userClass) => (
-          <Label variant="secondary" key={userClass}>
-            {userClass}
-          </Label>
-        ))}
-      </div>
+      <MiniSchoolCardRole role={role} classes={classes} />
     </div>
   );
 };
 
-export default MiniSchoolCardInProfile;
+export default MiniSchoolCard;
