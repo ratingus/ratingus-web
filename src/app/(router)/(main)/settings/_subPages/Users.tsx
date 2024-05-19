@@ -117,13 +117,11 @@ const Users = () => {
               >
                 <Avatar avatarClassName={styles.avatar} size={64} />
                 <div className={styles.userDetails}>
-                  <Typography variant="body" weight="bold">
-                    {login}
-                  </Typography>
-                  <Typography variant="body" weight="bold">
+                  <Typography variant="body">{login}</Typography>
+                  <Typography variant="body">
                     {getFioByUser({ name, surname, patronymic })}
                   </Typography>
-                  <Typography variant="small" weight="bold" color="textHelper">
+                  <Typography variant="small" color="textHelper">
                     {getUserBirthdate(birthdate)}
                   </Typography>
                 </div>

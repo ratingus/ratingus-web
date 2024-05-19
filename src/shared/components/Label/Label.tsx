@@ -21,7 +21,7 @@ export const Label = ({
   variant = "primary",
   ...props
 }: LabelProps) => (
-  <div className={cl(baseClasses, className, styles[variant])} {...props}>
+  <div className={cl(baseClasses, styles[variant], className)} {...props}>
     {children}
   </div>
 );
