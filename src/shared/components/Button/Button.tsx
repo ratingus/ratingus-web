@@ -25,7 +25,7 @@ const Button = ({
   className,
   children,
   variant = "primary",
-  sizeVariant = "medium",
+  sizeVariant,
   isActive,
   isDisable,
   isLoading,
@@ -38,7 +38,7 @@ const Button = ({
         baseClasses,
         className,
         styles[variant],
-        styles[sizeVariant],
+        sizeVariant && styles[sizeVariant],
         styles[isActive ? "active" : ""],
         styles[isDisable ? "disable" : ""],
       )}
