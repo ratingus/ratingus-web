@@ -14,6 +14,7 @@ type TypographyProps = {
   color?: keyof typeof vars;
   component?: ElementType;
   italic?: boolean;
+  passColor?: boolean;
   weight?: TypographyWeight;
 };
 
@@ -38,6 +39,7 @@ export const Typography = ({
   component = "div",
   italic,
   weight,
+  passColor,
   ...props
 }: TypographyProps) => {
   // @ts-ignore
@@ -51,7 +53,7 @@ export const Typography = ({
         italic && styles.italic,
         className,
       )}
-      style={{ color: vars[color] }}
+      style={passColor ? {} : { color: vars[color] }}
       {...props}
     >
       {children}

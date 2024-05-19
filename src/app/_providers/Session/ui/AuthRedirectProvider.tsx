@@ -18,10 +18,11 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
     if (typeof window !== "undefined") {
       const isUserLoggedIn = Cookies.get("isLogged") === "true";
 
-      if (!isUserLoggedIn && !(path === "/login" || path === "/registration")) {
+      if (
+        !isUserLoggedIn &&
+        !(path === "/login" || path === "/registration" || path === "/")
+      ) {
         router.push("/login");
-      } else if (path === "/") {
-        router.push("/announcements");
       }
       setIsAuthRedirected(true);
     }
