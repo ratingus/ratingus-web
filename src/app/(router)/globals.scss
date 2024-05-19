@@ -17,6 +17,16 @@ ul {
 	list-style-type: none;
 }
 
+a {
+	color: $primary-main;
+	&:hover {
+		color: mix($primary-paper, $primary-main, 50);
+	}
+	&:active {
+		color: $primary-paper;
+	}
+}
+
 ::-webkit-scrollbar {
 	width: 4px;
 	height: 4px;
