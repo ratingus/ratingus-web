@@ -117,7 +117,7 @@ export default function Calendar() {
     setIsAddTeacher(false);
   };
   const handleAddTeacher = () => {
-    setIsAddTeacher(!isAddTeacher);
+    setIsAddTeacher(true);
     setIsAddSubject(false);
   };
 
