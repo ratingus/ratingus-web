@@ -8,4 +8,9 @@ const api = axios.create({
   },
 });
 
+export const extractTokenFromSetCookie = (setCookieHeader: string[]) => {
+  const match = setCookieHeader[0].match(/token=([^;]+)/);
+  return match ? match[1] : null;
+};
+
 export default api;

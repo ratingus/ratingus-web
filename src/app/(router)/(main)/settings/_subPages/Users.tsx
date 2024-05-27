@@ -93,7 +93,6 @@ const Users = () => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      console.log(formData);
       console.log(formData.get("name"));
       console.log(formData.get("surname"));
       console.log(formData.get("patronymic"));
