@@ -4,6 +4,7 @@ import { announcementsApi } from "@/entity/Announcement/query";
 import { announcementSlice } from "@/entity/Announcement/store";
 import { schoolSlice } from "@/entity/School/store";
 import { profileApi } from "@/entity/User/query/profile.api";
+import { baseApi } from "@/shared/api/rtkq";
 import { modalSlice } from "@/shared/components/Modal/slice";
 
 export const makeStore = () => {
@@ -15,11 +16,8 @@ export const makeStore = () => {
       [announcementsApi.reducerPath]: announcementsApi.reducer,
       [profileApi.reducerPath]: profileApi.reducer,
     },
-    // @ts-ignore
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware()
-        .concat(announcementsApi.middleware)
-        .concat(profileApi.middleware),
+      getDefaultMiddleware().concat(baseApi.middleware),
   });
 };
 

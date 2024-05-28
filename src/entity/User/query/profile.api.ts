@@ -1,17 +1,11 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-
 import { getFioByUser } from "@/entity/User/helpers";
 import { Profile } from "@/entity/User/model";
-import { axiosBaseQuery } from "@/shared/api/rtkq";
+import { baseApi } from "@/shared/api/rtkq";
 
-export const profileApi = createApi({
-  baseQuery: axiosBaseQuery({
-    baseUrl: "/profile",
-  }),
-  tagTypes: ["Profile"],
+export const profileApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProfile: build.query<Profile & { fio: string }, null>({
-      query: () => ({ url: "" }),
+      query: () => ({ url: "/profile" }),
       transformResponse(data: Profile): Profile & { fio: string } {
         console.log(data);
         return {
@@ -23,7 +17,6 @@ export const profileApi = createApi({
           }),
         };
       },
-      providesTags: ["Profile"],
     }),
   }),
 });
