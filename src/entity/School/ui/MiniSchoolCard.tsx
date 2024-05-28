@@ -3,34 +3,29 @@ import React from "react";
 import styles from "./MiniSchoolCard.module.scss";
 import MiniSchoolCardRole from "./MiniSchoolCardRole";
 
-import { School } from "@/entity/School/model";
+import { ProfileSchool } from "@/entity/School/model";
 import ChooseSchool from "@/feature/ChooseSchool/ui/ChooseSchool";
 import { Typography } from "@/shared/components/Typography/Typography";
 
-type MiniSchoolCardInProfileProps = {
-  id: School["id"];
-  schoolName: School["name"];
-  role: string;
-  classes: string[];
-};
+type MiniSchoolCardInProfileProps = ProfileSchool;
 
 const MiniSchoolCard = ({
   id,
-  schoolName,
+  name,
   role,
-  classes,
+  classDto,
 }: MiniSchoolCardInProfileProps) => {
   return (
     <div className={styles.base}>
       <Typography variant="h2" component="div">
         <ChooseSchool
           buttonProps={{ variant: "ghost" }}
-          school={{ id, name: schoolName }}
+          school={{ id, name: name }}
         >
-          {schoolName}
+          {name}
         </ChooseSchool>
       </Typography>
-      <MiniSchoolCardRole role={role} classes={classes} />
+      <MiniSchoolCardRole role={role} classDto={classDto} />
     </div>
   );
 };

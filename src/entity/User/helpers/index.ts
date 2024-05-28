@@ -1,4 +1,4 @@
-import { UserIdentity } from "../model";
+import { RoleEnum, UserIdentity } from "../model";
 
 import { getDateString } from "@/shared/helpers/date";
 
@@ -15,4 +15,21 @@ export const getFioByUser = (
 export const getFiByUser = (user: UserIdentity) => {
   const { surname, name } = user;
   return `${surname} ${name}`;
+};
+
+export const getRoleByType = (role: RoleEnum) => {
+  switch (role) {
+    case RoleEnum.GUEST:
+      return "Гость";
+    case RoleEnum.STUDENT:
+      return "Ученик";
+    case RoleEnum.TEACHER:
+      return "Учитель";
+    case RoleEnum.LOCAL_ADMIN:
+      return "Администратор";
+    case RoleEnum.MANAGER:
+      return "Менеджер";
+    default:
+      return "";
+  }
 };
