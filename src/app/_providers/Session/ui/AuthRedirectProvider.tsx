@@ -18,9 +18,11 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
   const dispatch = useAppDispatch();
   const { data: user, status } = useSession();
 
-  if (user) {
-    dispatch(actionSetSelectedSchool(parseInt(user.user.school)));
-  }
+  useEffect(() => {
+    dispatch(
+      actionSetSelectedSchool(parseInt(user?.user.school || "") || null),
+    );
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
