@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { announcementsApi } from "@/entity/Announcement/query";
 import { announcementSlice } from "@/entity/Announcement/store";
+import { classApi } from "@/entity/School/query";
 import { schoolSlice } from "@/entity/School/store";
 import { profileApi } from "@/entity/User/query/profile.api";
 import { baseApi } from "@/shared/api/rtkq";
@@ -15,6 +16,7 @@ export const makeStore = () => {
       [schoolSlice.name]: schoolSlice.reducer,
       [announcementsApi.reducerPath]: announcementsApi.reducer,
       [profileApi.reducerPath]: profileApi.reducer,
+      [classApi.reducerPath]: classApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(baseApi.middleware),

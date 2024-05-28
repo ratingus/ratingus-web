@@ -15,3 +15,10 @@ export type BaseAnnouncement = {
 export type Announcement = BaseAnnouncement & {
   creator: WithFio<BaseAnnouncement["creator"]>;
 };
+
+export type CreateAnnouncementDto = Pick<
+  BaseAnnouncement,
+  "name" | "content"
+> & {
+  classesId: number[];
+};
