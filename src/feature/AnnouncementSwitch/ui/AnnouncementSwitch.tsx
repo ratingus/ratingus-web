@@ -1,6 +1,5 @@
 "use client";
 import React, { Dispatch, SetStateAction } from "react";
-import { useSession } from "next-auth/react";
 
 import {
   actionSetSelectedAnnouncementMode,
@@ -10,6 +9,7 @@ import {
 } from "@/entity/Announcement/store";
 import { TabOption, Tabs } from "@/shared/components/Tabs/Tabs";
 import { useAppDispatch, useAppSelector } from "@/shared/hooks/rtk";
+import { useUser } from "@/shared/hooks/useUser";
 
 type AnnouncementSwitchProps = {
   isLoading?: boolean;
@@ -24,12 +24,12 @@ const AnnouncementSwitch = ({
 }: AnnouncementSwitchProps) => {
   const dispatch = useAppDispatch();
   const selectedOption = useAppSelector(selectAnnouncementMode);
-  const { data: user } = useSession();
+  const { user } = useUser();
 
   const handleChange = (value: TabOption<OptionType>) => {
     dispatch(actionSetSelectedAnnouncementMode(value));
     if (value.value === "class") {
-      setClassId(user?.user?.classId);
+      setClassId(user.classId);
     } else if (value.value === "all") {
       setClassId(undefined);
     }

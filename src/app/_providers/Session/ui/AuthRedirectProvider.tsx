@@ -3,10 +3,10 @@ import React, { ReactNode, useEffect } from "react";
 import HeaderIcon from "@icons/header.svg";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 import { actionSetSelectedSchool } from "@/entity/School/store";
 import { useAppDispatch } from "@/shared/hooks/rtk";
+import { useUser } from "@/shared/hooks/useUser";
 
 type AuthRedirectProviderProps = {
   children: ReactNode;
@@ -16,12 +16,10 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
   const router = useRouter();
   const path = usePathname();
   const dispatch = useAppDispatch();
-  const { data: user, status } = useSession();
+  const { user, status } = useUser();
 
   useEffect(() => {
-    dispatch(
-      actionSetSelectedSchool(parseInt(user?.user.school || "") || null),
-    );
+    dispatch(actionSetSelectedSchool(parseInt(user.school || "") || null));
   }, [dispatch, user]);
 
   useEffect(() => {

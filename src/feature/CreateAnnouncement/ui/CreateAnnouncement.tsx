@@ -1,6 +1,5 @@
 "use client";
 import React, { FormEvent } from "react";
-import { useSession } from "next-auth/react";
 
 import styles from "./CreateAnnouncement.module.scss";
 
@@ -9,6 +8,7 @@ import { Input } from "@/shared/components/Input/Input";
 import { Select } from "@/shared/components/Select/Select";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { useUser } from "@/shared/hooks/useUser";
 
 type CreateAnnouncementProps = {};
 
@@ -28,7 +28,7 @@ const options = [
 ];
 
 const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
-  const { data: user } = useSession();
+  const { user } = useUser();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     console.log(e);
@@ -46,7 +46,7 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
             От кого:
           </Typography>
           <Typography component="span" color="textPrimary">
-            {user?.user.fio}
+            {user.fio}
           </Typography>
         </div>
         <div className={styles.for}>

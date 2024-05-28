@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { NextAuthOptions, User } from "next-auth";
+import { NextAuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "process";
@@ -23,8 +23,7 @@ declare module "next-auth" {
     classId?: number;
     className?: string;
   }
-  interface Session {
-    user: User;
+  interface Session extends User {
     accessToken: string;
   }
 }
@@ -77,17 +76,12 @@ const providers = [
             ) as JWT;
 
             return {
-              id: decodedToken.id,
-              role: decodedToken.role,
-              school: decodedToken.school,
-              surname: decodedToken.surname,
-              name: decodedToken.name,
+              ...decodedToken,
               fio: getFioByUser({
                 surname: decodedToken.surname,
                 name: decodedToken.name,
                 patronymic: decodedToken.patronymic,
               }),
-              patronymic: decodedToken.patronymic,
               accessToken: token,
             } as User;
           }
@@ -113,41 +107,22 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        token.school = user.school;
-        token.surname = user.surname;
-        token.name = user.name;
-        token.fio = getFioByUser({
-          surname: user.surname,
-          name: user.name,
-          patronymic: user.patronymic,
-        });
-        token.patronymic = user.patronymic;
-        token.accessToken = user.accessToken;
+        return {
+          ...user,
+          fio: getFioByUser({
+            surname: user.surname,
+            name: user.name,
+            patronymic: user.patronymic,
+          }),
+        };
       }
       return token;
     },
-    async session({ session, token }) {
-      session.user = {
-        id: token.id,
-        role: token.role,
-        school: token.school,
-        surname: token.surname,
-        name: token.name,
-        fio: getFioByUser({
-          surname: token.surname,
-          name: token.name,
-          patronymic: token.patronymic,
-        }),
-        patronymic: token.patronymic,
-        accessToken: token.accessToken,
-      };
-      session.accessToken = token.accessToken;
-      api.defaults.headers["Authorization"] = `Bearer ${session.accessToken}`;
+    async session({ token }) {
+      api.defaults.headers["Authorization"] = `Bearer ${token.accessToken}`;
       console.log("session!!!");
       console.log(api.defaults.headers["Authorization"]);
-      return session;
+      return token as unknown as Session;
     },
   },
 };
