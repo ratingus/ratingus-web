@@ -19,9 +19,7 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
   const { data: user, status } = useSession();
 
   useEffect(() => {
-    dispatch(
-      actionSetSelectedSchool(parseInt(user?.user.school || "") || null),
-    );
+    dispatch(actionSetSelectedSchool(parseInt(user?.school || "") || null));
   }, [dispatch, user]);
 
   useEffect(() => {

@@ -1,21 +1,19 @@
 "use client";
 import React from "react";
-import { useSession } from "next-auth/react";
 
 import styles from "./ClassSelector.module.scss";
 
 import { classes } from "@/entity/School/mock";
 import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { useUser } from "@/shared/hooks/useUser";
 
 type ClassSelectorProps = {};
 
 const ClassSelector = ({}: ClassSelectorProps) => {
-  const { data: currentUser } = useSession();
+  const { user } = useUser();
   const options = classes.map(({ name }) => ({ label: name, value: name }));
-  const currentClass = classes.find(
-    ({ id }) => id === currentUser?.user.classId,
-  );
+  const currentClass = classes.find(({ id }) => id === user.classId);
 
   return (
     <div>

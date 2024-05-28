@@ -29,9 +29,10 @@ import SettingsIcon from "@/shared/icons/settings.svg";
 
 const Header = () => {
   const { data: session, status } = useSession();
+  console.log(session);
 
   const buttonsHeader = (): ButtonProps[] => {
-    if (status !== "authenticated" || !session?.user) {
+    if (status !== "authenticated" || !session) {
       return [
         {
           link: LOGIN_PAGE_LINK,
@@ -39,7 +40,7 @@ const Header = () => {
         },
       ];
     }
-    if (session.user.role === "GUEST") {
+    if (session.role === "GUEST") {
       return [
         {
           link: PROFILE_PAGE_LINK,
@@ -47,7 +48,7 @@ const Header = () => {
         },
       ];
     }
-    if (session.user.role === "STUDENT") {
+    if (session.role === "STUDENT") {
       return [
         {
           link: ANNOUNCEMENT_PAGE_LINK,
@@ -67,7 +68,7 @@ const Header = () => {
         },
       ];
     }
-    if (session.user.role === "TEACHER") {
+    if (session.role === "TEACHER") {
       return [
         {
           link: ANNOUNCEMENT_PAGE_LINK,
@@ -87,7 +88,7 @@ const Header = () => {
         },
       ];
     }
-    if (session.user.role === "LOCAL_ADMIN") {
+    if (session.role === "LOCAL_ADMIN") {
       return [
         {
           link: ANNOUNCEMENT_PAGE_LINK,

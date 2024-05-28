@@ -2,8 +2,10 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { announcementsApi } from "@/entity/Announcement/query";
 import { announcementSlice } from "@/entity/Announcement/store";
+import { classApi } from "@/entity/School/query";
 import { schoolSlice } from "@/entity/School/store";
 import { profileApi } from "@/entity/User/query/profile.api";
+import { baseApi } from "@/shared/api/rtkq";
 import { modalSlice } from "@/shared/components/Modal/slice";
 
 export const makeStore = () => {
@@ -14,12 +16,10 @@ export const makeStore = () => {
       [schoolSlice.name]: schoolSlice.reducer,
       [announcementsApi.reducerPath]: announcementsApi.reducer,
       [profileApi.reducerPath]: profileApi.reducer,
+      [classApi.reducerPath]: classApi.reducer,
     },
-    // @ts-ignore
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware()
-        .concat(announcementsApi.middleware)
-        .concat(profileApi.middleware),
+      getDefaultMiddleware().concat(baseApi.middleware),
   });
 };
 

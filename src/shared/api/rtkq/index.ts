@@ -1,10 +1,11 @@
 import { BaseQueryFn } from "@reduxjs/toolkit/query";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { AxiosError, AxiosRequestConfig } from "axios";
 import { getSession } from "next-auth/react";
 
 import api from "@/shared/api/axios";
 
-export const axiosBaseQuery =
+const axiosBaseQuery =
   (
     { baseUrl }: { baseUrl: string } = { baseUrl: "" },
   ): BaseQueryFn<{
@@ -42,3 +43,8 @@ export const axiosBaseQuery =
       };
     }
   };
+
+export const baseApi = createApi({
+  baseQuery: axiosBaseQuery(),
+  endpoints: () => ({}),
+});

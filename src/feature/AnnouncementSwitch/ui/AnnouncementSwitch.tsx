@@ -1,6 +1,5 @@
 "use client";
 import React, { Dispatch, SetStateAction } from "react";
-import { useSession } from "next-auth/react";
 
 import {
   actionSetSelectedAnnouncementMode,
@@ -10,6 +9,8 @@ import {
 } from "@/entity/Announcement/store";
 import { TabOption, Tabs } from "@/shared/components/Tabs/Tabs";
 import { useAppDispatch, useAppSelector } from "@/shared/hooks/rtk";
+import { useRole } from "@/shared/hooks/useRole";
+import { useUser } from "@/shared/hooks/useUser";
 
 type AnnouncementSwitchProps = {
   isLoading?: boolean;
@@ -17,19 +18,35 @@ type AnnouncementSwitchProps = {
   setClassId: Dispatch<SetStateAction<number | undefined>>;
 };
 
-// TODO: Проверка роли для выдачи options
 const AnnouncementSwitch = ({
   isLoading,
   setClassId,
 }: AnnouncementSwitchProps) => {
   const dispatch = useAppDispatch();
   const selectedOption = useAppSelector(selectAnnouncementMode);
-  const { data: user } = useSession();
+  const { user } = useUser();
+  const role = useRole();
+  const options = optionsArray.filter((option) => {
+    if (role !== "STUDENT" && option.value === "class") {
+      return false;
+    }
+    if (
+      role !== "TEACHER" &&
+      role !== "LOCAL_ADMIN" &&
+      option.value === "add"
+    ) {
+      return true;
+    }
+    if (role === "unauthenticated" || role === "loading") {
+      return false;
+    }
+    return true;
+  });
 
   const handleChange = (value: TabOption<OptionType>) => {
     dispatch(actionSetSelectedAnnouncementMode(value));
     if (value.value === "class") {
-      setClassId(user?.user?.classId);
+      setClassId(user.classId);
     } else if (value.value === "all") {
       setClassId(undefined);
     }
@@ -43,7 +60,7 @@ const AnnouncementSwitch = ({
       sizeVariant="big"
       variant="secondary"
       defaultOption={selectedOption}
-      options={optionsArray}
+      options={options}
     />
   );
 };

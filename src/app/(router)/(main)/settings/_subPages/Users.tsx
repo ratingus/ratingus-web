@@ -7,7 +7,6 @@ import styles from "./Users.module.scss";
 
 import MiniSchoolCardRole from "@/entity/School/ui/MiniSchoolCardRole";
 import { getFioByUser, getUserBirthdate } from "@/entity/User/helpers";
-import { UserRole } from "@/entity/User/model";
 import Avatar from "@/entity/User/ui/Avatar";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
@@ -15,7 +14,7 @@ import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 const Users = () => {
-  const users: UserRole[] = [
+  const users = [
     // @ts-ignore
     {
       id: 1,
@@ -81,7 +80,7 @@ const Users = () => {
     },
   ];
 
-  const [chosenUser, setChosenUser] = useState<UserRole | undefined | null>();
+  const [chosenUser, setChosenUser] = useState<any | undefined | null>();
 
   const handleChooseUser = (userId: number) => {
     setChosenUser(users.find(({ id }) => id === userId));
@@ -110,7 +109,7 @@ const Users = () => {
     <div className={styles.wrapper}>
       <div className={styles.listWrapper}>
         <ul className={styles.list}>
-          {users.map(({ id, login, name, surname, patronymic, birthdate }) => (
+          {users.map(({ id, login, birthdate, ...user }) => (
             <li key={id} className={styles.userWrapper}>
               <Button
                 variant="ghost"
@@ -120,9 +119,7 @@ const Users = () => {
                 <Avatar avatarClassName={styles.avatar} size={64} />
                 <div className={styles.userDetails}>
                   <Typography variant="body">{login}</Typography>
-                  <Typography variant="body">
-                    {getFioByUser({ name, surname, patronymic })}
-                  </Typography>
+                  <Typography variant="body">{getFioByUser(user)}</Typography>
                   <Typography variant="small" color="textHelper">
                     {getUserBirthdate(birthdate)}
                   </Typography>
@@ -188,7 +185,8 @@ const Users = () => {
                       form="addUser"
                       name="role"
                       variant="dark"
-                      onChange={(value) => setRole(value.value)}
+                      // @ts-ignore
+                      onChange={({ value }) => setRole(value)}
                       // @ts-ignore
                       defaultValue={{ value: "student", label: "Ученик" }}
                       options={[

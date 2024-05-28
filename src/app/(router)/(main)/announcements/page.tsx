@@ -20,7 +20,6 @@ export default function Announcements() {
     { classId },
     { refetchOnMountOrArgChange: true },
   );
-  console.log(announcements);
 
   return (
     <PageContainer isPanel className={styles.base}>
@@ -35,9 +34,9 @@ export default function Announcements() {
           announcements.map((announcement) => (
             <AnnouncementCard
               key={
-                announcement.authorFio +
-                announcement.title +
-                getDateTime(announcement.date)
+                announcement.creator.fio +
+                announcement.name +
+                getDateTime(announcement.createDate)
               }
               {...announcement}
             />

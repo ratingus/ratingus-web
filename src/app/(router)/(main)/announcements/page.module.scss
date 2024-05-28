@@ -10,7 +10,7 @@
 .announcements {
   display: flex;
   flex-direction: column;
-  padding: 20px 0 0;
+  padding: 20px 8px 0 0;
   height: calc(100% - 60px  - 10px - 12px * 2);
   gap: 20px;
   overflow-y: auto;

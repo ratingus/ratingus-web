@@ -160,38 +160,29 @@ export default function Calendar() {
                           { id: idLesson, name: lessonName, teachers },
                           indexLesson,
                         ) =>
-                          teachers?.map(
-                            ({ id, name, surname, patronymic }, index) => (
-                              <Draggable
-                                key={`${idLesson}_${id}`}
-                                draggableId={`${idLesson}_${id}`}
-                                index={indexLesson * maxTeachers + index}
-                              >
-                                {(provided) => (
-                                  <div
-                                    className={styles.lessonConstructor}
-                                    {...provided.dragHandleProps}
-                                    {...provided.draggableProps}
-                                    ref={provided.innerRef}
-                                  >
-                                    <Typography
-                                      variant="h4"
-                                      color="primaryMain"
-                                    >
-                                      {lessonName}
-                                    </Typography>
-                                    <Typography variant="body">
-                                      {getFioByUser({
-                                        name,
-                                        surname,
-                                        patronymic,
-                                      })}
-                                    </Typography>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ),
-                          ),
+                          teachers?.map(({ id, ...teacher }, index) => (
+                            <Draggable
+                              key={`${idLesson}_${id}`}
+                              draggableId={`${idLesson}_${id}`}
+                              index={indexLesson * maxTeachers + index}
+                            >
+                              {(provided) => (
+                                <div
+                                  className={styles.lessonConstructor}
+                                  {...provided.dragHandleProps}
+                                  {...provided.draggableProps}
+                                  ref={provided.innerRef}
+                                >
+                                  <Typography variant="h4" color="primaryMain">
+                                    {lessonName}
+                                  </Typography>
+                                  <Typography variant="body">
+                                    {getFioByUser(teacher)}
+                                  </Typography>
+                                </div>
+                              )}
+                            </Draggable>
+                          )),
                       )}
                       {!isDragging &&
                         lessonConstructor.map(({ id, name }) => (
@@ -239,11 +230,9 @@ export default function Calendar() {
                   className={cl(styles.listWrapper, styles.smallListWrapper)}
                 >
                   <ul className={styles.list}>
-                    {teachers.map(({ id, name, surname, patronymic }) => (
+                    {teachers.map(({ id, ...teacher }) => (
                       <li key={id} className={styles.lessonConstructor}>
-                        <Button>
-                          {getFioByUser({ name, surname, patronymic })}
-                        </Button>
+                        <Button>{getFioByUser(teacher)}</Button>
                       </li>
                     ))}
                   </ul>
