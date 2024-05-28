@@ -185,7 +185,8 @@ const Users = () => {
                       form="addUser"
                       name="role"
                       variant="dark"
-                      onChange={(value) => setRole(value.value)}
+                      // @ts-ignore
+                      onChange={({ value }) => setRole(value)}
                       // @ts-ignore
                       defaultValue={{ value: "student", label: "Ученик" }}
                       options={[
