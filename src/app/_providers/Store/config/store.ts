@@ -15,6 +15,7 @@ export const makeStore = () => {
       [announcementsApi.reducerPath]: announcementsApi.reducer,
       [profileApi.reducerPath]: profileApi.reducer,
     },
+    // @ts-ignore
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
         .concat(announcementsApi.middleware)

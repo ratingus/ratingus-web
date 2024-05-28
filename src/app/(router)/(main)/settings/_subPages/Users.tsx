@@ -16,6 +16,7 @@ import { Typography } from "@/shared/components/Typography/Typography";
 
 const Users = () => {
   const users: UserRole[] = [
+    // @ts-ignore
     {
       id: 1,
       login: "Логин",
@@ -28,6 +29,7 @@ const Users = () => {
       },
       birthdate: new Date(Date.UTC(2002, 2, 12)),
     },
+    // @ts-ignore
     {
       id: 2,
       login: "Логин",
@@ -40,6 +42,7 @@ const Users = () => {
       },
       birthdate: new Date(Date.UTC(2002, 2, 12)),
     },
+    // @ts-ignore
     {
       id: 3,
       login: "Логин",
@@ -150,6 +153,7 @@ const Users = () => {
                 </Typography>
               </div>
             </div>
+            {/*// @ts-ignore*/}
             <MiniSchoolCardRole {...chosenUser.userRole} />
           </div>
         ) : (
