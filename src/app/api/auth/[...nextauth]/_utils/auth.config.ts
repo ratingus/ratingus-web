@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "process";
 
 import { authService, UserLogin } from "@/entity/Auth";
+import { getFioByUser } from "@/entity/User/helpers";
 import { RoleEnum } from "@/entity/User/model";
 import api, { extractTokenFromSetCookie } from "@/shared/api/axios";
 
@@ -12,11 +13,15 @@ declare module "next-auth" {
   interface User {
     id: string;
     role: RoleEnum;
-    school: string;
     surname: string;
     name: string;
     patronymic: string;
+    fio: string;
     accessToken: string;
+    userRoleId?: number;
+    school?: string;
+    classId?: number;
+    className?: string;
   }
   interface Session {
     user: User;
@@ -28,11 +33,15 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     role: RoleEnum;
-    school: string;
     surname: string;
     name: string;
+    fio: string;
     patronymic: string;
     accessToken: string;
+    userRoleId?: number;
+    school?: string;
+    classId?: number;
+    className?: string;
   }
 }
 
@@ -44,7 +53,7 @@ const providers = [
       login: { label: "Логин", type: "text", placeholder: "Логин" },
       password: { label: "Пароль", type: "password" },
     },
-    authorize: async (credentials, req) => {
+    authorize: async (credentials) => {
       if (!credentials) {
         throw new Error("No credentials provided");
       }
@@ -73,6 +82,11 @@ const providers = [
               school: decodedToken.school,
               surname: decodedToken.surname,
               name: decodedToken.name,
+              fio: getFioByUser({
+                surname: decodedToken.surname,
+                name: decodedToken.name,
+                patronymic: decodedToken.patronymic,
+              }),
               patronymic: decodedToken.patronymic,
               accessToken: token,
             } as User;
@@ -104,6 +118,11 @@ export const authOptions: NextAuthOptions = {
         token.school = user.school;
         token.surname = user.surname;
         token.name = user.name;
+        token.fio = getFioByUser({
+          surname: user.surname,
+          name: user.name,
+          patronymic: user.patronymic,
+        });
         token.patronymic = user.patronymic;
         token.accessToken = user.accessToken;
       }
@@ -116,6 +135,11 @@ export const authOptions: NextAuthOptions = {
         school: token.school,
         surname: token.surname,
         name: token.name,
+        fio: getFioByUser({
+          surname: token.surname,
+          name: token.name,
+          patronymic: token.patronymic,
+        }),
         patronymic: token.patronymic,
         accessToken: token.accessToken,
       };

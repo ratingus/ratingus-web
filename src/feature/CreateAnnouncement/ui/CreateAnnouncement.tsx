@@ -1,9 +1,9 @@
 "use client";
 import React, { FormEvent } from "react";
+import { useSession } from "next-auth/react";
 
 import styles from "./CreateAnnouncement.module.scss";
 
-import { useUser } from "@/entity/User/hooks";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Select } from "@/shared/components/Select/Select";
@@ -28,7 +28,7 @@ const options = [
 ];
 
 const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
-  const { fio } = useUser();
+  const { data: user } = useSession();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     console.log(e);
@@ -46,7 +46,7 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
             От кого:
           </Typography>
           <Typography component="span" color="textPrimary">
-            {fio}
+            {user?.user.fio}
           </Typography>
         </div>
         <div className={styles.for}>

@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 
 import Schools from "./(pieces)/Schools";
 import styles from "./page.module.scss";
@@ -13,13 +12,10 @@ import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 export default function Profile() {
-  const { data } = useSession();
-  const { data: profile, isError, isLoading } = useGetProfileQuery(null);
-  console.log("profile, isError, isLoading: ", profile, isError, isLoading);
-  // if (isError) return redirect("/login");
+  const { data: profile, isLoading } = useGetProfileQuery(null);
   if (!profile || isLoading) return "loading...";
 
-  const { id, login, birthdate, fio, schools } = profile;
+  const { login, birthdate, fio, schools } = profile;
   return (
     <PageContainer isPanel>
       <Image
