@@ -20,12 +20,12 @@ const ChooseSchool = ({ buttonProps, children, school }: ChooseSchoolProps) => {
   const selectedSchool = useAppSelector(selectSelectedSchool);
 
   const handleSelectSchool = () => {
-    dispatch(actionSetSelectedSchool(school));
+    dispatch(actionSetSelectedSchool(school.id));
   };
   return (
     <Button
       {...buttonProps}
-      isActive={school.id === selectedSchool?.id}
+      isActive={school.id === selectedSchool}
       onClick={handleSelectSchool}
     >
       {children}
