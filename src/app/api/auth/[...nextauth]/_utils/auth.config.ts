@@ -1,41 +1,39 @@
 import jwt from "jsonwebtoken";
-import {
-  NextAuthOptions,
-  Session as NextAuthSession,
-  User as NextAuthUser,
-} from "next-auth";
+import { NextAuthOptions, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "process";
 
 import { authService, UserLogin } from "@/entity/Auth";
+import { RoleEnum } from "@/entity/User/model";
 import api, { extractTokenFromSetCookie } from "@/shared/api/axios";
 
-// Расширение типа User
-interface CustomUser extends NextAuthUser {
-  id: string;
-  role: string;
-  school: string;
-  surname: string;
-  name: string;
-  patronymic: string;
-  accessToken: string;
+declare module "next-auth" {
+  interface User {
+    id: string;
+    role: RoleEnum;
+    school: string;
+    surname: string;
+    name: string;
+    patronymic: string;
+    accessToken: string;
+  }
+  interface Session {
+    user: User;
+    accessToken: string;
+  }
 }
 
-// Расширение типа JWT
-interface CustomJWT extends jwt.JwtPayload {
-  id: string;
-  role: string;
-  school: string;
-  surname: string;
-  name: string;
-  patronymic: string;
-  accessToken: string;
-}
-
-// Расширение типа Session
-interface CustomSession extends NextAuthSession {
-  user: CustomUser;
-  accessToken: string;
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    role: RoleEnum;
+    school: string;
+    surname: string;
+    name: string;
+    patronymic: string;
+    accessToken: string;
+  }
 }
 
 const providers = [
@@ -67,7 +65,7 @@ const providers = [
               {
                 algorithms: ["HS512"],
               },
-            ) as CustomJWT;
+            ) as JWT;
 
             return {
               id: decodedToken.id,
@@ -77,7 +75,7 @@ const providers = [
               name: decodedToken.name,
               patronymic: decodedToken.patronymic,
               accessToken: token,
-            } as CustomUser;
+            } as User;
           }
         }
         throw new Error("Token is invalid");
@@ -101,37 +99,31 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        const customUser = user as CustomUser;
-        const customToken = token as CustomJWT;
-        customToken.id = customUser.id;
-        customToken.role = customUser.role;
-        customToken.school = customUser.school;
-        customToken.surname = customUser.surname;
-        customToken.name = customUser.name;
-        customToken.patronymic = customUser.patronymic;
-        customToken.accessToken = customUser.accessToken;
-        return customToken;
+        token.id = user.id;
+        token.role = user.role;
+        token.school = user.school;
+        token.surname = user.surname;
+        token.name = user.name;
+        token.patronymic = user.patronymic;
+        token.accessToken = user.accessToken;
       }
       return token;
     },
     async session({ session, token }) {
-      const customJWT = token as CustomJWT;
-      const customSession = session as CustomSession;
-      customSession.user = {
-        id: customJWT.id,
-        role: customJWT.role,
-        school: customJWT.school,
-        surname: customJWT.surname,
-        name: customJWT.name,
-        patronymic: customJWT.patronymic,
-        accessToken: customJWT.accessToken,
-      } as CustomUser;
-      customSession.accessToken = customJWT.accessToken;
-      api.defaults.headers["Authorization"] =
-        `Bearer ${customSession.accessToken}`;
+      session.user = {
+        id: token.id,
+        role: token.role,
+        school: token.school,
+        surname: token.surname,
+        name: token.name,
+        patronymic: token.patronymic,
+        accessToken: token.accessToken,
+      };
+      session.accessToken = token.accessToken;
+      api.defaults.headers["Authorization"] = `Bearer ${session.accessToken}`;
       console.log("session!!!");
       console.log(api.defaults.headers["Authorization"]);
-      return customSession;
+      return session;
     },
   },
 };
