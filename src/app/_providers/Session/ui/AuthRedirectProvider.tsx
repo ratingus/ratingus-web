@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
+import { actionSetSelectedSchool } from "@/entity/School/store";
+import { useAppDispatch } from "@/shared/hooks/rtk";
+
 type AuthRedirectProviderProps = {
   children: ReactNode;
 };
@@ -12,16 +15,24 @@ type AuthRedirectProviderProps = {
 const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
   const router = useRouter();
   const path = usePathname();
-  const { status } = useSession();
+  const dispatch = useAppDispatch();
+  const { data: user, status } = useSession();
+
+  if (user) {
+    dispatch(actionSetSelectedSchool(parseInt(user.user.school)));
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (
         status === "unauthenticated" &&
-        !(path === "/login" || path === "/registration")
+        !(path === "/login" || path === "/registration" || path === "/")
       ) {
         router.push("/login");
-      } else if (status === "authenticated") {
+      } else if (
+        status === "authenticated" &&
+        (path === "/login" || path === "/registration")
+      ) {
         router.push("/profile");
       }
     }
