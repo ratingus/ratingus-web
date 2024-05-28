@@ -5,3 +5,4 @@ export const SETTINGS_PAGE_LINK = "/settings";
 export const JOURNAL_PAGE_LINK = "/journal";
 export const CALENDAR_PAGE_LINK = "/calendar";
 export const DIARY_PAGE_LINK = "/diary";
+export const LOGIN_PAGE_LINK = "/login";

@@ -1,9 +1,12 @@
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from "react";
 import HeaderIcon from "@icons/header.svg";
 import { motion } from "framer-motion";
-import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+
+import { actionSetSelectedSchool } from "@/entity/School/store";
+import { useAppDispatch } from "@/shared/hooks/rtk";
 
 type AuthRedirectProviderProps = {
   children: ReactNode;
@@ -12,24 +15,33 @@ type AuthRedirectProviderProps = {
 const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
   const router = useRouter();
   const path = usePathname();
-  const [isAuthRedirected, setIsAuthRedirected] = useState<boolean>();
+  const dispatch = useAppDispatch();
+  const { data: user, status } = useSession();
+
+  useEffect(() => {
+    dispatch(
+      actionSetSelectedSchool(parseInt(user?.user.school || "") || null),
+    );
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const isUserLoggedIn = Cookies.get("isLogged") === "true";
-
       if (
-        !isUserLoggedIn &&
+        status === "unauthenticated" &&
         !(path === "/login" || path === "/registration" || path === "/")
       ) {
         router.push("/login");
+      } else if (
+        status === "authenticated" &&
+        (path === "/login" || path === "/registration")
+      ) {
+        router.push("/profile");
       }
-      setIsAuthRedirected(true);
     }
-  }, [router, path]);
+  }, [router, path, status]);
 
   // TODO: вынести в loading.tsx и пока не загрузилось, вызывать лоадер некста, а не вот это вот что это вообще такое
-  if (!isAuthRedirected) {
+  if (status === "loading") {
     return (
       <motion.div
         style={{

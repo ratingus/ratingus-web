@@ -16,6 +16,7 @@ import { Typography } from "@/shared/components/Typography/Typography";
 
 const Users = () => {
   const users: UserRole[] = [
+    // @ts-ignore
     {
       id: 1,
       login: "Логин",
@@ -28,6 +29,7 @@ const Users = () => {
       },
       birthdate: new Date(Date.UTC(2002, 2, 12)),
     },
+    // @ts-ignore
     {
       id: 2,
       login: "Логин",
@@ -40,6 +42,7 @@ const Users = () => {
       },
       birthdate: new Date(Date.UTC(2002, 2, 12)),
     },
+    // @ts-ignore
     {
       id: 3,
       login: "Логин",
@@ -93,7 +96,6 @@ const Users = () => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      console.log(formData);
       console.log(formData.get("name"));
       console.log(formData.get("surname"));
       console.log(formData.get("patronymic"));
@@ -151,6 +153,7 @@ const Users = () => {
                 </Typography>
               </div>
             </div>
+            {/*// @ts-ignore*/}
             <MiniSchoolCardRole {...chosenUser.userRole} />
           </div>
         ) : (

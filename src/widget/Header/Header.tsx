@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 import styles from "./Header.module.scss";
 
@@ -9,9 +12,11 @@ import {
   CALENDAR_PAGE_LINK,
   DIARY_PAGE_LINK,
   JOURNAL_PAGE_LINK,
+  LOGIN_PAGE_LINK,
   PROFILE_PAGE_LINK,
   SETTINGS_PAGE_LINK,
 } from "@/shared/api/links";
+import Button, { ButtonProps } from "@/shared/components/Button/Button";
 import { ButtonGroup } from "@/shared/components/ButtonGroup/ButtonGroup";
 import AdminPanelIcon from "@/shared/icons/admin-panel.svg";
 import AnnouncementIcon from "@/shared/icons/announcement.svg";
@@ -23,44 +28,112 @@ import JournalIcon from "@/shared/icons/journal.svg";
 import SettingsIcon from "@/shared/icons/settings.svg";
 
 const Header = () => {
+  const { data: session, status } = useSession();
+
+  const buttonsHeader = (): ButtonProps[] => {
+    if (status !== "authenticated" || !session?.user) {
+      return [
+        {
+          link: LOGIN_PAGE_LINK,
+          children: <Button variant="important">Войти</Button>,
+        },
+      ];
+    }
+    if (session.user.role === "GUEST") {
+      return [
+        {
+          link: PROFILE_PAGE_LINK,
+          children: <EmptyProfileIcon />,
+        },
+      ];
+    }
+    if (session.user.role === "STUDENT") {
+      return [
+        {
+          link: ANNOUNCEMENT_PAGE_LINK,
+          children: <AnnouncementIcon />,
+        },
+        {
+          link: DIARY_PAGE_LINK,
+          children: <DiaryIcon />,
+        },
+        {
+          link: CALENDAR_PAGE_LINK,
+          children: <CalendarIcon />,
+        },
+        {
+          link: PROFILE_PAGE_LINK,
+          children: <EmptyProfileIcon />,
+        },
+      ];
+    }
+    if (session.user.role === "TEACHER") {
+      return [
+        {
+          link: ANNOUNCEMENT_PAGE_LINK,
+          children: <AnnouncementIcon />,
+        },
+        {
+          link: CALENDAR_PAGE_LINK,
+          children: <CalendarIcon />,
+        },
+        {
+          link: JOURNAL_PAGE_LINK,
+          children: <JournalIcon />,
+        },
+        {
+          link: PROFILE_PAGE_LINK,
+          children: <EmptyProfileIcon />,
+        },
+      ];
+    }
+    if (session.user.role === "LOCAL_ADMIN") {
+      return [
+        {
+          link: ANNOUNCEMENT_PAGE_LINK,
+          children: <AnnouncementIcon />,
+        },
+        {
+          link: DIARY_PAGE_LINK,
+          children: <DiaryIcon />,
+        },
+        {
+          link: CALENDAR_PAGE_LINK,
+          children: <CalendarIcon />,
+        },
+        {
+          link: JOURNAL_PAGE_LINK,
+          children: <JournalIcon />,
+        },
+        {
+          link: SETTINGS_PAGE_LINK,
+          children: <SettingsIcon />,
+        },
+        {
+          link: ADMIN_PANEL_PAGE_LINK,
+          children: <AdminPanelIcon />,
+        },
+        {
+          link: PROFILE_PAGE_LINK,
+          children: <EmptyProfileIcon />,
+        },
+      ];
+    }
+    return [
+      {
+        link: LOGIN_PAGE_LINK,
+        children: <Button variant="important">Войти</Button>,
+      },
+    ];
+  };
+
   return (
     <header className={styles.base}>
       <Link href="/" className={styles.iconWrapper}>
         <HeaderIcon className={styles.icon} />
       </Link>
       <nav className={styles.nav}>
-        <ButtonGroup
-          buttons={[
-            {
-              link: ANNOUNCEMENT_PAGE_LINK,
-              children: <AnnouncementIcon />,
-            },
-            {
-              link: DIARY_PAGE_LINK,
-              children: <DiaryIcon />,
-            },
-            {
-              link: CALENDAR_PAGE_LINK,
-              children: <CalendarIcon />,
-            },
-            {
-              link: JOURNAL_PAGE_LINK,
-              children: <JournalIcon />,
-            },
-            {
-              link: SETTINGS_PAGE_LINK,
-              children: <SettingsIcon />,
-            },
-            {
-              link: ADMIN_PANEL_PAGE_LINK,
-              children: <AdminPanelIcon />,
-            },
-            {
-              link: PROFILE_PAGE_LINK,
-              children: <EmptyProfileIcon />,
-            },
-          ]}
-        />
+        <ButtonGroup buttons={buttonsHeader()} />
       </nav>
     </header>
   );

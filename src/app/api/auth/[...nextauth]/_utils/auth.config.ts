@@ -1,38 +1,101 @@
-import { NextAuthOptions } from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import jwt from "jsonwebtoken";
+import { NextAuthOptions, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "process";
 
-import { Provider } from "next-auth/providers/index";
-
 import { authService, UserLogin } from "@/entity/Auth";
+import { getFioByUser } from "@/entity/User/helpers";
+import { RoleEnum } from "@/entity/User/model";
+import api, { extractTokenFromSetCookie } from "@/shared/api/axios";
 
-const providers: Provider[] = [
-  Credentials({
+declare module "next-auth" {
+  interface User {
+    id: string;
+    role: RoleEnum;
+    surname: string;
+    name: string;
+    patronymic: string;
+    fio: string;
+    accessToken: string;
+    userRoleId?: number;
+    school?: string;
+    classId?: number;
+    className?: string;
+  }
+  interface Session {
+    user: User;
+    accessToken: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    role: RoleEnum;
+    surname: string;
+    name: string;
+    fio: string;
+    patronymic: string;
+    accessToken: string;
+    userRoleId?: number;
+    school?: string;
+    classId?: number;
+    className?: string;
+  }
+}
+
+const providers = [
+  CredentialsProvider({
+    type: "credentials",
     name: "Login and password",
     credentials: {
       login: { label: "Логин", type: "text", placeholder: "Логин" },
       password: { label: "Пароль", type: "password" },
     },
-    // Здесь отправляем запрос на сервер для авторизации пользователя по логину и паролю и возвращаем jwt из которого потом будем парсить данные пользователя
-    async authorize(credentials) {
-      try {
-        const { jwt: token } = await authService.login(
-          credentials as UserLogin,
-        );
-        console.log("TOKENING!");
-        console.log(token);
+    authorize: async (credentials) => {
+      if (!credentials) {
+        throw new Error("No credentials provided");
+      }
 
-        if (token) {
-          return {
-            id: "0",
-            name: "John Doe",
-            email: "test@test.ru",
-          };
+      try {
+        const response = await authService.login(credentials as UserLogin);
+
+        const setCookie = response.headers["set-cookie"];
+        if (setCookie) {
+          const token = extractTokenFromSetCookie(setCookie);
+          console.log("Extracted token:", token);
+
+          if (token) {
+            api.defaults.headers["Authorization"] = `Bearer ${token}`;
+            const decodedToken = jwt.verify(
+              token as string,
+              Buffer.from(env.NEXTAUTH_SECRET || "", "base64"),
+              {
+                algorithms: ["HS512"],
+              },
+            ) as JWT;
+
+            return {
+              id: decodedToken.id,
+              role: decodedToken.role,
+              school: decodedToken.school,
+              surname: decodedToken.surname,
+              name: decodedToken.name,
+              fio: getFioByUser({
+                surname: decodedToken.surname,
+                name: decodedToken.name,
+                patronymic: decodedToken.patronymic,
+              }),
+              patronymic: decodedToken.patronymic,
+              accessToken: token,
+            } as User;
+          }
         }
-        throw new Error("token invalid");
+        throw new Error("Token is invalid");
       } catch (error) {
         console.error("Failed to login:", error);
-        throw new Error("something went wrong");
+        throw new Error("Something went wrong during login");
       }
     },
   }),
@@ -48,39 +111,43 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    // @ts-ignore
-    async signIn({ user, account }) {
-      console.log(user);
-      console.log(account);
-      if (account && user) {
-        return true;
-      } else {
-        // TODO : Add unauthorized page
-        return "/unauthorized";
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+        token.school = user.school;
+        token.surname = user.surname;
+        token.name = user.name;
+        token.fio = getFioByUser({
+          surname: user.surname,
+          name: user.name,
+          patronymic: user.patronymic,
+        });
+        token.patronymic = user.patronymic;
+        token.accessToken = user.accessToken;
       }
-    },
-    // @ts-ignore
-    async redirect({ url, baseUrl }) {
-      return url.startsWith(baseUrl) ? url : baseUrl;
-    },
-    // @ts-ignore
-    async session({ session, token }) {
-      // if (token) {
-      //     session.user = token.user;
-      //     session.error = token.error;
-      //     session.accessToken = token.accessToken;
-      // }
-      return session;
-    },
-    // @ts-ignore
-    async jwt({ token, user, account }) {
-      if (account && user) {
-        token.accessToken = account.accessToken;
-        token.user = user;
-        return token;
-      }
-
       return token;
+    },
+    async session({ session, token }) {
+      session.user = {
+        id: token.id,
+        role: token.role,
+        school: token.school,
+        surname: token.surname,
+        name: token.name,
+        fio: getFioByUser({
+          surname: token.surname,
+          name: token.name,
+          patronymic: token.patronymic,
+        }),
+        patronymic: token.patronymic,
+        accessToken: token.accessToken,
+      };
+      session.accessToken = token.accessToken;
+      api.defaults.headers["Authorization"] = `Bearer ${session.accessToken}`;
+      console.log("session!!!");
+      console.log(api.defaults.headers["Authorization"]);
+      return session;
     },
   },
 };

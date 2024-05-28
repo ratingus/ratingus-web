@@ -1,7 +1,8 @@
 "use client";
-import Cookies from "js-cookie";
+import { FormEventHandler, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 import styles from "./page.module.scss";
 
@@ -12,25 +13,35 @@ import { Typography } from "@/shared/components/Typography/Typography";
 export default function Login() {
   const router = useRouter();
 
-  const handleLogin = () => {
-    Cookies.set("isLogged", "true");
-    router.push("/");
+  const form = useRef(null);
+  const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    if (form.current) {
+      const formData = new FormData(form.current);
+      await signIn("credentials", {
+        login: formData.get("login"),
+        password: formData.get("pass"),
+        redirect: true,
+        callbackUrl: "/profile",
+      });
+    }
   };
 
   return (
     <div className={styles.main}>
       <Typography variant="h3">Вход в систему</Typography>
-      <div className={styles.form}>
-        <Input placeholder="Логин" />
-        <Input placeholder="Пароль" type="password" />
-        <Button
-          className={styles.button}
-          variant="important"
-          onClick={handleLogin}
-        >
+      <form
+        ref={form}
+        id="login"
+        className={styles.form}
+        onSubmit={handleLogin}
+      >
+        <Input form="login" name="login" placeholder="Логин" />
+        <Input form="login" name="pass" placeholder="Пароль" type="password" />
+        <Button form="login" className={styles.button} variant="important">
           Вход
         </Button>
-      </div>
+      </form>
       <Link className={styles.button} href={"/registration"} passHref>
         <Button className={styles.button} variant="secondary">
           Регистрация
