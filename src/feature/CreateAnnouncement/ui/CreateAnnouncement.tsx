@@ -29,6 +29,7 @@ const options = [
 
 const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
   const { user } = useUser();
+  console.log(user);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     console.log(e);

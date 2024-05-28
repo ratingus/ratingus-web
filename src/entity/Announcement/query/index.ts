@@ -1,6 +1,7 @@
 import { ANNOUNCEMENTS_CONTEXT_PATH } from "../constants";
-import { Announcement } from "../model";
+import { Announcement, BaseAnnouncement } from "../model";
 
+import { getFioByUser } from "@/entity/User/helpers";
 import { baseApi } from "@/shared/api/rtkq";
 
 export const announcementsApi = baseApi.injectEndpoints({
@@ -11,10 +12,14 @@ export const announcementsApi = baseApi.injectEndpoints({
         params,
         method: "get",
       }),
-      transformResponse(data: Announcement[]): Announcement[] {
-        console.log(data);
-        return data;
-      },
+      transformResponse: (data: BaseAnnouncement[]): Announcement[] =>
+        data.map((announcement) => ({
+          ...announcement,
+          creator: {
+            ...announcement.creator,
+            fio: getFioByUser(announcement.creator),
+          },
+        })),
     }),
   }),
 });

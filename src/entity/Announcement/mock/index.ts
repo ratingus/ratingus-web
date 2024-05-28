@@ -2,7 +2,7 @@ import { http, HttpResponse, HttpResponseResolver } from "msw";
 
 import { ANNOUNCEMENTS_PATH } from "../constants";
 
-import { Announcement } from "@/entity/Announcement/model";
+import { BaseAnnouncement } from "@/entity/Announcement/model";
 
 const classesMapping: { [key: number]: string } = {
   0: "Класс 9а",
@@ -67,7 +67,7 @@ const announcements = [
 const getAnnouncementsResolver: HttpResponseResolver<
   never,
   never,
-  Announcement[] | { error: string }
+  BaseAnnouncement[] | { error: string }
 > = async ({ request }) => {
   const url = new URL(request.url);
   const classId = url.searchParams.get("classId");

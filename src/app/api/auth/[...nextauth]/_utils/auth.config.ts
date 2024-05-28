@@ -77,11 +77,7 @@ const providers = [
 
             return {
               ...decodedToken,
-              fio: getFioByUser({
-                surname: decodedToken.surname,
-                name: decodedToken.name,
-                patronymic: decodedToken.patronymic,
-              }),
+              fio: getFioByUser(decodedToken),
               accessToken: token,
             } as User;
           }
@@ -105,23 +101,20 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, profile, account, session }) {
       if (user) {
         return {
           ...user,
-          fio: getFioByUser({
-            surname: user.surname,
-            name: user.name,
-            patronymic: user.patronymic,
-          }),
+          fio: getFioByUser(user),
         };
       }
-      return token;
+      return {
+        ...token,
+        fio: getFioByUser(token),
+      };
     },
     async session({ token }) {
       api.defaults.headers["Authorization"] = `Bearer ${token.accessToken}`;
-      console.log("session!!!");
-      console.log(api.defaults.headers["Authorization"]);
       return token as unknown as Session;
     },
   },
