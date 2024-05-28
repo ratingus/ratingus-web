@@ -29,9 +29,10 @@ import SettingsIcon from "@/shared/icons/settings.svg";
 
 const Header = () => {
   const { data: session, status } = useSession();
+  console.log(session);
 
   const buttonsHeader = (): ButtonProps[] => {
-    if (status !== "authenticated" || !session?.user) {
+    if (status !== "authenticated" || !session) {
       return [
         {
           link: LOGIN_PAGE_LINK,
