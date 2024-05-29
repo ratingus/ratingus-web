@@ -1,5 +1,5 @@
 import { LESSONS_CONTEXT_PATH } from "../constants";
-import { DayLesson, Lesson } from "../model";
+import { DayLesson, Lesson, ScheduleDay } from "../model";
 
 import { baseApi } from "@/shared/api/rtkq";
 
@@ -14,6 +14,12 @@ export const lessonsApi = baseApi.injectEndpoints({
     getLessonById: build.query<Lesson, { id: number }>({
       query: (params) => ({ url: LESSONS_CONTEXT_PATH, params, method: "get" }),
     }),
+
+    getCalendar: build.query<ScheduleDay[], { classId: number }>({
+      query: ({ classId }) => ({ url: `/schedule/${classId}`, method: "get" }),
+      transformResponse: (data: { dayLessons: ScheduleDay[] }): ScheduleDay[] =>
+        data.dayLessons,
+    }),
   }),
 });
 
@@ -21,4 +27,5 @@ export const {
   useGetLessonsByWeekQuery,
   useGetLessonsByDayQuery,
   useGetLessonByIdQuery,
+  useGetCalendarQuery,
 } = lessonsApi;

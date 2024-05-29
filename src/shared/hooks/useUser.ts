@@ -10,7 +10,7 @@ export const useUser = () => {
   }
   const user = data as Session;
   return {
-    user,
+    ...user,
     status,
   };
 };

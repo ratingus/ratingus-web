@@ -8,6 +8,20 @@ import { capitalize } from "@/shared/helpers/strings";
 dayjs.locale("ru");
 dayjs.extend(isoWeek);
 
+export function getDayOfWeek(dayOfWeek: number): string {
+  const daysOfWeek = [
+    "Воскресенье",
+    "Понедельник",
+    "Вторник",
+    "Среда",
+    "Четверг",
+    "Пятница",
+    "Суббота",
+  ];
+
+  return daysOfWeek[dayOfWeek];
+}
+
 export const getDateString = (date: Date, format: string) => {
   return dayjs(date).format(format);
 };

@@ -13,6 +13,7 @@
 
 .calendar {
   overflow: auto;
+  min-width: calc(100% - 12px * 2);
   height: calc(100% - 12px * 2);
   display: flex;
   gap: 10px;

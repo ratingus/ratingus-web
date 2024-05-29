@@ -45,7 +45,7 @@ type SelectProps = Omit<BaseSelectProps, "onChange"> & {
   onChange?: (value: SelectOption) => void;
 };
 
-export const Select = forwardRef<SelectProps, SelectProps & BaseSelectProps>(
+export const Select = forwardRef<SelectProps, SelectProps>(
   (
     { variant, className, options, defaultValue, multiple, onChange, ...props },
     ref,

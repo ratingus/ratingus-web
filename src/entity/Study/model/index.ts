@@ -4,5 +4,5 @@ export type Study = {
   studyId: number;
   timetableNumber: number;
   subject: string;
-  teacher: Teacher;
+  teacher: Teacher | null;
 };
