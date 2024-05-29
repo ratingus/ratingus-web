@@ -87,17 +87,17 @@
 //
 // export default [getAnnouncementsHandler];
 
-import { DayLesson, DayLessonDetailed } from "@/entity/Lesson/model";
+import { DayLessonDetailed } from "@/entity/Lesson/model";
 
-export const generateDayLesson = (day: number): DayLesson => {
-  const dayLesson = generateDayLessonDetailed(day);
-  return {
-    dateTime: dayLesson.dateTime,
-    studies: dayLesson.studies.map(
-      ({ homework, note, mark, attendance, ...lesson }) => lesson,
-    ),
-  };
-};
+// export const generateDayLesson = (day: number): DayLesson => {
+//   const dayLesson = generateDayLessonDetailed(day);
+//   return {
+//     dateTime: dayLesson.dateTime,
+//     studies: dayLesson.studies.map(
+//       ({ homework, note, mark, attendance, ...lesson }) => lesson,
+//     ),
+//   };
+// };
 
 export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
   dateTime: new Date(Date.UTC(2024, 3, 29 + day - 1)),
@@ -106,6 +106,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 1 + 8 * day,
       studyId: 0,
       subject: "Математика",
+      // @ts-ignore
       teacher: {
         id: 1,
         name: "Иван",
@@ -122,6 +123,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 2 + 8 * day,
       studyId: 1,
       subject: "Физика",
+      // @ts-ignore
       teacher: {
         id: 2,
         name: "Петр",
@@ -137,6 +139,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 3 + 8 * day,
       studyId: 2,
       subject: "Химия",
+      // @ts-ignore
       teacher: {
         id: 3,
         name: "Сидор",
@@ -152,6 +155,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 4 + 8 * day,
       studyId: 2,
       subject: "Химия",
+      // @ts-ignore
       teacher: {
         id: 3,
         name: "Сидор",
@@ -165,6 +169,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 5 + 8 * day,
       studyId: 2,
       subject: "Химия",
+      // @ts-ignore
       teacher: {
         id: 3,
         name: "Сидор",
@@ -178,6 +183,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 6 + 8 * day,
       studyId: 2,
       subject: "Химия",
+      // @ts-ignore
       teacher: {
         id: 3,
         name: "Сидор",
@@ -191,6 +197,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 7 + 8 * day,
       studyId: 2,
       subject: "Химия",
+      // @ts-ignore
       teacher: {
         id: 3,
         name: "Сидор",
@@ -204,6 +211,7 @@ export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
       id: 8 + 8 * day,
       studyId: 2,
       subject: "Химия",
+      // @ts-ignore
       teacher: {
         id: 3,
         name: "Сидор",

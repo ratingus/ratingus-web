@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 import { Lesson } from "@/entity/Lesson/model";
-import LessonCard from "@/entity/Lesson/ui/LessonCard";
+import { LessonCard } from "@/entity/Lesson/ui/LessonCard";
 import Button from "@/shared/components/Button/Button";
 
 type DiaryLessonCardProps = Lesson & { bottomSlot?: ReactNode };

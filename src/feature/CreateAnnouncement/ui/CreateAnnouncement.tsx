@@ -15,7 +15,7 @@ import { useUser } from "@/shared/hooks/useUser";
 type CreateAnnouncementProps = {};
 
 const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
-  const { user } = useUser();
+  const { fio } = useUser();
   const [createPost] = usePostAnnouncementMutation();
   const { data: classes } = useGetClassesQuery(null);
   const form = useRef(null);
@@ -63,7 +63,7 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
             От кого:
           </Typography>
           <Typography component="span" color="textPrimary">
-            {user.fio}
+            {fio}
           </Typography>
         </div>
         <div className={styles.for}>

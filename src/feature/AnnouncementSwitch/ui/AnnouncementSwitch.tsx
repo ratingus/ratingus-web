@@ -24,7 +24,7 @@ const AnnouncementSwitch = ({
 }: AnnouncementSwitchProps) => {
   const dispatch = useAppDispatch();
   const selectedOption = useAppSelector(selectAnnouncementMode);
-  const { user } = useUser();
+  const { classId } = useUser();
   const role = useRole();
   const options = optionsArray.filter((option) => {
     if (role !== "STUDENT" && option.value === "class") {
@@ -35,7 +35,7 @@ const AnnouncementSwitch = ({
       role !== "LOCAL_ADMIN" &&
       option.value === "add"
     ) {
-      return true;
+      return false;
     }
     if (role === "unauthenticated" || role === "loading") {
       return false;
@@ -46,7 +46,7 @@ const AnnouncementSwitch = ({
   const handleChange = (value: TabOption<OptionType>) => {
     dispatch(actionSetSelectedAnnouncementMode(value));
     if (value.value === "class") {
-      setClassId(user.classId);
+      setClassId(classId);
     } else if (value.value === "all") {
       setClassId(undefined);
     }

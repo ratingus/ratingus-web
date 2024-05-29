@@ -34,6 +34,7 @@ const DayLessonCard = ({ dateTime, studies }: DayLessonCardProps) => {
       </header>
       <div className={styles.lessons}>
         {studies.map((lesson) => (
+          //   @ts-ignore
           <DiaryLessonCard key={lesson.id} {...lesson} />
         ))}
       </div>

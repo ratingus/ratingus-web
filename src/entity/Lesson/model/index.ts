@@ -1,15 +1,26 @@
 import { Attendance } from "@/entity/AttendanceMark/model";
-import { Study } from "@/entity/Study/model";
+import { UserDetails } from "@/entity/User/model";
 
 export type DayLesson = {
+  dayOfWeek: number;
   dateTime: Date;
   studies: Lesson[];
 };
 
-export type Lesson = Study & {
-  id: number;
+export type Lesson = {
+  scheduleId: number;
+  lessonId: number;
+  studentLessonId: number;
+  teacherSubjectId: number;
+  subject: string;
+  teacher: UserDetails;
+  timetableNumber: number;
   mark?: string;
   attendance?: Attendance;
+  homework: string;
+  note: string;
+  startTime: Date;
+  endTime: Date;
 };
 
 export type DayLessonDetailed = {

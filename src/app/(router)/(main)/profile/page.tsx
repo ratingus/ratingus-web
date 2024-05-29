@@ -5,7 +5,7 @@ import Schools from "./(pieces)/Schools";
 import styles from "./page.module.scss";
 
 import { getUserBirthdate } from "@/entity/User/helpers";
-import { useGetProfileQuery } from "@/entity/User/query/profile.api";
+import { useGetProfileQuery } from "@/entity/User/query";
 import Avatar from "@/entity/User/ui/Avatar";
 import Button from "@/shared/components/Button/Button";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";

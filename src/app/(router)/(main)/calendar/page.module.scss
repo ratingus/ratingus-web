@@ -14,6 +14,7 @@
 .calendar {
   overflow: auto;
   height: calc(100% - 12px * 2);
+  width: 100%;
   display: flex;
   gap: 10px;
 }
@@ -23,6 +24,7 @@
   padding: 10px;
 }
 .dayLesson {
+  min-width: 300px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -58,6 +60,13 @@
   }
 }
 
+.isActive {
+  & button {
+    border: 1px solid $primary-main;
+    width: 100%;
+  }
+}
+
 
 .listWrapper {
   height: calc(100% - 12px);
@@ -80,8 +89,4 @@
   flex-direction: column;
   gap: 10px;
   overflow: auto;
-}
-
-.addSubjectButton {
-  margin: 10px 0;
 }
