@@ -40,3 +40,16 @@ export type TeacherSubjects = {
 };
 
 export type TeacherWithSubject = Teacher & { subjectTeacherId: number };
+
+export type AddTeacherSubjectInCalendarDto =
+  DeleteTeacherSubjectInCalendarDto & {
+    studyWithTeacherId: number;
+  };
+export type ChangeTeacherSubjectsInCalendarDto = {
+  from: DeleteTeacherSubjectInCalendarDto;
+  to: DeleteTeacherSubjectInCalendarDto;
+};
+export type DeleteTeacherSubjectInCalendarDto = {
+  lessonNumber: number;
+  dayOfWeek: number;
+};

@@ -15,7 +15,10 @@ import styles from "@/app/(router)/(main)/calendar/page.module.scss";
 import { ScheduleCard } from "@/entity/Lesson/ui/LessonCard";
 import { ScheduleDay, TeacherSubjects } from "@/entity/Schedule/model";
 import {
+  useAddTeacherSubjectInCalendarMutation,
   useAddTeacherSubjectMutation,
+  useChangeTeacherSubjectInCalendarMutation,
+  useDeleteTeacherSubjectInCalendarMutation,
   useGetTeachersQuery,
   useGetTeacherSubjectsQuery,
 } from "@/entity/Schedule/query";
@@ -27,14 +30,21 @@ import { getDayOfWeek } from "@/shared/helpers/date";
 type DragDropCalendarProps = {
   isEditing: boolean;
   lessonsByWeek: ScheduleDay[];
+  classId: number;
 };
 
 export const DragDropCalendar = ({
   isEditing,
-  lessonsByWeek,
+  lessonsByWeek: calendar,
+  classId,
 }: DragDropCalendarProps) => {
+  const [addTeacherSubjectCalendar] = useAddTeacherSubjectInCalendarMutation();
+  const [changeTeacherSubjectsCalendar] =
+    useChangeTeacherSubjectInCalendarMutation();
+  const [deleteTeacherSubjectCalendar] =
+    useDeleteTeacherSubjectInCalendarMutation();
+
   const { data: teachers } = useGetTeachersQuery(null);
-  console.log(teachers);
 
   const { data: teacherSubjects } = useGetTeacherSubjectsQuery(null);
   const [addTeacherSubject] = useAddTeacherSubjectMutation();
@@ -65,8 +75,32 @@ export const DragDropCalendar = ({
     setChosenSubject(newChosenSubject);
   };
 
-  const handleDragEnd: OnDragEndResponder = (result: DropResult) => {
-    console.dir(result);
+  const handleDragEnd: OnDragEndResponder = async (result: DropResult) => {
+    if (!result?.destination) return;
+
+    const sourceId = parseInt(result.source.droppableId);
+    const sourceIndex = result.source.index;
+    const destinationId = parseInt(result.destination.droppableId);
+    const destinationIndex = result.destination.index;
+
+    if (destinationIndex === 0) {
+      await changeTeacherSubjectsCalendar({
+        data: {
+          from: { lessonNumber: sourceIndex, dayOfWeek: sourceId },
+          to: { lessonNumber: destinationIndex, dayOfWeek: destinationId },
+        },
+        classId,
+      });
+    } else {
+      await changeTeacherSubjectsCalendar({
+        data: {
+          from: { lessonNumber: sourceIndex, dayOfWeek: sourceId },
+          to: { lessonNumber: destinationIndex, dayOfWeek: destinationId },
+        },
+        classId,
+      });
+    }
+
     setIsDragging(false);
   };
   const handleDragStart: OnBeforeDragStartResponder = (start: DragStart) => {
@@ -193,9 +227,9 @@ export const DragDropCalendar = ({
         </>
       )}
       <div className={cl(styles.calendar, styles.card)}>
-        {lessonsByWeek.map((dayLesson, index) => (
+        {calendar.map((dayLesson, index) => (
           <Droppable
-            droppableId={`droppable_${index + 1}`}
+            droppableId={`${dayLesson.dayOfWeek}`}
             key={dayLesson.dayOfWeek}
           >
             {(provided) => (
@@ -213,6 +247,7 @@ export const DragDropCalendar = ({
                       key={lesson.timetableNumber}
                       draggableId={`${dayLesson.dayOfWeek}_${lesson.timetableNumber}`}
                       index={lesson.timetableNumber}
+                      isDragDisabled={!isDragging && lesson.subject === "Окно"}
                     >
                       {(provided) => (
                         <div

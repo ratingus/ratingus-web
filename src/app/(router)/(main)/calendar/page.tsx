@@ -27,7 +27,15 @@ export default function Calendar() {
   const role = useRole();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const { data: calendar } = useGetCalendarQuery({ classId });
+  const { data: calendar } = useGetCalendarQuery(
+    {
+      classId,
+      isAllDay: isEditing,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  );
 
   if (!calendar) return <div>loading...</div>;
 
@@ -48,7 +56,11 @@ export default function Calendar() {
       </div>
       <div className={styles.calendarWrapper}>
         {isEditing ? (
-          <DragDropCalendar isEditing={isEditing} lessonsByWeek={calendar} />
+          <DragDropCalendar
+            isEditing={isEditing}
+            lessonsByWeek={calendar}
+            classId={classId}
+          />
         ) : (
           <UsualCalendar lessonsByWeek={calendar} />
         )}

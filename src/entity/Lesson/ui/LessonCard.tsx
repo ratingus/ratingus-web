@@ -1,12 +1,14 @@
 "use client";
 import React, { ReactNode } from "react";
+import cl from "classnames";
 
-import { Lesson, ScheduleStudy } from "../model";
+import { Lesson } from "../model";
 
 import styles from "./LessonCard.module.scss";
 
 import { getTime } from "@/entity/Announcement/helpers";
 import Mark from "@/entity/AttendanceMark/ui/Mark";
+import { ScheduleStudy } from "@/entity/Schedule/model";
 import { getFioByUser } from "@/entity/User/helpers";
 import { Typography } from "@/shared/components/Typography/Typography";
 
@@ -33,7 +35,7 @@ export const ScheduleCard = ({
   startTime,
   endTime,
 }: SheduleCardProps) => (
-  <div className={styles.main}>
+  <div className={cl(styles.main, subject === "Окно" && styles.okno)}>
     <header className={styles.header}>
       №{timetableNumber}
       <time>

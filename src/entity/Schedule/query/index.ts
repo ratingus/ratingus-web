@@ -1,4 +1,7 @@
 import {
+  AddTeacherSubjectInCalendarDto,
+  ChangeTeacherSubjectsInCalendarDto,
+  DeleteTeacherSubjectInCalendarDto,
   ScheduleDay,
   TeacherSubject,
   TeacherSubjectDto,
@@ -9,10 +12,64 @@ import { baseApi } from "@/shared/api/rtkq";
 
 export const scheduleApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    getCalendar: build.query<ScheduleDay[], { classId: number }>({
-      query: ({ classId }) => ({ url: `/schedule/${classId}`, method: "get" }),
+    getCalendar: build.query<
+      ScheduleDay[],
+      { classId: number; isAllDay?: boolean }
+    >({
+      query: ({ classId, isAllDay }) => ({
+        url: `/schedule/${classId}`,
+        params: { isAllDay },
+        method: "get",
+      }),
       transformResponse: (data: { dayLessons: ScheduleDay[] }): ScheduleDay[] =>
         data.dayLessons,
+      // @ts-ignore
+      providesTags: () => [{ type: "Schedule", id: "LIST" }],
+    }),
+    addTeacherSubjectInCalendar: build.mutation<
+      void,
+      { data: AddTeacherSubjectInCalendarDto; classId: number }
+    >({
+      query: ({ data, classId }) => ({
+        url: `/schedule/${classId}`,
+        method: "POST",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "Schedule" },
+      ],
+    }),
+    changeTeacherSubjectInCalendar: build.mutation<
+      void,
+      { data: ChangeTeacherSubjectsInCalendarDto; classId: number }
+    >({
+      query: ({ data, classId }) => ({
+        url: `/schedule/change/${classId}`,
+        method: "POST",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "Schedule" },
+      ],
+    }),
+    deleteTeacherSubjectInCalendar: build.mutation<
+      void,
+      { data: DeleteTeacherSubjectInCalendarDto; classId: number }
+    >({
+      query: ({ data, classId }) => ({
+        url: `/schedule/delete/${classId}`,
+        method: "POST",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "Schedule" },
+      ],
     }),
 
     getTeachers: build.query<Teacher[], null>({
@@ -71,8 +128,12 @@ export const scheduleApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetTeachersQuery,
   useGetCalendarQuery,
+  useAddTeacherSubjectInCalendarMutation,
+  useChangeTeacherSubjectInCalendarMutation,
+  useDeleteTeacherSubjectInCalendarMutation,
+
+  useGetTeachersQuery,
   useGetTeacherSubjectsQuery,
   useAddTeacherSubjectMutation,
 } = scheduleApi;
