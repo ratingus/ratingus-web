@@ -4,7 +4,7 @@ import { announcementsApi } from "@/entity/Announcement/query";
 import { announcementSlice } from "@/entity/Announcement/store";
 import { classApi } from "@/entity/School/query";
 import { schoolSlice } from "@/entity/School/store";
-import { profileApi } from "@/entity/User/query/profile.api";
+import { profileApi } from "@/entity/User/query";
 import { baseApi } from "@/shared/api/rtkq";
 import { modalSlice } from "@/shared/components/Modal/slice";
 

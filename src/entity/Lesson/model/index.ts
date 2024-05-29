@@ -1,19 +1,5 @@
 import { Attendance } from "@/entity/AttendanceMark/model";
-import { Teacher, UserDetails } from "@/entity/User/model";
-
-export type ScheduleDay = {
-  dayOfWeek: number;
-  studies: ScheduleStudy[];
-};
-
-export type ScheduleStudy = {
-  timetableNumber: number;
-  teacherSubjectId: number;
-  subject: string;
-  teacher: Teacher | null;
-  startTime: Date;
-  endTime: Date;
-};
+import { UserDetails } from "@/entity/User/model";
 
 export type DayLesson = {
   dayOfWeek: number;

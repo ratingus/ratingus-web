@@ -7,7 +7,7 @@ import styles from "./page.module.scss";
 
 import { DragDropCalendar } from "@/app/(router)/(main)/calendar/_content/DragDropCalendar";
 import { UsualCalendar } from "@/app/(router)/(main)/calendar/_content/UsualCalendar";
-import { useGetCalendarQuery } from "@/entity/Lesson/query";
+import { useGetCalendarQuery } from "@/entity/Schedule/query";
 import { useGetClassesQuery } from "@/entity/School/query";
 import ClassSelector from "@/feature/ClassSelector/ClassSelector";
 import Button from "@/shared/components/Button/Button";
@@ -28,7 +28,6 @@ export default function Calendar() {
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { data: calendar } = useGetCalendarQuery({ classId });
-  console.log(calendar);
 
   if (!calendar) return <div>loading...</div>;
 

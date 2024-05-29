@@ -2,8 +2,8 @@ import React from "react";
 import cl from "classnames";
 
 import styles from "@/app/(router)/(main)/calendar/page.module.scss";
-import { ScheduleDay } from "@/entity/Lesson/model";
 import { ScheduleCard } from "@/entity/Lesson/ui/LessonCard";
+import { ScheduleDay } from "@/entity/Schedule/model";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getDayOfWeek } from "@/shared/helpers/date";
 

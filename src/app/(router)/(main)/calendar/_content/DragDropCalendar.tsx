@@ -9,10 +9,14 @@ import {
 import cl from "classnames";
 
 import styles from "@/app/(router)/(main)/calendar/page.module.scss";
-import { ScheduleDay } from "@/entity/Lesson/model";
 import { ScheduleCard } from "@/entity/Lesson/ui/LessonCard";
+import { ScheduleDay, TeacherSubjects } from "@/entity/Schedule/model";
+import {
+  useAddTeacherSubjectMutation,
+  useGetTeachersQuery,
+  useGetTeacherSubjectsQuery,
+} from "@/entity/Schedule/query";
 import { getFioByUser } from "@/entity/User/helpers";
-import { UserIdentity } from "@/entity/User/model";
 import Button from "@/shared/components/Button/Button";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getDayOfWeek } from "@/shared/helpers/date";
@@ -26,100 +30,36 @@ export const DragDropCalendar = ({
   isEditing,
   lessonsByWeek,
 }: DragDropCalendarProps) => {
-  const teachers: UserIdentity[] = [
-    {
-      id: 11,
-      name: "Ирина",
-      surname: "Фёдорова",
-      patronymic: "Оскарльдовна",
-    },
-    {
-      id: 12,
-      name: "Изабелла",
-      surname: "Фёдорова",
-      patronymic: "Олеговна",
-    },
-  ];
-  const subjects = [
-    {
-      id: 5,
-      name: "Химия",
-    },
-    {
-      id: 6,
-      name: "Биология",
-    },
-  ];
-  const lessonConstructor = [
-    {
-      id: 0,
-      name: "Математика",
-      teachers: [
-        {
-          id: 0,
-          name: "Иван",
-          surname: "Иванов",
-          patronymic: "Иванович",
-        },
-        {
-          id: 1,
-          name: "Петр",
-          surname: "Петров",
-          patronymic: "Петрович",
-        },
-        {
-          id: 2,
-          name: "Сидор",
-          surname: "Сидоров",
-          patronymic: "Сидорович",
-        },
-      ],
-    },
-    {
-      id: 1,
-      name: "Физика",
-      teachers: [
-        {
-          id: 0,
-          name: "Иван",
-          surname: "Иванов",
-          patronymic: "Иванович",
-        },
-        {
-          id: 1,
-          name: "Петр",
-          surname: "Петров",
-          patronymic: "Петрович",
-        },
-        {
-          id: 2,
-          name: "Сидор",
-          surname: "Сидоров",
-          patronymic: "Сидорович",
-        },
-      ],
-    },
-  ];
+  const { data: teachers } = useGetTeachersQuery(null);
+  console.log(teachers);
+
+  const { data: teacherSubjects } = useGetTeacherSubjectsQuery(null);
+  const [addTeacherSubject] = useAddTeacherSubjectMutation();
 
   const maxTeachers = useMemo(
     () =>
-      lessonConstructor.reduce((acc, { teachers }) => {
+      teacherSubjects?.reduce((acc, { teachers }) => {
         return Math.max(acc, teachers?.length || 0);
-      }, 0),
-    [lessonConstructor],
+      }, 0) || 0,
+    [teacherSubjects],
   );
 
-  const [isAddSubject, setIsAddSubject] = useState<boolean>(false);
-  const [isAddTeacher, setIsAddTeacher] = useState(false);
+  const [chosenSubject, setChosenSubject] = useState<TeacherSubjects | null>(
+    null,
+  );
+
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleAddSubject = () => {
-    setIsAddSubject(!isAddSubject);
-    setIsAddTeacher(false);
-  };
-  const handleAddTeacher = () => {
-    setIsAddTeacher(true);
-    setIsAddSubject(false);
+  const handleAddTeacher = (subjectId: number) => {
+    if (chosenSubject?.subject.id === subjectId) {
+      setChosenSubject(null);
+      return;
+    }
+    const newChosenSubject =
+      teacherSubjects && teacherSubjects.length > 0
+        ? teacherSubjects.filter(({ subject: { id } }) => id === subjectId)[0]
+        : null;
+    setChosenSubject(newChosenSubject);
   };
 
   const handleDragEnd = (result: DropResult) => {
@@ -129,6 +69,26 @@ export const DragDropCalendar = ({
     setIsDragging(true);
   };
 
+  if (!teachers || !teacherSubjects) return <div>loading...</div>;
+
+  const handleMergeTeacherSubject = async (id: number) => {
+    if (chosenSubject) {
+      // @ts-ignore
+      const { data: newTeacherSubject } = await addTeacherSubject({
+        subjId: chosenSubject.subject.id.toString(),
+        teacherId: id.toString(),
+      });
+      if (newTeacherSubject) {
+        setChosenSubject({
+          ...(chosenSubject || {}),
+          teachers: [
+            ...(chosenSubject?.teachers || []),
+            newTeacherSubject.teacher,
+          ],
+        });
+      }
+    }
+  };
   return (
     <DragDropContext
       onDragEnd={handleDragEnd}
@@ -144,9 +104,9 @@ export const DragDropCalendar = ({
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  {lessonConstructor.map(
+                  {teacherSubjects.map(
                     (
-                      { id: idLesson, name: lessonName, teachers },
+                      { subject: { id: idLesson, name: lessonName }, teachers },
                       indexLesson,
                     ) =>
                       teachers?.map(({ id, ...teacher }, index) => (
@@ -174,49 +134,54 @@ export const DragDropCalendar = ({
                       )),
                   )}
                   {!isDragging &&
-                    lessonConstructor.map(({ id, name }) => (
-                      <li key={id} className={styles.lessonConstructor}>
-                        <Typography variant="h4" color="primaryMain">
-                          {name}
-                        </Typography>
-                        <Button variant="secondary" onClick={handleAddTeacher}>
-                          +
-                        </Button>
-                      </li>
-                    ))}
+                    teacherSubjects
+                      .filter(
+                        ({ teachers }) =>
+                          (teachers || []).length !== maxTeachers,
+                      )
+                      .map(({ subject: { id, name } }) => (
+                        <li
+                          key={id}
+                          className={cl(
+                            styles.lessonConstructor,
+                            chosenSubject?.subject.id === id && styles.isActive,
+                          )}
+                        >
+                          <Typography variant="h4" color="primaryMain">
+                            {name}
+                          </Typography>
+                          <Button
+                            isActive={chosenSubject?.subject.id === id}
+                            variant="secondary"
+                            onClick={() => handleAddTeacher(id)}
+                          >
+                            +
+                          </Button>
+                        </li>
+                      ))}
                   {provided.placeholder}
                 </div>
               )}
             </Droppable>
-            <Button
-              className={styles.addSubjectButton}
-              variant="ghost"
-              isActive={isAddSubject}
-              onClick={handleAddSubject}
-            >
-              Добавить предмет
-            </Button>
           </div>
-          {isAddSubject && (
-            <div className={cl(styles.listWrapper, styles.smallListWrapper)}>
-              <ul className={styles.list}>
-                {subjects.map(({ id, name }) => (
-                  <li key={id} className={styles.lessonConstructor}>
-                    <Button>{name}</Button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
 
-          {isAddTeacher && (
+          {chosenSubject && (
             <div className={cl(styles.listWrapper, styles.smallListWrapper)}>
               <ul className={styles.list}>
-                {teachers.map(({ id, ...teacher }) => (
-                  <li key={id} className={styles.lessonConstructor}>
-                    <Button>{getFioByUser(teacher)}</Button>
-                  </li>
-                ))}
+                {teachers
+                  .filter(
+                    (teacher) =>
+                      !chosenSubject.teachers
+                        ?.map(({ id }) => id)
+                        .includes(teacher.id),
+                  )
+                  .map(({ id, ...teacher }) => (
+                    <li key={id} className={styles.lessonConstructor}>
+                      <Button onClick={() => handleMergeTeacherSubject(id)}>
+                        {getFioByUser(teacher)}
+                      </Button>
+                    </li>
+                  ))}
               </ul>
             </div>
           )}
