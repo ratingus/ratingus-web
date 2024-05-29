@@ -9,6 +9,7 @@ import { Slider } from "@/shared/components/Slider/Slider";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 export default function Diary() {
+  // @ts-ignore
   const lessonsByWeek: DayLesson[] = Array(6)
     .fill([])
     .map((_, i) => ({
