@@ -35,7 +35,7 @@ const AnnouncementSwitch = ({
       role !== "LOCAL_ADMIN" &&
       option.value === "add"
     ) {
-      return true;
+      return false;
     }
     if (role === "unauthenticated" || role === "loading") {
       return false;

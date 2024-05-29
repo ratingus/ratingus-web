@@ -12,6 +12,7 @@ import { useGetClassesQuery } from "@/entity/School/query";
 import ClassSelector from "@/feature/ClassSelector/ClassSelector";
 import Button from "@/shared/components/Button/Button";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
+import { useRole } from "@/shared/hooks/useRole";
 import { useUser } from "@/shared/hooks/useUser";
 
 export default function Calendar() {
@@ -23,6 +24,7 @@ export default function Calendar() {
     classIdFromUser ||
     (classes && classes[0].id) ||
     -1;
+  const role = useRole();
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const { data: calendar } = useGetCalendarQuery({ classId });
@@ -34,14 +36,16 @@ export default function Calendar() {
     <PageContainer isPanel className={styles.base}>
       <div className={styles.flex}>
         <ClassSelector />
-        <Button
-          isActive={isEditing}
-          onClick={() => setIsEditing(!isEditing)}
-          sizeVariant="medium"
-          variant="secondary"
-        >
-          Редактировать
-        </Button>
+        {role === "LOCAL_ADMIN" && (
+          <Button
+            isActive={isEditing}
+            onClick={() => setIsEditing(!isEditing)}
+            sizeVariant="medium"
+            variant="secondary"
+          >
+            Редактировать
+          </Button>
+        )}
       </div>
       <div className={styles.calendarWrapper}>
         {isEditing ? (
