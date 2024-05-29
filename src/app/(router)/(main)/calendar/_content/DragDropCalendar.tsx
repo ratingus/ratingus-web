@@ -3,8 +3,11 @@ import React, { useMemo, useState } from "react";
 import {
   DragDropContext,
   Draggable,
+  DragStart,
   Droppable,
   DropResult,
+  OnBeforeDragStartResponder,
+  OnDragEndResponder,
 } from "react-beautiful-dnd";
 import cl from "classnames";
 
@@ -62,10 +65,12 @@ export const DragDropCalendar = ({
     setChosenSubject(newChosenSubject);
   };
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd: OnDragEndResponder = (result: DropResult) => {
+    console.dir(result);
     setIsDragging(false);
   };
-  const handleDragStart = () => {
+  const handleDragStart: OnBeforeDragStartResponder = (start: DragStart) => {
+    console.dir(start);
     setIsDragging(true);
   };
 
