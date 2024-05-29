@@ -211,8 +211,8 @@ export const DragDropCalendar = ({
                   {dayLesson.studies.map((lesson) => (
                     <Draggable
                       key={lesson.timetableNumber}
-                      draggableId={`${dayLesson.dayOfWeek}__${lesson.timetableNumber}`}
-                      index={dayLesson.dayOfWeek * 49 + lesson.timetableNumber}
+                      draggableId={`${dayLesson.dayOfWeek}_${lesson.timetableNumber}`}
+                      index={lesson.timetableNumber}
                     >
                       {(provided) => (
                         <div
