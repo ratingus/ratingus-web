@@ -1,12 +1,13 @@
 "use client";
-import React, { useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import styles from "./ClassSelector.module.scss";
 
 import { useGetClassesQuery } from "@/entity/School/query";
 import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 import { useUser } from "@/shared/hooks/useUser";
 
 type ClassSelectorProps = {};
@@ -14,6 +15,7 @@ type ClassSelectorProps = {};
 const ClassSelector = ({}: ClassSelectorProps) => {
   const router = useRouter();
   const params = useSearchParams();
+  const path = usePathname();
   const { classId: classIdFromUser } = useUser();
   const { data: classes } = useGetClassesQuery(null);
   const classId =
@@ -22,21 +24,12 @@ const ClassSelector = ({}: ClassSelectorProps) => {
     (classes && classes[0].id) ||
     -1;
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const searchParams = new URLSearchParams(params.toString());
-      searchParams.set(name, value);
-
-      return searchParams.toString();
-    },
-    [params],
-  );
   if (!classes) {
     return <div>loading...</div>;
   }
   if (!params.has("classId")) {
     router.push(
-      "/calendar" + "?" + createQueryString("classId", classId.toString()),
+      `${path}?${addQueryInParamsString("classId", classId.toString(), params)}`,
     );
   }
 
@@ -63,7 +56,7 @@ const ClassSelector = ({}: ClassSelectorProps) => {
         onChange={({ value }) => {
           if (value !== classId.toString()) {
             router.push(
-              "/calendar" + "?" + createQueryString("classId", value),
+              `${path}?${addQueryInParamsString("classId", value, params)}`,
             );
           }
         }}

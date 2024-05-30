@@ -6,7 +6,11 @@ import styles from "./DayLessonCard.module.scss";
 
 import { DayLesson } from "@/entity/Lesson/model";
 import { Typography } from "@/shared/components/Typography/Typography";
-import { getDateString, getDayAndMonth } from "@/shared/helpers/date";
+import {
+  getDateString,
+  getDayAndMonth,
+  parseTimestamp,
+} from "@/shared/helpers/date";
 import { capitalize } from "@/shared/helpers/strings";
 import DiaryLessonCard from "@/widget/DiaryLessonCard/DiaryLessonCard";
 
@@ -19,7 +23,7 @@ const DayLessonCard = ({ dateTime, studies }: DayLessonCardProps) => {
   const handleDateClick = () => {
     // const week = getWeekNumber(dateTime);
     const week = 35;
-    const day = dateTime.getDay();
+    const day = parseTimestamp(dateTime).getDay();
 
     router.push("/diary?week=" + week + "&day=" + day);
   };

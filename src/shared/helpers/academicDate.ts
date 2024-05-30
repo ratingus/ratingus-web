@@ -25,7 +25,7 @@ export function getAcademicWeekOfYear(date: Date): number {
 }
 
 export function getAcademicDate(date: Date): Date {
-  const calendar = new Date(date.getTime());
+  const calendar = new Date(date.toDateString());
   calendar.setUTCHours(3, 0, 0, 0);
   calendar.setMonth(8); // September is month 8 (0-based index)
   calendar.setDate(1);

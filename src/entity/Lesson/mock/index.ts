@@ -100,7 +100,7 @@ import { DayLessonDetailed } from "@/entity/Lesson/model";
 // };
 
 export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
-  dateTime: new Date(Date.UTC(2024, 3, 29 + day - 1)),
+  dateTime: new Date(Date.UTC(2024, 3, 29 + day - 1)).toString(),
   studies: [
     {
       id: 1 + 8 * day,

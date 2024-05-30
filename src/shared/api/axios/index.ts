@@ -19,11 +19,7 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
   function (response) {
-    console.dir(response);
     console.dir(response.headers["set-cookie"]);
-    console.dir(response.headers["Set-Cookie"]);
-    console.dir(response.config.headers["set-cookie"]);
-    console.dir(response.config.headers["Set-Cookie"]);
     return response;
   },
   function (error) {

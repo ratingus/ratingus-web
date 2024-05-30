@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import styles from "./Header.module.scss";
 
@@ -130,7 +130,19 @@ const Header = () => {
         <HeaderIcon className={styles.icon} />
       </Link>
       <nav className={styles.nav}>
-        <ButtonGroup buttons={buttonsHeader()} />
+        <ButtonGroup
+          buttons={[
+            ...buttonsHeader(),
+            {
+              link: LOGIN_PAGE_LINK,
+              children: (
+                <Button onClick={() => signOut()} variant="important">
+                  Войти
+                </Button>
+              ),
+            },
+          ]}
+        />
       </nav>
     </header>
   );

@@ -30,6 +30,19 @@ export const getDayAndMonth = (date: string, isShort?: boolean) => {
   return `${day} ${capitalize(month)}`;
 };
 
+export const getWeekDateBetween = (date: Date) => {
+  const dateDayjs = dayjs(date);
+  const startOfWeek = dayjs(date)
+    .startOf("week")
+    .add(dateDayjs.utcOffset() + 1, "minutes");
+  const endOfWeek = dayjs(date).endOf("week");
+
+  if (startOfWeek.month() === endOfWeek.month()) {
+    return `${startOfWeek.toDate().getDate()} - ${getDayAndMonth(endOfWeek.toString(), true)}`;
+  }
+  return `${getDayAndMonth(startOfWeek.toString(), true)} - ${getDayAndMonth(endOfWeek.toString(), true)}`;
+};
+
 export const getDayJs = () => dayjs;
 
 export const parseTimestamp = (data: string): Date => {
