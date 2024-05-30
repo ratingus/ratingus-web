@@ -10,8 +10,8 @@ export type ScheduleStudy = {
   teacherSubjectId: number;
   subject: string;
   teacher: Teacher | null;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
 };
 
 export type TeacherSubjectDto = {

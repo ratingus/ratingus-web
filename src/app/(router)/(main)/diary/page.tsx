@@ -11,7 +11,9 @@ import { getAcademicWeekOfYear } from "@/shared/helpers/academicDate";
 
 export default function Diary() {
   const week = getAcademicWeekOfYear(new Date());
+  console.log(week);
   const { data: lessonsByWeek } = useGetLessonsByWeekQuery({ week: 39 });
+  console.log(lessonsByWeek);
 
   if (!lessonsByWeek) return <div>loading...</div>;
 
@@ -33,10 +35,7 @@ export default function Diary() {
       </Slider>
       <div className={styles.lessons}>
         {lessonsByWeek.map((dayLesson) => (
-          <DayLessonCard
-            key={dayLesson.dateTime.toISOString()}
-            {...dayLesson}
-          />
+          <DayLessonCard key={dayLesson.dateTime} {...dayLesson} />
         ))}
       </div>
     </>

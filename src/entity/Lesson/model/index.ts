@@ -3,7 +3,7 @@ import { UserDetails } from "@/entity/User/model";
 
 export type DayLesson = {
   dayOfWeek: number;
-  dateTime: Date;
+  dateTime: string;
   studies: Lesson[];
 };
 
@@ -19,12 +19,12 @@ export type Lesson = {
   attendance?: Attendance;
   homework: string;
   note: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
 };
 
 export type DayLessonDetailed = {
-  dateTime: Date;
+  dateTime: string;
   studies: LessonDetailed[];
 };
 

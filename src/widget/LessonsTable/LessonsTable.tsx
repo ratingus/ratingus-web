@@ -11,7 +11,7 @@ import { getDateString } from "@/shared/helpers/date";
 type LessonsTableProps = {};
 
 type Lesson = {
-  date: Date;
+  date: string;
   theme: string;
   homework: string;
   was?: boolean;
@@ -136,8 +136,8 @@ const LessonsTable = ({}: LessonsTableProps) => {
         </thead>
         <tbody>
           {lessons.map((lesson) => (
-            <tr key={getDateString(lesson.date, "DD.MM")}>
-              <td>{getDateString(lesson.date, "DD.MM")}</td>
+            <tr key={getDateString(lesson.date.toString(), "DD.MM")}>
+              <td>{getDateString(lesson.date.toString(), "DD.MM")}</td>
               <td className={styles.fullsize}>{lesson.theme}</td>
               <td>{lesson.homework}</td>
               <td>
