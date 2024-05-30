@@ -95,10 +95,6 @@ const Header = () => {
           children: <AnnouncementIcon />,
         },
         {
-          link: DIARY_PAGE_LINK,
-          children: <DiaryIcon />,
-        },
-        {
           link: CALENDAR_PAGE_LINK,
           children: <CalendarIcon />,
         },
