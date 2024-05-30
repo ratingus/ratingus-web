@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 
 import styles from "./JoinOrganizationButton.module.scss";
 
@@ -11,11 +12,18 @@ import {
 } from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { useAppDispatch } from "@/shared/hooks/rtk";
+import { useRole } from "@/shared/hooks/useRole";
 
 const JoinOrganizationButton = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const role = useRole();
   const handleClick = () => {
-    dispatch(actionShowModal(INFO_ABOUT_ORGANIZATION_MODAL));
+    if (role === "unauthenticated") {
+      router.push("/login");
+    } else {
+      dispatch(actionShowModal(INFO_ABOUT_ORGANIZATION_MODAL));
+    }
   };
   return (
     <Button
