@@ -175,8 +175,8 @@ export const DragDropCalendar = ({
                   {!isDragging &&
                     teacherSubjects
                       .filter(
-                        ({ teachers }) =>
-                          (teachers || []).length !== maxTeachers,
+                        ({ teachers: teachersFromSubject }) =>
+                          (teachersFromSubject || []).length < teachers.length,
                       )
                       .map(({ subject: { id, name } }) => (
                         <li
