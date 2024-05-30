@@ -29,9 +29,9 @@ export const announcementsApi = baseApi.injectEndpoints({
         result
           ? [
               ...result.map(({ id }) => ({ type: "Announcement", id })),
-              { type: "Announcement", id: "LIST" },
+              { type: "getAnnouncements", id: "LIST" },
             ]
-          : [{ type: "Announcement", id: "LIST" }],
+          : [{ type: "getAnnouncements", id: "LIST" }],
     }),
     postAnnouncement: build.mutation<Announcement, CreateAnnouncementDto>({
       query: (newAnnouncement) => ({
@@ -40,7 +40,7 @@ export const announcementsApi = baseApi.injectEndpoints({
         data: newAnnouncement,
       }),
       // @ts-ignore
-      invalidatesTags: [{ type: "Announcement", id: "LIST" }],
+      invalidatesTags: [{ type: "getAnnouncements", id: "LIST" }],
     }),
   }),
 });

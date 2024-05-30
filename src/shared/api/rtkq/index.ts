@@ -17,11 +17,7 @@ const axiosBaseQuery =
   }> =>
   async ({ url, method, data, params, headers }) => {
     try {
-      console.log("rtkq url:");
-      console.log(process.env.NEXT_PUBLIC_API_URL);
-      console.log(baseUrl + url);
       const session = await getSession();
-      console.log("token: ", session?.accessToken);
       const result = await api({
         url: baseUrl + url,
         method,
