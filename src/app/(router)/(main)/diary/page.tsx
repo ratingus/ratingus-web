@@ -3,62 +3,17 @@ import { SwiperSlide } from "swiper/react";
 
 import styles from "./page.module.scss";
 
-import { DayLesson } from "@/entity/Lesson/model";
+import { useGetLessonsByWeekQuery } from "@/entity/Lesson/query";
 import DayLessonCard from "@/entity/Lesson/ui/DayLessonCard";
 import { Slider } from "@/shared/components/Slider/Slider";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getAcademicWeekOfYear } from "@/shared/helpers/academicDate";
 
 export default function Diary() {
-  // @ts-ignore
-  const lessonsByWeek: DayLesson[] = Array(6)
-    .fill([])
-    .map((_, i) => ({
-      dateTime: new Date(Date.UTC(2024, 3, 29 + i)),
-      studies: [
-        {
-          id: 1 + 3 * i,
-          studyId: 0,
-          subject: "Математика",
-          teacher: {
-            id: 1,
-            name: "Иван",
-            surname: "Иванов",
-            patronymic: "Иванович",
-          },
-          timetableNumber: 1,
-          mark: "5",
-          attendance: "was",
-        },
-        {
-          id: 2 + 3 * i,
-          studyId: 1,
-          subject: "Физика",
-          teacher: {
-            id: 2,
-            name: "Петр",
-            surname: "Петров",
-            patronymic: "Петрович",
-          },
-          timetableNumber: 2,
-          mark: "4",
-          attendance: "was",
-        },
-        {
-          id: 3 + 3 * i,
-          studyId: 2,
-          subject: "Химия",
-          teacher: {
-            id: 3,
-            name: "Сидор",
-            surname: "Сидоров",
-            patronymic: "Сидорович",
-          },
-          timetableNumber: 3,
-          mark: "3",
-          attendance: "was",
-        },
-      ],
-    }));
+  const week = getAcademicWeekOfYear(new Date());
+  const { data: lessonsByWeek } = useGetLessonsByWeekQuery({ week: 39 });
+
+  if (!lessonsByWeek) return <div>loading...</div>;
 
   return (
     <>
