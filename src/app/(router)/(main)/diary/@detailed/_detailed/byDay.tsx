@@ -37,9 +37,11 @@ const ByDay = ({ week, day }: DetailedPageProps) => {
             <SwiperSlide key={day.getDay()}>
               <div className={styles.sliderHeader}>
                 <Typography variant="h4">
-                  {capitalize(getDateString(day, "dddd"))}
+                  {capitalize(getDateString(day.toString(), "dddd"))}
                 </Typography>
-                <Typography variant="h4">{getDayAndMonth(day)}</Typography>
+                <Typography variant="h4">
+                  {getDayAndMonth(day.toString())}
+                </Typography>
               </div>
             </SwiperSlide>
           ))}
