@@ -1,12 +1,17 @@
 import { ReadonlyURLSearchParams } from "next/navigation";
 
 export const addQueryInParamsString = (
-  name: string,
-  value: any,
   params: ReadonlyURLSearchParams,
+  ...queries: { name: string; value: any }[]
 ) => {
   const searchParams = new URLSearchParams(params.toString());
-  searchParams.set(name, value.toString());
+  queries.forEach(({ name, value }) => {
+    if (value === undefined) {
+      searchParams.delete(name);
+      return;
+    }
+    searchParams.set(name, value.toString());
+  });
 
   return searchParams.toString();
 };

@@ -62,7 +62,7 @@ export default function Diary() {
             swiper.activeIndex = 1;
             router.push(
               path +
-                `?${addQueryInParamsString("week", Number(currentSlideDate) + 1, searchParams)}`,
+                `?${addQueryInParamsString(searchParams, { name: "week", value: Number(currentSlideDate) + 1 })}`,
             );
           },
         }}

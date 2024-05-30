@@ -1,5 +1,5 @@
 import React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SwiperSlide } from "swiper/react";
 
 import styles from "@/app/(router)/(main)/diary/@detailed/_detailed/ByDay.module.scss";
@@ -9,6 +9,7 @@ import Button from "@/shared/components/Button/Button";
 import { Slider } from "@/shared/components/Slider/Slider";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getDateString, getDayAndMonth } from "@/shared/helpers/date";
+import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 import { capitalize } from "@/shared/helpers/strings";
 
 // import styles from './ByLesson.module.scss';
@@ -23,8 +24,13 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
   const study = data.studies[lesson - 1];
 
   const router = useRouter();
+  const path = usePathname();
+  const searchParams = useSearchParams();
   const handleBack = () => {
-    router.push("/diary?week=" + week + "&day=" + day);
+    router.push(
+      path +
+        `?${addQueryInParamsString(searchParams, { name: "lesson", value: undefined })}`,
+    );
   };
 
   return (

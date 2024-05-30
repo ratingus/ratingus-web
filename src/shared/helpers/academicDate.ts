@@ -1,10 +1,15 @@
+import { getDayJs } from "@/shared/helpers/date";
+
 export function getAcademicDateByWeek(weekOfYear: number): Date {
   const date = getAcademicDate(new Date());
   const difference = (weekOfYear - 1) * 7;
   const calendar = new Date(date.getTime());
   calendar.setUTCHours(0, 0, 0, 0);
   calendar.setDate(calendar.getDate() + difference);
-  return calendar;
+  return getDayJs()(calendar)
+    .startOf("week")
+    .add(getDayJs()(calendar).utcOffset() + 1, "minutes")
+    .toDate();
 }
 
 export function getAcademicWeekOfYear(date: Date): number {

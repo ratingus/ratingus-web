@@ -12,6 +12,7 @@ export default function DetailedPage() {
   const week = Number(params.get("week"));
   const day = Number(params.get("day"));
   const lesson = Number(params.get("lesson"));
+  console.log("DetailedPage: week, day, lesson", week, day, lesson);
 
   if (!week || !(day || lesson)) {
     return <DefaultDetailed />;

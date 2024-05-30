@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import styles from "./DayLessonCard.module.scss";
 
@@ -11,6 +11,7 @@ import {
   getDayAndMonth,
   parseTimestamp,
 } from "@/shared/helpers/date";
+import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 import { capitalize } from "@/shared/helpers/strings";
 import DiaryLessonCard from "@/widget/DiaryLessonCard/DiaryLessonCard";
 
@@ -18,14 +19,17 @@ type DayLessonCardProps = DayLesson;
 
 const DayLessonCard = ({ dateTime, studies }: DayLessonCardProps) => {
   const router = useRouter();
+  const path = usePathname();
+  const searchParams = useSearchParams();
 
   // TODO: перенести в /feature
   const handleDateClick = () => {
-    // const week = getWeekNumber(dateTime);
-    const week = 35;
     const day = parseTimestamp(dateTime).getDay();
 
-    router.push("/diary?week=" + week + "&day=" + day);
+    router.push(
+      path +
+        `?${addQueryInParamsString(searchParams, { name: "day", value: day }, { name: "lesson", value: undefined })}`,
+    );
   };
 
   return (

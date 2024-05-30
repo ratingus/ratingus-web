@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
+import React, { forwardRef, ReactNode } from "react";
 import cl from "classnames";
 import { Navigation } from "swiper/modules";
-import { Swiper, SwiperProps } from "swiper/react";
+import { Swiper, SwiperProps, SwiperRef } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -18,22 +18,23 @@ type SliderProps = {
   className?: string;
 };
 
-export const Slider = ({
-  className,
-  children = [],
-  swiperProps,
-}: SliderProps) => {
-  return (
-    <Swiper
-      className={cl(baseClasses, className)}
-      modules={[Navigation]}
-      centeredSlides
-      centeredSlidesBounds
-      slidesPerView={1}
-      navigation
-      {...swiperProps}
-    >
-      {children}
-    </Swiper>
-  );
-};
+export const Slider = forwardRef<SwiperRef, SliderProps>(
+  ({ className, children = [], swiperProps }, ref) => {
+    return (
+      <Swiper
+        ref={ref}
+        className={cl(baseClasses, className)}
+        modules={[Navigation]}
+        centeredSlides
+        centeredSlidesBounds
+        slidesPerView={1}
+        navigation
+        {...swiperProps}
+      >
+        {children}
+      </Swiper>
+    );
+  },
+);
+
+Slider.displayName = "Slider";
