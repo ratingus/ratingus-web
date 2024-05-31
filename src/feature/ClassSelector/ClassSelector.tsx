@@ -29,7 +29,7 @@ const ClassSelector = ({}: ClassSelectorProps) => {
   }
   if (!params.has("classId")) {
     router.push(
-      `${path}?${addQueryInParamsString("classId", classId.toString(), params)}`,
+      `${path}?${addQueryInParamsString(params, { name: "classId", value: classId })}`,
     );
   }
 
@@ -56,7 +56,7 @@ const ClassSelector = ({}: ClassSelectorProps) => {
         onChange={({ value }) => {
           if (value !== classId.toString()) {
             router.push(
-              `${path}?${addQueryInParamsString("classId", value, params)}`,
+              `${path}?${addQueryInParamsString(params, { name: "classId", value })}`,
             );
           }
         }}
