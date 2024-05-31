@@ -9,7 +9,8 @@ import LessonBlockDetailed from "@/entity/Lesson/ui/LessonBlockDetailed";
 import Button from "@/shared/components/Button/Button";
 import { Slider } from "@/shared/components/Slider/Slider";
 import { Typography } from "@/shared/components/Typography/Typography";
-import { getDateString, getDayAndMonth } from "@/shared/helpers/date";
+import { getAcademicDateByWeek } from "@/shared/helpers/academicDate";
+import { getDateString, getDayAndMonth, getDayJs } from "@/shared/helpers/date";
 import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 import { capitalize } from "@/shared/helpers/strings";
 
@@ -32,6 +33,10 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
   };
   const swiperRef = useRef<SwiperRef>(null);
 
+  const { data } = useGetLessonsByWeekQuery({
+    week,
+  });
+
   useEffect(() => {
     if (swiperRef.current) {
       swiperRef.current.swiper.slideTo(
@@ -39,10 +44,6 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
       );
     }
   }, [day, lesson]);
-
-  const { data } = useGetLessonsByWeekQuery({
-    week,
-  });
 
   if (data === undefined) {
     return <div>loading...</div>;
@@ -53,6 +54,10 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
   const study = studies.filter(
     ({ timetableNumber }) => timetableNumber === lesson,
   )[0];
+
+  const date = getDayJs()(getAcademicDateByWeek(week))
+    .add(day - 1, "days")
+    .toDate();
 
   return (
     <div>
@@ -96,7 +101,11 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
         <Typography color="textHelper">&lt; Назад</Typography>
       </Button>
       <div className={styles.lesson}>
-        <LessonBlockDetailed key={study.timetableNumber} {...study} />
+        <LessonBlockDetailed
+          key={study.timetableNumber}
+          date={date}
+          {...study}
+        />
       </div>
     </div>
   );

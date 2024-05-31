@@ -32,3 +32,11 @@ export type LessonDetailed = Lesson & {
   homework?: string;
   note?: string;
 };
+
+export type AddNote = {
+  scheduleId: number;
+  date: Date;
+  lessonId: number;
+  lessonStudentId: number;
+  text: string;
+};

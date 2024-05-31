@@ -8,7 +8,7 @@ export function getAcademicDateByWeek(weekOfYear: number): Date {
   calendar.setDate(calendar.getDate() + difference);
   return getDayJs()(calendar)
     .startOf("week")
-    .add(getDayJs()(calendar).utcOffset() + 1, "minutes")
+    .add(getDayJs()(calendar).utcOffset(), "minutes")
     .toDate();
 }
 

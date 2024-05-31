@@ -1,5 +1,5 @@
-import { LESSONS_PATH } from "../constants";
-import { DayLesson } from "../model";
+import { LESSONS_CONTEXT_PATH, LESSONS_PATH } from "../constants";
+import { AddNote, DayLesson } from "../model";
 
 import { baseApi } from "@/shared/api/rtkq";
 
@@ -10,7 +10,17 @@ export const lessonsApi = baseApi.injectEndpoints({
       // @ts-ignore
       providesTags: [{ type: "getLessonsByWeek", id: "LIST" }],
     }),
+
+    addNote: build.mutation<void, AddNote>({
+      query: (data) => ({
+        url: `${LESSONS_CONTEXT_PATH}/lesson`,
+        method: "post",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "getLessonsByWeek", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetLessonsByWeekQuery } = lessonsApi;
+export const { useGetLessonsByWeekQuery, useAddNoteMutation } = lessonsApi;
