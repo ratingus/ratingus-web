@@ -5,12 +5,13 @@ import styles from "./LessonCardDetailed.module.scss";
 import { Typography } from "@/shared/components/Typography/Typography";
 import DiaryLessonCard from "@/widget/DiaryLessonCard/DiaryLessonCard";
 
-type LessonCardProps = LessonDetailed;
+type LessonCardProps = LessonDetailed & { day: number };
 
-const LessonCardDetailed = (lesson: LessonCardProps) => {
+const LessonCardDetailed = ({ day, ...lesson }: LessonCardProps) => {
   const { homework, note } = lesson;
   return (
     <DiaryLessonCard
+      day={day}
       {...lesson}
       bottomSlot={
         // TODO: такой же блок в LessonBlockDetailed? Генералифицировать!

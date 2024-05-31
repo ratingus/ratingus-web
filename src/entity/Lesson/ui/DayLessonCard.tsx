@@ -21,11 +21,10 @@ const DayLessonCard = ({ dateTime, studies }: DayLessonCardProps) => {
   const router = useRouter();
   const path = usePathname();
   const searchParams = useSearchParams();
+  const day = parseTimestamp(dateTime).getDay();
 
   // TODO: перенести в /feature
   const handleDateClick = () => {
-    const day = parseTimestamp(dateTime).getDay();
-
     router.push(
       path +
         `?${addQueryInParamsString(searchParams, { name: "day", value: day }, { name: "lesson", value: undefined })}`,
@@ -43,7 +42,7 @@ const DayLessonCard = ({ dateTime, studies }: DayLessonCardProps) => {
       <div className={styles.lessons}>
         {studies.map((lesson) => (
           //   @ts-ignore
-          <DiaryLessonCard key={lesson.id} {...lesson} />
+          <DiaryLessonCard key={lesson.id} day={day} {...lesson} />
         ))}
       </div>
     </div>

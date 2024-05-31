@@ -51,6 +51,9 @@ export default function Diary() {
       <Slider
         className={styles.slider}
         swiperProps={{
+          onInit: (swiper) => {
+            swiper.slideTo(1);
+          },
           onSlideChange: (swiper) => {
             const currentSlide = swiper.activeIndex;
             const currentSlideDate =

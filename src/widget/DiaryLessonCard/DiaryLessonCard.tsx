@@ -6,9 +6,9 @@ import { LessonCard } from "@/entity/Lesson/ui/LessonCard";
 import Button from "@/shared/components/Button/Button";
 import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 
-type DiaryLessonCardProps = Lesson & { bottomSlot?: ReactNode };
+type DiaryLessonCardProps = Lesson & { day: number; bottomSlot?: ReactNode };
 
-const DiaryLessonCard = (lesson: DiaryLessonCardProps) => {
+const DiaryLessonCard = ({ day, ...lesson }: DiaryLessonCardProps) => {
   const { timetableNumber } = lesson;
   // TODO: перенести в /feature и сделать нормальное получение времени
   const router = useRouter();
@@ -17,7 +17,7 @@ const DiaryLessonCard = (lesson: DiaryLessonCardProps) => {
   const handleLessonClick = () => {
     router.push(
       path +
-        `?${addQueryInParamsString(searchParams, { name: "lesson", value: timetableNumber })}`,
+        `?${addQueryInParamsString(searchParams, { name: "lesson", value: timetableNumber }, { name: "day", value: day })}`,
     );
   };
   return (

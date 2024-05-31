@@ -98,7 +98,11 @@ const ByDay = ({ week, day }: DetailedPageProps) => {
       <div className={styles.lessonsWrapper}>
         <div className={styles.lessons}>
           {data[day - 1].studies.map((lesson) => (
-            <LessonCardDetailed key={lesson.timetableNumber} {...lesson} />
+            <LessonCardDetailed
+              key={lesson.timetableNumber}
+              day={day}
+              {...lesson}
+            />
           ))}
         </div>
       </div>

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { SwiperSlide } from "swiper/react";
+import { SwiperRef, SwiperSlide } from "swiper/react";
 
 import styles from "@/app/(router)/(main)/diary/@detailed/_detailed/ByDay.module.scss";
-import { generateDayLessonDetailed } from "@/entity/Lesson/mock";
+import { useGetLessonsByWeekQuery } from "@/entity/Lesson/query";
 import LessonBlockDetailed from "@/entity/Lesson/ui/LessonBlockDetailed";
 import Button from "@/shared/components/Button/Button";
 import { Slider } from "@/shared/components/Slider/Slider";
@@ -20,9 +20,6 @@ export type DetailedPageProps = {
   lesson: number;
 };
 const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
-  const data = generateDayLessonDetailed(day);
-  const study = data.studies[lesson - 1];
-
   const router = useRouter();
   const path = usePathname();
   const searchParams = useSearchParams();
@@ -32,32 +29,53 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
         `?${addQueryInParamsString(searchParams, { name: "lesson", value: undefined })}`,
     );
   };
+  const swiperRef = useRef<SwiperRef>(null);
+
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.swiper.slideTo(
+        studies.findIndex(({ timetableNumber }) => timetableNumber === lesson),
+      );
+    }
+  }, [day, lesson]);
+
+  const { data } = useGetLessonsByWeekQuery({
+    week,
+  });
+
+  if (data === undefined) {
+    return <div>loading...</div>;
+  }
+
+  const dayData = data[day - 1];
+  const studies = dayData.studies;
+  const study = studies.filter(
+    ({ timetableNumber }) => timetableNumber === lesson,
+  )[0];
 
   return (
     <div>
       <div className={styles.sliderHeader}>
         <Typography variant="h4">
-          {capitalize(getDateString(data.dateTime, "dddd"))}
+          {capitalize(getDateString(dayData.dateTime, "dddd"))}
         </Typography>
-        <Typography variant="h4">{getDayAndMonth(data.dateTime)}</Typography>
+        <Typography variant="h4">{getDayAndMonth(dayData.dateTime)}</Typography>
       </div>
       <div className={styles.sliderWrapper}>
         <Slider
+          ref={swiperRef}
           className={styles.slider}
           swiperProps={{
             onSlideChange: (swiper) => {
+              const lesson = studies[swiper.activeIndex].timetableNumber;
               router.push(
-                "/diary?week=" +
-                  week +
-                  "&day=" +
-                  day +
-                  "&lesson=" +
-                  (swiper.activeIndex + 1),
+                path +
+                  `?${addQueryInParamsString(searchParams, { name: "lesson", value: lesson })}`,
               );
             },
           }}
         >
-          {data.studies.map((study) => (
+          {dayData.studies.map((study) => (
             <SwiperSlide key={study.timetableNumber}>
               <div>
                 <div className={styles.sliderContent}>
