@@ -3,6 +3,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SwiperRef, SwiperSlide } from "swiper/react";
 
 import styles from "@/app/(router)/(main)/diary/@detailed/_detailed/ByDay.module.scss";
+import { getTime } from "@/entity/Announcement/helpers";
 import { useGetLessonsByWeekQuery } from "@/entity/Lesson/query";
 import LessonBlockDetailed from "@/entity/Lesson/ui/LessonBlockDetailed";
 import Button from "@/shared/components/Button/Button";
@@ -75,14 +76,16 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
             },
           }}
         >
-          {dayData.studies.map((study) => (
-            <SwiperSlide key={study.timetableNumber}>
+          {dayData.studies.map(({ timetableNumber, startTime, endTime }) => (
+            <SwiperSlide key={timetableNumber}>
               <div>
                 <div className={styles.sliderContent}>
+                  <Typography variant="small">№{timetableNumber}</Typography>
                   <Typography variant="small">
-                    №{study.timetableNumber}
+                    <time>
+                      {getTime(startTime)} - {getTime(endTime)}
+                    </time>
                   </Typography>
-                  <Typography variant="small">8:00 - 8:40</Typography>
                 </div>
               </div>
             </SwiperSlide>
