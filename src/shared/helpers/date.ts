@@ -8,17 +8,35 @@ import { capitalize } from "@/shared/helpers/strings";
 dayjs.locale("ru");
 dayjs.extend(isoWeek);
 
+const daysOfWeek = [
+  "Воскресенье",
+  "Понедельник",
+  "Вторник",
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
+];
 export function getDayOfWeek(dayOfWeek: number): string {
-  const daysOfWeek = [
-    "Воскресенье",
-    "Понедельник",
-    "Вторник",
-    "Среда",
-    "Четверг",
-    "Пятница",
-    "Суббота",
-  ];
   return daysOfWeek[dayOfWeek];
+}
+
+const months = [
+  "Январь",
+  "Февраль",
+  "Март",
+  "Апрель",
+  "Май",
+  "Июнь",
+  "Июль",
+  "Август",
+  "Сентябрь",
+  "Октябрь",
+  "Ноябрь",
+  "Декабрь",
+];
+export function getMonthName(month: number) {
+  return months[month];
 }
 
 export const getDateString = (date: string, format: string) => {

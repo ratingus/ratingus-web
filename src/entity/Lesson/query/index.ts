@@ -1,5 +1,5 @@
 import { LESSONS_CONTEXT_PATH, LESSONS_PATH } from "../constants";
-import { AddNote, DayLesson } from "../model";
+import { AddNote, DayLesson, MagazineDto } from "../model";
 
 import { baseApi } from "@/shared/api/rtkq";
 
@@ -20,7 +20,18 @@ export const lessonsApi = baseApi.injectEndpoints({
       // @ts-ignore
       invalidatesTags: [{ type: "getLessonsByWeek", id: "LIST" }],
     }),
+
+    getJournal: build.query<
+      MagazineDto,
+      { classId: number; teacherSubjectId: number }
+    >({
+      query: (params) => ({ url: "/magazine/users", params, method: "get" }),
+    }),
   }),
 });
 
-export const { useGetLessonsByWeekQuery, useAddNoteMutation } = lessonsApi;
+export const {
+  useGetLessonsByWeekQuery,
+  useAddNoteMutation,
+  useGetJournalQuery,
+} = lessonsApi;

@@ -39,7 +39,7 @@ export type TeacherSubjects = {
   teachers: TeacherWithSubject[] | null;
 };
 
-export type TeacherWithSubject = Teacher & { subjectTeacherId: number };
+export type TeacherWithSubject = Teacher & { teacherSubjectId: number };
 
 export type AddTeacherSubjectInCalendarDto =
   DeleteTeacherSubjectInCalendarDto & {

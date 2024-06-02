@@ -1,134 +1,133 @@
 import React, { useState } from "react";
 import cl from "classnames";
+import { useSearchParams } from "next/navigation";
 
 import styles from "./StudentsTable.module.scss";
 
 import { Attendance } from "@/entity/AttendanceMark/model";
 import Mark from "@/entity/AttendanceMark/ui/Mark";
-import { getFiByUser } from "@/entity/User/helpers";
-import { students as mockedStudents } from "@/entity/User/mock";
+import { MarkDto } from "@/entity/Lesson/model";
+import { useGetJournalQuery } from "@/entity/Lesson/query";
+import { getFioByUser } from "@/entity/User/helpers";
 import Button from "@/shared/components/Button/Button";
+import { Typography } from "@/shared/components/Typography/Typography";
+import { getMonthName } from "@/shared/helpers/date";
 
 type StudentsTableProps = {};
 
-const students = mockedStudents.sort((a, b) =>
-  getFiByUser(a).localeCompare(getFiByUser(b)),
-);
-
-const monthDays = [
-  {
-    month: "Январь",
-    days: [10, 12, 15, 17, 19, 22, 24, 27],
-  },
-  {
-    month: "Февраль",
-    days: [1, 6, 8, 13, 15, 29, 30, 31, 32],
-  },
-  {
-    month: "Март",
-    days: [1, 2, 11, 14, 21, 30],
-  },
-  {
-    month: "Апрель",
-    days: [6, 11, 13, 20, 25, 27],
-  },
-  {
-    month: "Май",
-    days: [4, 11, 13, 22, 27, 30],
-  },
-];
-
-function seededRandom(seed: number) {
-  const a = 16808; // multiplier
-  const m = 2147483647; // 2**31 - 1
-  const q = Math.floor(m / a);
-  const r = m % a;
-
-  seed = a * (seed % q) - r * Math.floor(seed / q);
-  if (seed <= 0) {
-    seed += m;
-  }
-
-  return seed / m;
-}
-
-const table = {
-  students: students.map((student) => ({
-    ...student,
-    marks: monthDays.map(({ days }) =>
-      days.map((day) => {
-        const random = seededRandom(
-          ((((137 * student.id * student.id * student.id) / 8 / 2) * day) / 2) *
-            day *
-            day,
-        );
-        return {
-          mark:
-            random < 0.9 && random > 0.45
-              ? Math.floor(random * 5 + 1).toString()
-              : undefined,
-          attendance:
-            random > 0.3 && random < 0.6
-              ? random < 0.4
-                ? "invalidAbsent"
-                : "validAbsent"
-              : undefined,
-        } as { mark?: string; attendance?: Attendance };
-      }),
-    ),
-  })),
-  monthDays: monthDays,
-};
-
 const StudentsTable = ({}: StudentsTableProps) => {
+  const searchParams = useSearchParams();
+  const classId = Number(searchParams.get("classId"));
+  const teacherSubjectId = Number(searchParams.get("teacherSubject"));
+  const { data } = useGetJournalQuery(
+    { classId, teacherSubjectId },
+    { refetchOnMountOrArgChange: true },
+  );
+
+  if (!data) return <div>loading...</div>;
+  const { students, monthLessonDays } = data;
+
+  const getKey = (...value: any[]) =>
+    `${teacherSubjectId}_${classId}_${value.join("_")}`;
+
   return (
     <div className={styles.wrapper}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th rowSpan={2}>№</th>
-            <th rowSpan={2} className={styles.fullsize}>
-              Фамилия Имя
-            </th>
-            {table.monthDays.map(({ month, days }) => (
-              <th key={month} colSpan={days.length}>
-                {month}
-              </th>
-            ))}
-            <th rowSpan={2}>Итог</th>
-          </tr>
-          <tr>
-            {table.monthDays.map(({ days }) => (
-              <>
-                {days.map((day) => (
-                  <th key={day} className={styles.day}>
+      <div className={styles.mainHeader}>
+        <div className={styles.header}>
+          <div className={cl(styles.block, styles.headerBlock)}>
+            <Typography variant="h3">№</Typography>
+          </div>
+          <div className={cl(styles.fi, styles.headerBlock)}>
+            <Typography variant="h4">Фамилия Имя</Typography>
+          </div>
+        </div>
+        {students.map((student, index) => (
+          <div key={getKey(student.id)} className={styles.header}>
+            <div className={styles.block}>{index + 1}</div>
+            <div className={styles.fi}>{getFioByUser(student)}</div>
+          </div>
+        ))}
+      </div>
+      <div className={cl(styles.overflow, styles.mainHeader)}>
+        <div className={cl(styles.header, styles.absolute)}>
+          {monthLessonDays.map(({ month, lessonDays }) => (
+            <div key={getKey(month)} className={styles.months}>
+              <div className={cl(styles.monthsAndDays, styles.headerBlock)}>
+                {getMonthName(month - 1)}
+              </div>
+              <div className={cl(styles.header)}>
+                {lessonDays.map(({ day }) => (
+                  <div
+                    key={getKey(day)}
+                    className={cl(
+                      styles.monthsAndDays,
+                      styles.days,
+                      styles.headerBlock,
+                    )}
+                  >
                     {day}
-                  </th>
+                  </div>
                 ))}
-              </>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {table.students.map((student, index) => (
-            <tr key={student.id}>
-              <td>{index + 1}</td>
-              <td className={styles.fullsize}>{getFiByUser(student)}</td>
-              {table.monthDays.map(({ days }, monthIndex) => (
-                <>
-                  {days.map((day, dayIndex) => (
-                    <StudentsTableMark
-                      key={day}
-                      student={student.marks[monthIndex][dayIndex]}
-                    />
-                  ))}
-                </>
-              ))}
-              <td>-</td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+        {students.map((student) => (
+          <div
+            key={getKey(student.id, student.studentId)}
+            className={cl(styles.header, styles.headerMonths)}
+          >
+            {monthLessonDays.map(({ month, lessonDays }) => (
+              <div key={getKey(month)} className={styles.header}>
+                {lessonDays.map(({ day, lessonId }) => {
+                  const markDto = student.marks[month - 1].filter(
+                    ({ lessonId: lesson }) =>
+                      lessonId.some(({ lessonId }) => lesson === lessonId),
+                  );
+                  const { mark, attendance } = markDto[0] || {
+                    mark: undefined,
+                    attendance: undefined,
+                  };
+                  return (
+                    <div
+                      key={getKey(day, mark, attendance)}
+                      className={styles.block}
+                    >
+                      <StudentsTableMark markDto={markDto} />
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className={styles.mainHeader}>
+        <div className={cl(styles.block, styles.headerBlock, styles.itog)}>
+          <Typography variant="h3">Итог</Typography>
+        </div>
+        {students.map(({ id, marks }) => {
+          let length = 0;
+          const mark = marks.reduce((acc, mark) => {
+            const add = mark.reduce((acc, { mark }) => {
+              if (mark) {
+                length++;
+                return acc + Number(mark);
+              }
+              return acc;
+            }, 0);
+            return acc + add;
+          }, 0);
+
+          const avgMark = mark / length;
+
+          return (
+            <div key={id} className={styles.itog}>
+              <Mark mark={length === 0 ? "-" : avgMark.toFixed(2)} />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
@@ -136,21 +135,29 @@ const StudentsTable = ({}: StudentsTableProps) => {
 export default StudentsTable;
 
 type StudentsTableMarkProps = {
-  student: (typeof table.students)[0]["marks"][0][0];
+  markDto: MarkDto[];
 };
 
-const StudentsTableMark = ({ student }: StudentsTableMarkProps) => {
-  const [mark, setMark] = useState<string | undefined>(student.mark);
-  const [attendance, setAttendance] = useState<Attendance | undefined>(
-    student.attendance,
-  );
+const StudentsTableMark = ({ markDto }: StudentsTableMarkProps) => {
+  const { mark, attendance } = markDto[0] || {
+    mark: undefined,
+    attendance: undefined,
+  };
+  const [markStudent, setMarkStudent] = useState<string | undefined>(mark);
+  const [attendanceStudent, setAttendanceStudent] = useState<
+    Attendance | undefined
+  >(attendance);
 
-  const handleChangeMark = () => {};
+  const handleChangeMark = () =>
+    console.log(markDto, markStudent, attendanceStudent);
 
   return (
-    <td className={cl(styles.day, styles.tdMark)}>
-      <Button variant="ghost" onClick={handleChangeMark}></Button>
-      <Mark variant="h4" mark={mark} attendance={attendance} />
-    </td>
+    <Button
+      className={styles.markButton}
+      variant="ghost"
+      onClick={handleChangeMark}
+    >
+      <Mark mark={markStudent} attendance={attendanceStudent} />
+    </Button>
   );
 };

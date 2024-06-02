@@ -1,33 +1,104 @@
+@mixin blocked {
+  background: $background-paper;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+
 .wrapper {
   height: calc(80dvh - 24px - 20px * 4);
+  display: flex;
+  gap: 10px;
+  border-radius: 20px;
+  padding: 20px 30px;
+  background: $background-main;
 }
 
-.table {
+.header {
+  display: flex;
+  gap: 4px;
+}
+
+.absolute {
+  width: 100%;
+}
+.overflow {
   overflow: auto;
-  display: block;
+  position: relative;
+}
+
+.months {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+
+.headerMonths {
+  display: flex;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.monthsAndDays {
+  display: flex;
+  justify-content: center;
+  text-align: center;
   width: 100%;
-  height: 100%;
-  border-collapse: collapse;
-
-  thead tr th {
-    background: mix($text-helper, $text-primary, 30%);
-  }
-  thead, tbody {
-    width: 100%;
-  }
-
-  th, td {
-    background: $text-primary;
-    color: $background-main;
-    border: 1px solid black;
-    padding: 4px;
-  }
+  border-radius: 20px;
+}
+.days {
+  max-width: 55px;
+  width: 55px;
+  min-width: 55px;
 }
 
-.day {
-  min-width: 16px;
-  min-height: 48px;
+.fi {
+  @include blocked;
+  padding: 12px;
+  max-width: 310px !important;
+  width: 310px !important;
+  min-width: 310px !important;
 }
-.fullsize {
+
+.block {
+  @include blocked;
+  max-height: 55px;
+  height: 55px;
+  min-height: 55px;
+  max-width: 55px;
+  width: 55px;
+  min-width: 55px;
+  aspect-ratio: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+.itog {
+  @include blocked;
+  padding: 0 12px;
+  max-height: 55px;
+  height: 55px;
+  min-height: 55px;
+  min-width: 100%;
   width: 100%;
+  text-align: center;
+  justify-content: center;
 }
+
+.headerBlock {
+  background: mix($text-primary, $background-main, 10%);
+  margin-bottom: 10px;
+}
+
+.mainHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.markButton {
+  min-width: 100%;
+  min-height: 100%;
+  border-radius: 20px;
+}
+

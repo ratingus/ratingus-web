@@ -40,3 +40,40 @@ export type AddNote = {
   lessonStudentId: number;
   text: string;
 };
+
+export type MagazineDto = {
+  students: StudentDto[];
+  monthLessonDays: MonthLessonDayDto[];
+};
+
+export type StudentDto = {
+  id: number;
+  name: string;
+  surname: string;
+  patronymic: string;
+  studentId: number;
+  marks: MarkDto[][];
+};
+
+export type MarkDto = {
+  studentLessonId: number;
+  lessonId: number;
+  mark?: string;
+  attendance?: Attendance;
+};
+
+export type MonthLessonDayDto = {
+  month: number;
+  lessonDays: LessonDayDto[];
+};
+
+export type LessonDayDto = {
+  day: number;
+  lessonId: MagazineLessonDto[];
+};
+
+export type MagazineLessonDto = {
+  scheduleId: number;
+  lessonNumber: number;
+  lessonId: number;
+};
