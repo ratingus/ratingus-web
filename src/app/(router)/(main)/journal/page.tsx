@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styles from "./page.module.scss";
 
@@ -24,8 +24,18 @@ export default function Journal() {
   };
   const selectedValue = useAppSelector(selectSelectedTeacherId);
   const { userRoleId } = useUser();
-  console.log("userRoleId", userRoleId);
-  console.log("selectedValue", selectedValue);
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (
+      selectedValue === null ||
+      !!userRoleId ||
+      userRoleId !== selectedValue
+    ) {
+      setIsEditing(false);
+    }
+  }, [selectedValue, userRoleId]);
 
   return (
     <PageContainer
@@ -56,12 +66,23 @@ export default function Journal() {
         {selectedValue !== null &&
           !!userRoleId &&
           userRoleId === selectedValue && (
-            <Button variant="secondary" className={styles.editButton}>
+            <Button
+              isActive={isEditing}
+              onClick={() => setIsEditing((prev) => !prev)}
+              variant="secondary"
+              className={styles.editButton}
+            >
               Редактировать
             </Button>
           )}
       </div>
-      {tab.value === "students" ? <StudentsTable /> : <LessonsTable />}
+      <div className={styles.main}>
+        {tab.value === "students" ? (
+          <StudentsTable isEditing={isEditing} />
+        ) : (
+          <LessonsTable isEditing={isEditing} />
+        )}
+      </div>
     </PageContainer>
   );
 }
