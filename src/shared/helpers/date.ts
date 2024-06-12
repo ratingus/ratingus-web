@@ -35,8 +35,23 @@ const months = [
   "Ноябрь",
   "Декабрь",
 ];
-export function getMonthName(month: number) {
-  return months[month];
+const monthsGenitive = [
+  "Января",
+  "Февраля",
+  "Марта",
+  "Апреля",
+  "Мая",
+  "Июня",
+  "Июля",
+  "Августа",
+  "Сентября",
+  "Октября",
+  "Ноября",
+  "Декабря",
+];
+
+export function getMonthName(month: number, genitive: boolean = false) {
+  return genitive ? monthsGenitive[month] : months[month];
 }
 
 export const getDateString = (date: string, format: string) => {

@@ -105,6 +105,10 @@
   border-radius: 20px;
 }
 
+.selected {
+  border: 2px solid $primary-main;
+}
+
 .info {
   flex-basis: 20%;
 }

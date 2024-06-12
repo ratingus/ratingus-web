@@ -4,63 +4,14 @@
   display: flex;
   align-items: center;
 }
-
 .wrapper {
-  height: calc(80dvh - 24px - 20px * 6);
-  width: 80%;
-  display: flex;
-  flex: 1 1;
-  flex-basis: 80%;
-  gap: 10px;
-  border-radius: 20px;
-  padding: 20px 30px;
+  height: calc(100% - 12px*2);
   background: $background-main;
-}
-
-.header {
-  display: flex;
-  gap: 4px;
-}
-
-.absolute {
-  width: 100%;
-}
-.overflow {
-  overflow: auto;
-  position: relative;
-}
-
-.months {
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
-  padding: 4px;
-}
-
-.headerMonths {
-  display: flex;
-  gap: 12px;
-  padding: 0 4px;
-}
-
-.monthsAndDays {
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  border-radius: 20px;
-}
-.days {
-  max-width: 55px;
-  width: 55px;
-  min-width: 55px;
-}
-
-.fi {
-  @include blocked;
+  justify-content: space-between;
   padding: 12px;
-  max-width: 310px !important;
-  width: 310px !important;
-  min-width: 310px !important;
 }
 
 .block {
@@ -76,36 +27,63 @@
   justify-content: center;
 }
 
-.itog {
-  @include blocked;
-  padding: 0 12px;
-  max-height: 55px;
-  height: 55px;
-  min-height: 55px;
-  min-width: 100%;
-  width: 100%;
-  text-align: center;
-  justify-content: center;
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.headerBlock {
+.bubble {
   background: mix($text-primary, $background-main, 10%);
-  margin-bottom: 10px;
+    border-radius: 20px;
+    padding: 2px 12px;
+    display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.mainHeader {
+.flex {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
   flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 4px;
 }
 
-.markButton {
-  min-width: 100%;
-  min-height: 100%;
-  border-radius: 20px;
+.select {
+  min-width: 225px;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
-.info {
-  flex-basis: 20%;
+.movementButtons {
+  display: flex;
+  gap: 4px;
+
+  & .movementUpDownButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
 }
 
+.left {
+  transform: rotateZ(90deg);
+}
+.up {
+  transform: rotateZ(180deg);
+}
+.right {
+  transform: rotateZ(-90deg);
+}

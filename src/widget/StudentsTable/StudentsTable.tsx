@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
 import cl from "classnames";
 import { useSearchParams } from "next/navigation";
 
 import styles from "./StudentsTable.module.scss";
+import { StudentsTableMark } from "./StudentsTableMark";
 
-import { Attendance } from "@/entity/AttendanceMark/model";
 import Mark from "@/entity/AttendanceMark/ui/Mark";
-import { MarkDto } from "@/entity/Lesson/model";
 import { useGetJournalQuery } from "@/entity/Lesson/query";
+import { selectSelectedStudentTeacher } from "@/entity/Lesson/store/journal/selectors";
+import { actionSetSelectedStudentTeacher } from "@/entity/Lesson/store/journal/slice";
 import { getFioByUser } from "@/entity/User/helpers";
-import Button from "@/shared/components/Button/Button";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getMonthName } from "@/shared/helpers/date";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/rtk";
 import StudentsTableDetails from "@/widget/StudentsTable/StudentsTableDetails";
 
 type StudentsTableProps = {
@@ -26,6 +27,83 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
     { classId, teacherSubjectId },
     { refetchOnMountOrArgChange: true },
   );
+  const dispatch = useAppDispatch();
+
+  const selectedStudentLesson = useAppSelector(selectSelectedStudentTeacher);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      event.stopPropagation();
+      const { key } = event;
+
+      if (selectedStudentLesson && data) {
+        const { index, studentDto } = selectedStudentLesson;
+        const { students, monthLessonDays } = data;
+        const studentIndex = students.findIndex(
+          ({ id }) => id === studentDto.id,
+        );
+        if (studentIndex === -1) return;
+
+        const verticalMax = students.length;
+        const vertical = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
+        const normiziledVertical =
+          studentIndex + vertical >= verticalMax || studentIndex + vertical < 0
+            ? 0
+            : vertical;
+
+        const newStudentIndex = students.findIndex(
+          ({ id }) => id === studentDto.id + normiziledVertical,
+        );
+        if (newStudentIndex === -1) return;
+
+        const monthMax = monthLessonDays.length;
+        const monthDaysMax = monthLessonDays[index[0]].lessonDays.length;
+        const horizontal =
+          key === "ArrowRight" ? 1 : key === "ArrowLeft" ? -1 : 0;
+        let horizontalMonth = index[0];
+        let horizontalDay = index[1] + horizontal;
+        if (horizontalDay >= monthDaysMax) {
+          horizontalMonth++;
+          horizontalDay = 0;
+        } else if (horizontalDay < 0) {
+          horizontalMonth--;
+          horizontalDay =
+            data.monthLessonDays[horizontalMonth].lessonDays.length - 1;
+        }
+        if (horizontalMonth >= monthMax || horizontalMonth < 0) return;
+
+        const newIndex = [horizontalMonth, horizontalDay] as [number, number];
+        if (
+          ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(key) &&
+          (vertical !== 0 || horizontal !== 0)
+        ) {
+          const month = monthLessonDays[newIndex[0]].month;
+          const day = monthLessonDays[newIndex[0]].lessonDays[newIndex[1]].day;
+          const lessonId =
+            monthLessonDays[newIndex[0]].lessonDays[newIndex[1]].lessonId;
+          const markDto = students[newStudentIndex].marks[month - 1].filter(
+            ({ lessonId: lesson }) =>
+              lessonId.some(({ lessonId }) => lesson === lessonId),
+          );
+          dispatch(
+            actionSetSelectedStudentTeacher({
+              lessonId,
+              markDto,
+              date: `${day} ${getMonthName(month - 1, true)}`,
+              studentDto: students[newStudentIndex],
+              index: newIndex,
+            }),
+          );
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [data, dispatch, selectedStudentLesson]);
 
   if (!data) return <div>loading...</div>;
   const { students, monthLessonDays } = data;
@@ -81,9 +159,9 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
               key={getKey(student.id, student.studentId)}
               className={cl(styles.header, styles.headerMonths)}
             >
-              {monthLessonDays.map(({ month, lessonDays }) => (
+              {monthLessonDays.map(({ month, lessonDays }, monthIndex) => (
                 <div key={getKey(month)} className={styles.header}>
-                  {lessonDays.map(({ day, lessonId }) => {
+                  {lessonDays.map(({ day, lessonId }, dayIndex) => {
                     const markDto = student.marks[month - 1].filter(
                       ({ lessonId: lesson }) =>
                         lessonId.some(({ lessonId }) => lesson === lessonId),
@@ -97,7 +175,14 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
                         key={getKey(day, mark, attendance)}
                         className={styles.block}
                       >
-                        <StudentsTableMark markDto={markDto} />
+                        <StudentsTableMark
+                          index={[monthIndex, dayIndex]}
+                          date={`${day} ${getMonthName(month - 1, true)}`}
+                          isEditing={isEditing}
+                          lessonId={lessonId}
+                          studentDto={student}
+                          markDto={markDto}
+                        />
                       </div>
                     );
                   })}
@@ -133,9 +218,9 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
           })}
         </div>
       </div>
-      {isEditing && (
+      {isEditing && !!selectedStudentLesson && (
         <div className={styles.info}>
-          <StudentsTableDetails />
+          <StudentsTableDetails {...selectedStudentLesson} />
         </div>
       )}
     </>
@@ -143,31 +228,3 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
 };
 
 export default StudentsTable;
-
-type StudentsTableMarkProps = {
-  markDto: MarkDto[];
-};
-
-const StudentsTableMark = ({ markDto }: StudentsTableMarkProps) => {
-  const { mark, attendance } = markDto[0] || {
-    mark: undefined,
-    attendance: undefined,
-  };
-  const [markStudent, setMarkStudent] = useState<string | undefined>(mark);
-  const [attendanceStudent, setAttendanceStudent] = useState<
-    Attendance | undefined
-  >(attendance);
-
-  const handleChangeMark = () =>
-    console.log(markDto, markStudent, attendanceStudent);
-
-  return (
-    <Button
-      className={styles.markButton}
-      variant="ghost"
-      onClick={handleChangeMark}
-    >
-      <Mark mark={markStudent} attendance={attendanceStudent} />
-    </Button>
-  );
-};

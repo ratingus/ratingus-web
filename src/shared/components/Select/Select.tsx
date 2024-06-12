@@ -4,6 +4,7 @@ import React, {
   forwardRef,
   SelectHTMLAttributes,
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import {
@@ -30,7 +31,7 @@ const baseClasses = cl(styles.base);
 
 export interface SelectOption {
   label: string;
-  value: string;
+  value?: string;
 }
 
 type BaseSelectProps = DetailedHTMLProps<
@@ -47,7 +48,16 @@ type SelectProps = Omit<BaseSelectProps, "onChange"> & {
 
 export const Select = forwardRef<SelectProps, SelectProps>(
   (
-    { variant, className, options, defaultValue, multiple, onChange, ...props },
+    {
+      variant,
+      className,
+      options,
+      defaultValue,
+      multiple,
+      onChange,
+      value,
+      ...props
+    },
     ref,
   ) => {
     const [selectedValue, setSelectedValue] = useState<
@@ -56,6 +66,17 @@ export const Select = forwardRef<SelectProps, SelectProps>(
     const [selectedValues, setSelectedValues] = useState<SelectOption[]>(
       defaultValue ? [defaultValue] : [],
     );
+
+    useEffect(() => {
+      console.log("Changed value: ", value);
+      if (value) {
+        setSelectedValue(
+          value as
+            | ((string | number | readonly string[]) & SelectOption)
+            | undefined,
+        );
+      }
+    }, [value]);
 
     const handleSetValue = (newValue: SelectOption) => {
       onChange?.(newValue);

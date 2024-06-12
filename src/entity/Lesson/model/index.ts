@@ -61,6 +61,15 @@ export type MarkDto = {
   mark?: string;
   attendance?: Attendance;
 };
+export type AddMarkDto = {
+  scheduleId: number;
+  studentId: number;
+  date: Date;
+  lessonId: number;
+  lessonStudentId: number;
+  mark?: string;
+  attendance?: Attendance;
+};
 
 export type MonthLessonDayDto = {
   month: number;

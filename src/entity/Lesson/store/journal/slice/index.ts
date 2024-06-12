@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { StudentsTableMarkProps } from "@/widget/StudentsTable/StudentsTableMark";
+
 interface JournalState {
   selectedTeacherId: number | null;
+  selectedStudentLesson: StudentsTableMarkProps | null;
 }
 
 const initialState = {
   selectedTeacherId: null,
+  selectedStudentLesson: null,
 } satisfies JournalState as JournalState;
 
 export const journalSlice = createSlice({
@@ -23,10 +27,17 @@ export const journalSlice = createSlice({
     ) {
       state.selectedTeacherId = action.payload;
     },
+    actionSetSelectedStudentTeacher(
+      state,
+      action: PayloadAction<JournalState["selectedStudentLesson"]>,
+    ) {
+      state.selectedStudentLesson = action.payload;
+    },
   },
 });
 
-export const { actionSetSelectedTeacherId } = journalSlice.actions;
+export const { actionSetSelectedTeacherId, actionSetSelectedStudentTeacher } =
+  journalSlice.actions;
 
 export const { selectState } = journalSlice.selectors;
 
