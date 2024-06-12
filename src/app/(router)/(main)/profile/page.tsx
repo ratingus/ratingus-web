@@ -14,6 +14,7 @@ import { Modal } from "@/shared/components/Modal/Modal";
 import {
   actionShowModal,
   ENTER_CODE_MODAL,
+  PROFILE_EDIT_MODAL,
 } from "@/shared/components/Modal/slice";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { Typography } from "@/shared/components/Typography/Typography";
@@ -21,6 +22,9 @@ import { useAppDispatch } from "@/shared/hooks/rtk";
 
 const EnterCodeModal = dynamic(
   () => import("@/widget/_modals/EnterCodeModal/EnterCodeModal"),
+);
+const EditProfileModal = dynamic(
+  () => import("@/widget/_modals/EditProfileModal/EditProfileModal"),
 );
 
 export default function Profile() {
@@ -32,6 +36,9 @@ export default function Profile() {
 
   const handleEnterCode = () => {
     dispatch(actionShowModal(ENTER_CODE_MODAL));
+  };
+  const handleEditProfile = () => {
+    dispatch(actionShowModal(PROFILE_EDIT_MODAL));
   };
 
   return (
@@ -66,7 +73,9 @@ export default function Profile() {
               </div>
             </div>
             <Typography variant="h4" component="span">
-              <Button variant="secondary">Редактировать</Button>
+              <Button onClick={handleEditProfile} variant="secondary">
+                Редактировать
+              </Button>
             </Typography>
           </div>
           <Schools schools={schools} />
@@ -74,6 +83,9 @@ export default function Profile() {
       </PageContainer>
       <Modal modalName={ENTER_CODE_MODAL} className={styles.modal}>
         <EnterCodeModal />
+      </Modal>
+      <Modal modalName={PROFILE_EDIT_MODAL} className={styles.modal}>
+        <EditProfileModal />
       </Modal>
     </>
   );

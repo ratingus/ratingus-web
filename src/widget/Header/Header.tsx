@@ -40,12 +40,21 @@ const Header = () => {
         },
       ];
     }
+    const logoutButton = {
+      link: LOGIN_PAGE_LINK,
+      children: (
+        <Button onClick={() => signOut()} variant="important">
+          Выйти
+        </Button>
+      ),
+    };
     if (session.role === "GUEST") {
       return [
         {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     if (session.role === "STUDENT") {
@@ -66,6 +75,7 @@ const Header = () => {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     if (session.role === "TEACHER") {
@@ -86,6 +96,7 @@ const Header = () => {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     if (session.role === "LOCAL_ADMIN") {
@@ -114,6 +125,7 @@ const Header = () => {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     return [
@@ -130,19 +142,7 @@ const Header = () => {
         <HeaderIcon className={styles.icon} />
       </Link>
       <nav className={styles.nav}>
-        <ButtonGroup
-          buttons={[
-            ...buttonsHeader(),
-            {
-              link: LOGIN_PAGE_LINK,
-              children: (
-                <Button onClick={() => signOut()} variant="important">
-                  Войти
-                </Button>
-              ),
-            },
-          ]}
-        />
+        <ButtonGroup buttons={buttonsHeader()} />
       </nav>
     </header>
   );

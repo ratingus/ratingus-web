@@ -24,7 +24,29 @@ export const profileApi = baseApi.injectEndpoints({
       // @ts-ignore
       invalidatesTags: [{ type: "Profile", id: "LIST" }],
     }),
+
+    editProfile: build.mutation<
+      void,
+      {
+        name: string | null;
+        surname: string | null;
+        patronymic: string | null;
+        birthDate: Date | null;
+      }
+    >({
+      query: (data) => ({
+        url: `/profile`,
+        method: "put",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "Profile", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useEnterCodeMutation } = profileApi;
+export const {
+  useGetProfileQuery,
+  useEnterCodeMutation,
+  useEditProfileMutation,
+} = profileApi;

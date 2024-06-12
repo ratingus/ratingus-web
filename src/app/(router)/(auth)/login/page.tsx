@@ -1,7 +1,6 @@
 "use client";
 import { FormEventHandler, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 import styles from "./page.module.scss";
@@ -11,8 +10,6 @@ import { Input } from "@/shared/components/Input/Input";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 export default function Login() {
-  const router = useRouter();
-
   const form = useRef(null);
   const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
