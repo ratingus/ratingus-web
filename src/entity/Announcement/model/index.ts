@@ -7,7 +7,7 @@ export type BaseAnnouncement = {
   name: string;
   content?: string;
   creator: UserIdentity;
-  createDate: Date;
+  createDate: string;
   views: number;
   classes: Class[];
 };

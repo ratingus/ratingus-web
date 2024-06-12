@@ -11,6 +11,9 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^2.2.3
         version: 2.2.3(react-redux@9.1.0(@types/react@18.2.73)(react@18.2.0)(redux@5.0.1))(react@18.2.0)
+      '@types/cookie':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@types/react-modal':
         specifier: ^3.16.3
         version: 3.16.3

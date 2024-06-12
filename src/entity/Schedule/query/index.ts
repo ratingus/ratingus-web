@@ -24,7 +24,7 @@ export const scheduleApi = baseApi.injectEndpoints({
       transformResponse: (data: { dayLessons: ScheduleDay[] }): ScheduleDay[] =>
         data.dayLessons,
       // @ts-ignore
-      providesTags: () => [{ type: "Schedule", id: "LIST" }],
+      providesTags: () => [{ type: "getCalendar", id: "LIST" }],
     }),
     addTeacherSubjectInCalendar: build.mutation<
       void,
@@ -38,7 +38,7 @@ export const scheduleApi = baseApi.injectEndpoints({
       // @ts-ignore
       invalidatesTags: [
         // @ts-ignore
-        { type: "Schedule" },
+        { type: "getCalendar" },
       ],
     }),
     changeTeacherSubjectInCalendar: build.mutation<
@@ -53,7 +53,7 @@ export const scheduleApi = baseApi.injectEndpoints({
       // @ts-ignore
       invalidatesTags: [
         // @ts-ignore
-        { type: "Schedule" },
+        { type: "getCalendar" },
       ],
     }),
     deleteTeacherSubjectInCalendar: build.mutation<
@@ -62,13 +62,13 @@ export const scheduleApi = baseApi.injectEndpoints({
     >({
       query: ({ data, classId }) => ({
         url: `/schedule/delete/${classId}`,
-        method: "POST",
+        method: "DELETE",
         data,
       }),
       // @ts-ignore
       invalidatesTags: [
         // @ts-ignore
-        { type: "Schedule" },
+        { type: "getCalendar" },
       ],
     }),
 
@@ -82,9 +82,9 @@ export const scheduleApi = baseApi.injectEndpoints({
                 type: "Teachers",
                 id,
               })),
-              { type: "Teachers", id: "LIST" },
+              { type: "getTeachers", id: "LIST" },
             ]
-          : [{ type: "Teachers", id: "LIST" }],
+          : [{ type: "getTeachers", id: "LIST" }],
     }),
     getTeacherSubjects: build.query<TeacherSubjects[], null>({
       query: () => ({ url: `/admin-panel/subject`, method: "get" }),
@@ -93,12 +93,12 @@ export const scheduleApi = baseApi.injectEndpoints({
         result
           ? [
               ...result.map(({ subject: { id }, teachers }) => ({
-                type: "TeacherSubject",
+                type: "getTeacherSubjects",
                 id: `${id}-${teachers ? teachers.join("+") : null}`,
               })),
-              { type: "TeacherSubject", id: "LIST" },
+              { type: "getTeacherSubjects", id: "LIST" },
             ]
-          : [{ type: "TeacherSubject", id: "LIST" }],
+          : [{ type: "getTeacherSubjects", id: "LIST" }],
     }),
     addTeacherSubject: build.mutation<
       TeacherSubject,
@@ -110,18 +110,18 @@ export const scheduleApi = baseApi.injectEndpoints({
         data: newTeacherSubject,
       }),
       transformResponse: ({
-        id: subjectTeacherId,
+        id: teacherSubjectId,
         subject,
         teacher,
       }: TeacherSubjectDto): TeacherSubject => ({
         subject,
-        teacher: { ...teacher, subjectTeacherId },
+        teacher: { ...teacher, teacherSubjectId },
       }),
       invalidatesTags: [
         // @ts-ignore
-        { type: "TeacherSubject" },
+        { type: "getTeacherSubjects" },
         // @ts-ignore
-        { type: "Teachers" },
+        { type: "getTeachers" },
       ],
     }),
   }),

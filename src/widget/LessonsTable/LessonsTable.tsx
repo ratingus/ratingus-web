@@ -8,10 +8,12 @@ import { getDateString } from "@/shared/helpers/date";
 
 // import styles from './LessonsTable.module.scss';
 
-type LessonsTableProps = {};
+type LessonsTableProps = {
+  isEditing: boolean;
+};
 
 type Lesson = {
-  date: Date;
+  date: string;
   theme: string;
   homework: string;
   was?: boolean;
@@ -122,39 +124,45 @@ const lessons = [
   },
 ];
 
-const LessonsTable = ({}: LessonsTableProps) => {
+const LessonsTable = ({ isEditing }: LessonsTableProps) => {
   return (
-    <div className={styles.wrapper}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Дата</th>
-            <th>Тема</th>
-            <th className={styles.fullsize}>Домашнее задание</th>
-            <th>Проведено</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lessons.map((lesson) => (
-            <tr key={getDateString(lesson.date, "DD.MM")}>
-              <td>{getDateString(lesson.date, "DD.MM")}</td>
-              <td className={styles.fullsize}>{lesson.theme}</td>
-              <td>{lesson.homework}</td>
-              <td>
-                <input type="checkbox" checked={lesson.was} />
+    <>
+      <div className={styles.wrapper}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Тема</th>
+              <th className={styles.fullsize}>Домашнее задание</th>
+              <th>Проведено</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lessons.map((lesson) => (
+              <tr key={getDateString(lesson.date.toString(), "DD.MM")}>
+                <td>{getDateString(lesson.date.toString(), "DD.MM")}</td>
+                <td className={styles.fullsize}>{lesson.theme}</td>
+                <td>{lesson.homework}</td>
+                <td>
+                  <input type="checkbox" checked={lesson.was} />
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <td
+                colSpan={4}
+                className={cl(styles.fullsize, styles.addWrapper)}
+              >
+                <Button variant="important" className={styles.add}>
+                  +
+                </Button>
               </td>
             </tr>
-          ))}
-          <tr>
-            <td colSpan={4} className={cl(styles.fullsize, styles.addWrapper)}>
-              <Button variant="important" className={styles.add}>
-                +
-              </Button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+          </tbody>
+        </table>
+      </div>
+      {isEditing && <div className={styles.info}>ТЕСТОВЫЕ ДАННЫЕ</div>}
+    </>
   );
 };
 

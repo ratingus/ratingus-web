@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import styles from "./Header.module.scss";
 
@@ -40,12 +40,21 @@ const Header = () => {
         },
       ];
     }
+    const logoutButton = {
+      link: LOGIN_PAGE_LINK,
+      children: (
+        <Button onClick={() => signOut()} variant="important">
+          Выйти
+        </Button>
+      ),
+    };
     if (session.role === "GUEST") {
       return [
         {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     if (session.role === "STUDENT") {
@@ -66,6 +75,7 @@ const Header = () => {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     if (session.role === "TEACHER") {
@@ -86,6 +96,7 @@ const Header = () => {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     if (session.role === "LOCAL_ADMIN") {
@@ -93,10 +104,6 @@ const Header = () => {
         {
           link: ANNOUNCEMENT_PAGE_LINK,
           children: <AnnouncementIcon />,
-        },
-        {
-          link: DIARY_PAGE_LINK,
-          children: <DiaryIcon />,
         },
         {
           link: CALENDAR_PAGE_LINK,
@@ -118,6 +125,7 @@ const Header = () => {
           link: PROFILE_PAGE_LINK,
           children: <EmptyProfileIcon />,
         },
+        logoutButton,
       ];
     }
     return [

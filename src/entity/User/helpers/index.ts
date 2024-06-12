@@ -2,7 +2,7 @@ import { RoleEnum, UserIdentity } from "../model";
 
 import { getDateString } from "@/shared/helpers/date";
 
-export const getUserBirthdate = (birthdate: Date) =>
+export const getUserBirthdate = (birthdate: string) =>
   getDateString(birthdate, "DD MMMM YYYY");
 
 export const getFioByUser = (

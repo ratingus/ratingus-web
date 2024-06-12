@@ -5,10 +5,12 @@ import {
 } from "@reduxjs/toolkit";
 
 export const INFO_ABOUT_ORGANIZATION_MODAL = "infoAboutOrganizationModal";
-const PROFILE_EDIT_MODAL = "profileEditModal";
+export const PROFILE_EDIT_MODAL = "profileEditModal";
+export const ENTER_CODE_MODAL = "enterCodeModal";
 export type ModalName =
   | typeof INFO_ABOUT_ORGANIZATION_MODAL
-  | typeof PROFILE_EDIT_MODAL;
+  | typeof PROFILE_EDIT_MODAL
+  | typeof ENTER_CODE_MODAL;
 
 interface ModalState {
   activeModals: ModalName[];

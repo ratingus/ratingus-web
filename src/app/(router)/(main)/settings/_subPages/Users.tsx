@@ -121,7 +121,7 @@ const Users = () => {
                   <Typography variant="body">{login}</Typography>
                   <Typography variant="body">{getFioByUser(user)}</Typography>
                   <Typography variant="small" color="textHelper">
-                    {getUserBirthdate(birthdate)}
+                    {getUserBirthdate(birthdate.toString())}
                   </Typography>
                 </div>
               </Button>

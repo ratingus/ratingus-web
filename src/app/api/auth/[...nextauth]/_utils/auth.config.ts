@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import { default as jwtHelper } from "jsonwebtoken";
 import { NextAuthOptions, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -67,7 +67,7 @@ const providers = [
 
           if (token) {
             api.defaults.headers["Authorization"] = `Bearer ${token}`;
-            const decodedToken = jwt.verify(
+            const decodedToken = jwtHelper.verify(
               token as string,
               Buffer.from(env.NEXTAUTH_SECRET || "", "base64"),
               {
@@ -101,7 +101,36 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user, profile, account, session }) {
+    async jwt({ token, user, session, trigger }) {
+      if (trigger === "update") {
+        const resp = await api.post(
+          `/profile/change-school`,
+          {
+            id: session.school,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token.accessToken}`,
+            },
+          },
+        );
+        const tokenFromSetCookie = extractTokenFromSetCookie(
+          resp.headers["set-cookie"] || [""],
+        );
+        const decodedToken = jwtHelper.verify(
+          tokenFromSetCookie || "",
+          Buffer.from(env.NEXTAUTH_SECRET || "", "base64"),
+          {
+            algorithms: ["HS512"],
+          },
+        ) as JWT;
+
+        return {
+          ...decodedToken,
+          fio: getFioByUser(decodedToken),
+          accessToken: tokenFromSetCookie,
+        } as JWT;
+      }
       if (user) {
         return {
           ...user,
@@ -114,7 +143,9 @@ export const authOptions: NextAuthOptions = {
       };
     },
     async session({ token }) {
-      api.defaults.headers["Authorization"] = `Bearer ${token.accessToken}`;
+      if (token && token.accessToken) {
+        api.defaults.headers["Authorization"] = `Bearer ${token.accessToken}`;
+      }
       return token as unknown as Session;
     },
   },

@@ -11,8 +11,42 @@ export const profileApi = baseApi.injectEndpoints({
         ...data,
         fio: getFioByUser(data),
       }),
+      // @ts-ignore
+      providesTags: [{ type: "Profile", id: "LIST" }],
+    }),
+
+    enterCode: build.mutation<void, { code: string }>({
+      query: (data) => ({
+        url: `/profile/user-code`,
+        method: "post",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "Profile", id: "LIST" }],
+    }),
+
+    editProfile: build.mutation<
+      void,
+      {
+        name: string | null;
+        surname: string | null;
+        patronymic: string | null;
+        birthDate: Date | null;
+      }
+    >({
+      query: (data) => ({
+        url: `/profile`,
+        method: "put",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "Profile", id: "LIST" }],
     }),
   }),
 });
 
-export const { useGetProfileQuery } = profileApi;
+export const {
+  useGetProfileQuery,
+  useEnterCodeMutation,
+  useEditProfileMutation,
+} = profileApi;

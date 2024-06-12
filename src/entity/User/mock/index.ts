@@ -97,4 +97,16 @@ export const students: UserIdentity[] = [
     name: "Александр",
     patronymic: "Александрович",
   },
+  {
+    id: 17,
+    surname: "Александров",
+    name: "Александр",
+    patronymic: "Александрович",
+  },
+  {
+    id: 18,
+    surname: "Александров",
+    name: "Александр",
+    patronymic: "Александрович",
+  },
 ];

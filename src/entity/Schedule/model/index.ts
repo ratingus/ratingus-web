@@ -10,8 +10,8 @@ export type ScheduleStudy = {
   teacherSubjectId: number;
   subject: string;
   teacher: Teacher | null;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
 };
 
 export type TeacherSubjectDto = {
@@ -39,7 +39,7 @@ export type TeacherSubjects = {
   teachers: TeacherWithSubject[] | null;
 };
 
-export type TeacherWithSubject = Teacher & { subjectTeacherId: number };
+export type TeacherWithSubject = Teacher & { teacherSubjectId: number };
 
 export type AddTeacherSubjectInCalendarDto =
   DeleteTeacherSubjectInCalendarDto & {

@@ -20,7 +20,7 @@ export type UserDetails = UserIdentity & {
   role: RoleEnum;
   schoolId: number;
   classId: number;
-  birthdate: Date;
+  birthdate: string;
 };
 
 export type User = UserDetails & {
@@ -33,7 +33,7 @@ export type Profile = {
   surname: string;
   patronymic?: string;
   login: string;
-  birthdate: Date;
+  birthdate: string;
   schools: ProfileSchool[];
 };
 

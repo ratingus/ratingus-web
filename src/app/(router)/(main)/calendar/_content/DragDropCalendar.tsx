@@ -83,7 +83,27 @@ export const DragDropCalendar = ({
     const destinationId = parseInt(result.destination.droppableId);
     const destinationIndex = result.destination.index;
 
-    if (destinationIndex === 0) {
+    if (sourceId === destinationId && sourceIndex === destinationIndex) return;
+
+    if (sourceId === -1) {
+      const studyWithTeacherId = parseInt(result.draggableId);
+      addTeacherSubjectCalendar({
+        data: {
+          studyWithTeacherId,
+          lessonNumber: destinationIndex,
+          dayOfWeek: destinationId,
+        },
+        classId,
+      });
+    } else if (destinationId === -1) {
+      deleteTeacherSubjectCalendar({
+        data: {
+          lessonNumber: sourceIndex,
+          dayOfWeek: sourceId,
+        },
+        classId,
+      });
+    } else if (destinationIndex === 0) {
       await changeTeacherSubjectsCalendar({
         data: {
           from: { lessonNumber: sourceIndex, dayOfWeek: sourceId },
@@ -136,71 +156,84 @@ export const DragDropCalendar = ({
       {isEditing && (
         <>
           <div className={styles.listWrapper}>
-            <Droppable droppableId={`droppable0`}>
-              {(provided) => (
-                <div
-                  className={styles.list}
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  {teacherSubjects.map(
-                    (
-                      { subject: { id: idLesson, name: lessonName }, teachers },
-                      indexLesson,
-                    ) =>
-                      teachers?.map(({ id, ...teacher }, index) => (
-                        <Draggable
-                          key={`${idLesson}_${id}`}
-                          draggableId={`${idLesson}_${id}`}
-                          index={indexLesson * maxTeachers + index}
-                        >
-                          {(provided) => (
-                            <div
-                              className={styles.lessonConstructor}
-                              {...provided.dragHandleProps}
-                              {...provided.draggableProps}
-                              ref={provided.innerRef}
-                            >
-                              <Typography variant="h4" color="primaryMain">
-                                {lessonName}
-                              </Typography>
-                              <Typography variant="body">
-                                {getFioByUser(teacher)}
-                              </Typography>
-                            </div>
-                          )}
-                        </Draggable>
-                      )),
-                  )}
-                  {!isDragging &&
-                    teacherSubjects
-                      .filter(
-                        ({ teachers }) =>
-                          (teachers || []).length !== maxTeachers,
-                      )
-                      .map(({ subject: { id, name } }) => (
-                        <li
-                          key={id}
-                          className={cl(
-                            styles.lessonConstructor,
-                            chosenSubject?.subject.id === id && styles.isActive,
-                          )}
-                        >
-                          <Typography variant="h4" color="primaryMain">
-                            {name}
-                          </Typography>
-                          <Button
-                            isActive={chosenSubject?.subject.id === id}
-                            variant="secondary"
-                            onClick={() => handleAddTeacher(id)}
+            <Droppable droppableId={`-1`}>
+              {(provided) => {
+                let index = -1;
+                return (
+                  <div
+                    className={styles.list}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {teacherSubjects.map(
+                      ({
+                        subject: { id: idLesson, name: lessonName },
+                        teachers,
+                      }) =>
+                        teachers?.map(
+                          ({ id, teacherSubjectId, ...teacher }) => {
+                            index++;
+                            return (
+                              <Draggable
+                                key={`${idLesson}_${id}`}
+                                draggableId={teacherSubjectId.toString()}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <div
+                                    className={styles.lessonConstructor}
+                                    {...provided.dragHandleProps}
+                                    {...provided.draggableProps}
+                                    ref={provided.innerRef}
+                                  >
+                                    <Typography
+                                      variant="h4"
+                                      color="primaryMain"
+                                    >
+                                      {lessonName}
+                                    </Typography>
+                                    <Typography variant="body">
+                                      {getFioByUser(teacher)}
+                                    </Typography>
+                                  </div>
+                                )}
+                              </Draggable>
+                            );
+                          },
+                        ),
+                    )}
+                    {!isDragging &&
+                      teacherSubjects
+                        .filter(
+                          ({ teachers: teachersFromSubject }) =>
+                            (teachersFromSubject || []).length <
+                            teachers.length,
+                        )
+                        .map(({ subject: { id, name } }) => (
+                          <li
+                            key={id}
+                            className={cl(
+                              styles.lessonConstructor,
+                              chosenSubject?.subject.id === id &&
+                                styles.isActive,
+                            )}
                           >
-                            +
-                          </Button>
-                        </li>
-                      ))}
-                  {provided.placeholder}
-                </div>
-              )}
+                            <Typography variant="h4" color="primaryMain">
+                              {name}
+                            </Typography>
+                            <Button
+                              isActive={chosenSubject?.subject.id === id}
+                              variant="secondary"
+                              onClick={() => handleAddTeacher(id)}
+                            >
+                              +
+                            </Button>
+                          </li>
+                        ))}
+                    {provided.placeholder}
+                  </div>
+                );
+              }}
             </Droppable>
           </div>
 
@@ -247,7 +280,7 @@ export const DragDropCalendar = ({
                       key={lesson.timetableNumber}
                       draggableId={`${dayLesson.dayOfWeek}_${lesson.timetableNumber}`}
                       index={lesson.timetableNumber}
-                      isDragDisabled={!isDragging && lesson.subject === "Окно"}
+                      isDragDisabled={lesson.subject === "Окно"}
                     >
                       {(provided) => (
                         <div

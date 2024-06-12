@@ -1,156 +1,230 @@
-import React, { useState } from "react";
+import { useEffect } from "react";
 import cl from "classnames";
+import { useSearchParams } from "next/navigation";
 
 import styles from "./StudentsTable.module.scss";
+import { StudentsTableMark } from "./StudentsTableMark";
 
-import { Attendance } from "@/entity/AttendanceMark/model";
 import Mark from "@/entity/AttendanceMark/ui/Mark";
-import { getFiByUser } from "@/entity/User/helpers";
-import { students as mockedStudents } from "@/entity/User/mock";
-import Button from "@/shared/components/Button/Button";
+import { useGetJournalQuery } from "@/entity/Lesson/query";
+import { selectSelectedStudentTeacher } from "@/entity/Lesson/store/journal/selectors";
+import { actionSetSelectedStudentTeacher } from "@/entity/Lesson/store/journal/slice";
+import { getFioByUser } from "@/entity/User/helpers";
+import { Typography } from "@/shared/components/Typography/Typography";
+import { getMonthName } from "@/shared/helpers/date";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/rtk";
+import StudentsTableDetails from "@/widget/StudentsTable/StudentsTableDetails";
 
-type StudentsTableProps = {};
-
-const students = mockedStudents.sort((a, b) =>
-  getFiByUser(a).localeCompare(getFiByUser(b)),
-);
-
-const monthDays = [
-  {
-    month: "Январь",
-    days: [10, 12, 15, 17, 19, 22, 24, 27],
-  },
-  {
-    month: "Февраль",
-    days: [1, 6, 8, 13, 15, 29, 30, 31, 32],
-  },
-  {
-    month: "Март",
-    days: [1, 2, 11, 14, 21, 30],
-  },
-  {
-    month: "Апрель",
-    days: [6, 11, 13, 20, 25, 27],
-  },
-  {
-    month: "Май",
-    days: [4, 11, 13, 22, 27, 30],
-  },
-];
-
-function seededRandom(seed: number) {
-  const a = 16808; // multiplier
-  const m = 2147483647; // 2**31 - 1
-  const q = Math.floor(m / a);
-  const r = m % a;
-
-  seed = a * (seed % q) - r * Math.floor(seed / q);
-  if (seed <= 0) {
-    seed += m;
-  }
-
-  return seed / m;
-}
-
-const table = {
-  students: students.map((student) => ({
-    ...student,
-    marks: monthDays.map(({ days }) =>
-      days.map((day) => {
-        const random = seededRandom(
-          ((((137 * student.id * student.id * student.id) / 8 / 2) * day) / 2) *
-            day *
-            day,
-        );
-        return {
-          mark:
-            random < 0.9 && random > 0.45
-              ? Math.floor(random * 5 + 1).toString()
-              : undefined,
-          attendance:
-            random > 0.3 && random < 0.6
-              ? random < 0.4
-                ? "invalidAbsent"
-                : "validAbsent"
-              : undefined,
-        } as { mark?: string; attendance?: Attendance };
-      }),
-    ),
-  })),
-  monthDays: monthDays,
+type StudentsTableProps = {
+  isEditing: boolean;
 };
 
-const StudentsTable = ({}: StudentsTableProps) => {
+const StudentsTable = ({ isEditing }: StudentsTableProps) => {
+  const searchParams = useSearchParams();
+  const classId = Number(searchParams.get("classId"));
+  const teacherSubjectId = Number(searchParams.get("teacherSubject"));
+  const { data } = useGetJournalQuery(
+    { classId, teacherSubjectId },
+    { refetchOnMountOrArgChange: true },
+  );
+  const dispatch = useAppDispatch();
+
+  const selectedStudentLesson = useAppSelector(selectSelectedStudentTeacher);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      event.stopPropagation();
+      const { key } = event;
+
+      if (selectedStudentLesson && data) {
+        const { index, studentDto } = selectedStudentLesson;
+        const { students, monthLessonDays } = data;
+        const studentIndex = students.findIndex(
+          ({ id }) => id === studentDto.id,
+        );
+        if (studentIndex === -1) return;
+
+        const verticalMax = students.length;
+        const vertical = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
+        const normiziledVertical =
+          studentIndex + vertical >= verticalMax || studentIndex + vertical < 0
+            ? 0
+            : vertical;
+
+        const newStudentIndex = students.findIndex(
+          ({ id }) => id === studentDto.id + normiziledVertical,
+        );
+        if (newStudentIndex === -1) return;
+
+        const monthMax = monthLessonDays.length;
+        const monthDaysMax = monthLessonDays[index[0]].lessonDays.length;
+        const horizontal =
+          key === "ArrowRight" ? 1 : key === "ArrowLeft" ? -1 : 0;
+        let horizontalMonth = index[0];
+        let horizontalDay = index[1] + horizontal;
+        if (horizontalDay >= monthDaysMax) {
+          horizontalMonth++;
+          horizontalDay = 0;
+        } else if (horizontalDay < 0) {
+          horizontalMonth--;
+          horizontalDay =
+            data.monthLessonDays[horizontalMonth].lessonDays.length - 1;
+        }
+        if (horizontalMonth >= monthMax || horizontalMonth < 0) return;
+
+        const newIndex = [horizontalMonth, horizontalDay] as [number, number];
+        if (
+          ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"].includes(key) &&
+          (vertical !== 0 || horizontal !== 0)
+        ) {
+          const month = monthLessonDays[newIndex[0]].month;
+          const day = monthLessonDays[newIndex[0]].lessonDays[newIndex[1]].day;
+          const lessonId =
+            monthLessonDays[newIndex[0]].lessonDays[newIndex[1]].lessonId;
+          const markDto = students[newStudentIndex].marks[month - 1].filter(
+            ({ lessonId: lesson }) =>
+              lessonId.some(({ lessonId }) => lesson === lessonId),
+          );
+          dispatch(
+            actionSetSelectedStudentTeacher({
+              lessonId,
+              markDto,
+              date: `${day} ${getMonthName(month - 1, true)}`,
+              studentDto: students[newStudentIndex],
+              index: newIndex,
+            }),
+          );
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [data, dispatch, selectedStudentLesson]);
+
+  if (!data) return <div>loading...</div>;
+  const { students, monthLessonDays } = data;
+
+  const getKey = (...value: any[]) =>
+    `${teacherSubjectId}_${classId}_${value.join("_")}`;
+
   return (
-    <div className={styles.wrapper}>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th rowSpan={2}>№</th>
-            <th rowSpan={2} className={styles.fullsize}>
-              Фамилия Имя
-            </th>
-            {table.monthDays.map(({ month, days }) => (
-              <th key={month} colSpan={days.length}>
-                {month}
-              </th>
-            ))}
-            <th rowSpan={2}>Итог</th>
-          </tr>
-          <tr>
-            {table.monthDays.map(({ days }) => (
-              <>
-                {days.map((day) => (
-                  <th key={day} className={styles.day}>
-                    {day}
-                  </th>
-                ))}
-              </>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {table.students.map((student, index) => (
-            <tr key={student.id}>
-              <td>{index + 1}</td>
-              <td className={styles.fullsize}>{getFiByUser(student)}</td>
-              {table.monthDays.map(({ days }, monthIndex) => (
-                <>
-                  {days.map((day, dayIndex) => (
-                    <StudentsTableMark
-                      key={day}
-                      student={student.marks[monthIndex][dayIndex]}
-                    />
-                  ))}
-                </>
-              ))}
-              <td>-</td>
-            </tr>
+    <>
+      <div className={styles.wrapper}>
+        <div className={styles.mainHeader}>
+          <div className={styles.header}>
+            <div className={cl(styles.block, styles.headerBlock)}>
+              <Typography variant="h3">№</Typography>
+            </div>
+            <div className={cl(styles.fi, styles.headerBlock)}>
+              <Typography variant="h4">Фамилия Имя</Typography>
+            </div>
+          </div>
+          {students.map((student, index) => (
+            <div key={getKey(student.id)} className={styles.header}>
+              <div className={styles.block}>{index + 1}</div>
+              <div className={styles.fi}>{getFioByUser(student)}</div>
+            </div>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </div>
+        <div className={cl(styles.overflow, styles.mainHeader)}>
+          <div className={cl(styles.header, styles.absolute)}>
+            {monthLessonDays.map(({ month, lessonDays }) => (
+              <div key={getKey(month)} className={styles.months}>
+                <div className={cl(styles.monthsAndDays, styles.headerBlock)}>
+                  {getMonthName(month - 1)}
+                </div>
+                <div className={cl(styles.header)}>
+                  {lessonDays.map(({ day }) => (
+                    <div
+                      key={getKey(day)}
+                      className={cl(
+                        styles.monthsAndDays,
+                        styles.days,
+                        styles.headerBlock,
+                      )}
+                    >
+                      {day}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          {students.map((student) => (
+            <div
+              key={getKey(student.id, student.studentId)}
+              className={cl(styles.header, styles.headerMonths)}
+            >
+              {monthLessonDays.map(({ month, lessonDays }, monthIndex) => (
+                <div key={getKey(month)} className={styles.header}>
+                  {lessonDays.map(({ day, lessonId }, dayIndex) => {
+                    const markDto = student.marks[month - 1].filter(
+                      ({ lessonId: lesson }) =>
+                        lessonId.some(({ lessonId }) => lesson === lessonId),
+                    );
+                    const { mark, attendance } = markDto[0] || {
+                      mark: undefined,
+                      attendance: undefined,
+                    };
+                    return (
+                      <div
+                        key={getKey(day, mark, attendance)}
+                        className={styles.block}
+                      >
+                        <StudentsTableMark
+                          index={[monthIndex, dayIndex]}
+                          date={`${day} ${getMonthName(month - 1, true)}`}
+                          isEditing={isEditing}
+                          lessonId={lessonId}
+                          studentDto={student}
+                          markDto={markDto}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className={styles.mainHeader}>
+          <div className={cl(styles.block, styles.headerBlock, styles.itog)}>
+            <Typography variant="h3">Итог</Typography>
+          </div>
+          {students.map(({ id, marks }) => {
+            let length = 0;
+            const mark = marks.reduce((acc, mark) => {
+              const add = mark.reduce((acc, { mark }) => {
+                if (mark) {
+                  length++;
+                  return acc + Number(mark);
+                }
+                return acc;
+              }, 0);
+              return acc + add;
+            }, 0);
+
+            const avgMark = mark / length;
+
+            return (
+              <div key={id} className={styles.itog}>
+                <Mark mark={length === 0 ? "-" : avgMark.toFixed(2)} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {isEditing && !!selectedStudentLesson && (
+        <div className={styles.info}>
+          <StudentsTableDetails {...selectedStudentLesson} />
+        </div>
+      )}
+    </>
   );
 };
 
 export default StudentsTable;
-
-type StudentsTableMarkProps = {
-  student: (typeof table.students)[0]["marks"][0][0];
-};
-
-const StudentsTableMark = ({ student }: StudentsTableMarkProps) => {
-  const [mark, setMark] = useState<string | undefined>(student.mark);
-  const [attendance, setAttendance] = useState<Attendance | undefined>(
-    student.attendance,
-  );
-
-  const handleChangeMark = () => {};
-
-  return (
-    <td className={cl(styles.day, styles.tdMark)}>
-      <Button variant="ghost" onClick={handleChangeMark}></Button>
-      <Mark variant="h4" mark={mark} attendance={attendance} />
-    </td>
-  );
-};
