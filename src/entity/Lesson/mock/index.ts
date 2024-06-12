@@ -87,8 +87,6 @@
 //
 // export default [getAnnouncementsHandler];
 
-import { DayLessonDetailed } from "@/entity/Lesson/model";
-
 // export const generateDayLesson = (day: number): DayLesson => {
 //   const dayLesson = generateDayLessonDetailed(day);
 //   return {
@@ -99,126 +97,126 @@ import { DayLessonDetailed } from "@/entity/Lesson/model";
 //   };
 // };
 
-export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
-  dateTime: new Date(Date.UTC(2024, 3, 29 + day - 1)).toString(),
-  studies: [
-    {
-      id: 1 + 8 * day,
-      studyId: 0,
-      subject: "Математика",
-      // @ts-ignore
-      teacher: {
-        id: 1,
-        name: "Иван",
-        surname: "Иванов",
-        patronymic: "Иванович",
-      },
-      timetableNumber: 1,
-      mark: "5",
-      attendance: "was",
-      homework: "Подготовиться к контрольной работе",
-      note: "Повторить деепричастия и причастия.",
-    },
-    {
-      id: 2 + 8 * day,
-      studyId: 1,
-      subject: "Физика",
-      // @ts-ignore
-      teacher: {
-        id: 2,
-        name: "Петр",
-        surname: "Петров",
-        patronymic: "Петрович",
-      },
-      timetableNumber: 2,
-      mark: "4",
-      attendance: "was",
-      note: "Не понял пункт 2.3 при ответе на вопрос 3.2 у доски, надо прорешать похожие.",
-    },
-    {
-      id: 3 + 8 * day,
-      studyId: 2,
-      subject: "Химия",
-      // @ts-ignore
-      teacher: {
-        id: 3,
-        name: "Сидор",
-        surname: "Сидоров",
-        patronymic: "Сидорович",
-      },
-      timetableNumber: 3,
-      mark: "3",
-      attendance: "was",
-      homework: "Подготовиться к контрольной работе",
-    },
-    {
-      id: 4 + 8 * day,
-      studyId: 2,
-      subject: "Химия",
-      // @ts-ignore
-      teacher: {
-        id: 3,
-        name: "Сидор",
-        surname: "Сидоров",
-        patronymic: "Сидорович",
-      },
-      timetableNumber: 4,
-      mark: "2",
-    },
-    {
-      id: 5 + 8 * day,
-      studyId: 2,
-      subject: "Химия",
-      // @ts-ignore
-      teacher: {
-        id: 3,
-        name: "Сидор",
-        surname: "Сидоров",
-        patronymic: "Сидорович",
-      },
-      timetableNumber: 5,
-      attendance: "was",
-    },
-    {
-      id: 6 + 8 * day,
-      studyId: 2,
-      subject: "Химия",
-      // @ts-ignore
-      teacher: {
-        id: 3,
-        name: "Сидор",
-        surname: "Сидоров",
-        patronymic: "Сидорович",
-      },
-      timetableNumber: 6,
-      attendance: "validAbsent",
-    },
-    {
-      id: 7 + 8 * day,
-      studyId: 2,
-      subject: "Химия",
-      // @ts-ignore
-      teacher: {
-        id: 3,
-        name: "Сидор",
-        surname: "Сидоров",
-        patronymic: "Сидорович",
-      },
-      timetableNumber: 7,
-      attendance: "invalidAbsent",
-    },
-    {
-      id: 8 + 8 * day,
-      studyId: 2,
-      subject: "Химия",
-      // @ts-ignore
-      teacher: {
-        id: 3,
-        name: "Сидор",
-        surname: "Сидоров",
-        patronymic: "Сидорович",
-      },
-      timetableNumber: 8,
-    },
-  ],
-});
+// export const generateDayLessonDetailed = (day: number): DayLessonDetailed => ({
+//   dateTime: new Date(Date.UTC(2024, 3, 29 + day - 1)).toString(),
+//   studies: [
+//     {
+//       id: 1 + 8 * day,
+//       studyId: 0,
+//       subject: "Математика",
+//       // @ts-ignore
+//       teacher: {
+//         id: 1,
+//         name: "Иван",
+//         surname: "Иванов",
+//         patronymic: "Иванович",
+//       },
+//       timetableNumber: 1,
+//       mark: "5",
+//       attendance: "was",
+//       homework: "Подготовиться к контрольной работе",
+//       note: "Повторить деепричастия и причастия.",
+//     },
+//     {
+//       id: 2 + 8 * day,
+//       studyId: 1,
+//       subject: "Физика",
+//       // @ts-ignore
+//       teacher: {
+//         id: 2,
+//         name: "Петр",
+//         surname: "Петров",
+//         patronymic: "Петрович",
+//       },
+//       timetableNumber: 2,
+//       mark: "4",
+//       attendance: "was",
+//       note: "Не понял пункт 2.3 при ответе на вопрос 3.2 у доски, надо прорешать похожие.",
+//     },
+//     {
+//       id: 3 + 8 * day,
+//       studyId: 2,
+//       subject: "Химия",
+//       // @ts-ignore
+//       teacher: {
+//         id: 3,
+//         name: "Сидор",
+//         surname: "Сидоров",
+//         patronymic: "Сидорович",
+//       },
+//       timetableNumber: 3,
+//       mark: "3",
+//       attendance: "was",
+//       homework: "Подготовиться к контрольной работе",
+//     },
+//     {
+//       id: 4 + 8 * day,
+//       studyId: 2,
+//       subject: "Химия",
+//       // @ts-ignore
+//       teacher: {
+//         id: 3,
+//         name: "Сидор",
+//         surname: "Сидоров",
+//         patronymic: "Сидорович",
+//       },
+//       timetableNumber: 4,
+//       mark: "2",
+//     },
+//     {
+//       id: 5 + 8 * day,
+//       studyId: 2,
+//       subject: "Химия",
+//       // @ts-ignore
+//       teacher: {
+//         id: 3,
+//         name: "Сидор",
+//         surname: "Сидоров",
+//         patronymic: "Сидорович",
+//       },
+//       timetableNumber: 5,
+//       attendance: "was",
+//     },
+//     {
+//       id: 6 + 8 * day,
+//       studyId: 2,
+//       subject: "Химия",
+//       // @ts-ignore
+//       teacher: {
+//         id: 3,
+//         name: "Сидор",
+//         surname: "Сидоров",
+//         patronymic: "Сидорович",
+//       },
+//       timetableNumber: 6,
+//       attendance: "validAbsent",
+//     },
+//     {
+//       id: 7 + 8 * day,
+//       studyId: 2,
+//       subject: "Химия",
+//       // @ts-ignore
+//       teacher: {
+//         id: 3,
+//         name: "Сидор",
+//         surname: "Сидоров",
+//         patronymic: "Сидорович",
+//       },
+//       timetableNumber: 7,
+//       attendance: "invalidAbsent",
+//     },
+//     {
+//       id: 8 + 8 * day,
+//       studyId: 2,
+//       subject: "Химия",
+//       // @ts-ignore
+//       teacher: {
+//         id: 3,
+//         name: "Сидор",
+//         surname: "Сидоров",
+//         patronymic: "Сидорович",
+//       },
+//       timetableNumber: 8,
+//     },
+//   ],
+// });
