@@ -62,7 +62,7 @@ export const scheduleApi = baseApi.injectEndpoints({
     >({
       query: ({ data, classId }) => ({
         url: `/schedule/delete/${classId}`,
-        method: "POST",
+        method: "DELETE",
         data,
       }),
       // @ts-ignore
@@ -110,12 +110,12 @@ export const scheduleApi = baseApi.injectEndpoints({
         data: newTeacherSubject,
       }),
       transformResponse: ({
-        id: subjectTeacherId,
+        id: teacherSubjectId,
         subject,
         teacher,
       }: TeacherSubjectDto): TeacherSubject => ({
         subject,
-        teacher: { ...teacher, subjectTeacherId },
+        teacher: { ...teacher, teacherSubjectId },
       }),
       invalidatesTags: [
         // @ts-ignore
