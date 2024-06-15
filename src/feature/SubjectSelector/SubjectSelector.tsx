@@ -30,7 +30,7 @@ const SubjectSelector = () => {
       subjects[0].teachers[0].teacherSubjectId) ||
     -1;
 
-  if (teacherSubjectFromParams <= 0) {
+  if (teacherSubjectFromParams < 0) {
     router.push(
       `${path}?${addQueryInParamsString(searchParams, { name: "teacherSubject", value: teacherSubject })}`,
     );
@@ -41,7 +41,7 @@ const SubjectSelector = () => {
     );
   }
 
-  if (!subjects || !teacherSubject) return <div>loading...</div>;
+  if (!subjects) return <div>loading...</div>;
 
   const teacherSubjects = subjects.flatMap(
     ({ subject, teachers }) =>

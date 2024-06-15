@@ -11,7 +11,7 @@ import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { TabOption, Tabs } from "@/shared/components/Tabs/Tabs";
 import { useAppSelector } from "@/shared/hooks/rtk";
 import { useUser } from "@/shared/hooks/useUser";
-import LessonsTable from "@/widget/LessonsTable/LessonsTable";
+import { LessonsTable } from "@/widget/LessonsTable/LessonsTable";
 import StudentsTable from "@/widget/StudentsTable/StudentsTable";
 
 export default function Journal() {
