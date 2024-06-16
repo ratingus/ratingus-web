@@ -1,4 +1,10 @@
-import { DetailedHTMLProps, InputHTMLAttributes, useId } from "react";
+import {
+  ChangeEventHandler,
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useId,
+  useState,
+} from "react";
 import cl from "classnames";
 
 import styles from "./Checkbox.module.scss";
@@ -11,18 +17,33 @@ type BaseInputProps = DetailedHTMLProps<
 >;
 export type CheckboxProps = BaseInputProps;
 
-export const Checkbox = ({ className, id, ...props }: CheckboxProps) => {
+export const Checkbox = ({
+  className,
+  id,
+  checked,
+  onChange,
+  ...props
+}: CheckboxProps) => {
   const baseId = useId();
   const checkboxId = [baseId, id].join("_");
+  const [value, setValue] = useState(!!checked);
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setValue(e.currentTarget.checked);
+    onChange?.(e);
+  };
+
   return (
     <div className={cl(styles.wrapper, props.disabled && styles.disabled)}>
       <input
         {...props}
         id={checkboxId}
         className={cl(className)}
+        checked={value}
+        onChange={handleChange}
         type="checkbox"
       />
-      {props.checked && <Icon />}
+      {value && <Icon />}
       <label htmlFor={checkboxId} />
     </div>
   );

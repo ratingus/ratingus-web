@@ -9,6 +9,7 @@ import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { actionHideModal } from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 
 const EnterCodeModal = () => {
@@ -23,8 +24,12 @@ const EnterCodeModal = () => {
       const formCode = formData.get("code");
       if (formCode) {
         const code = formCode.toString();
+        yaMetricaEvent(
+          "Отправлен запрос на подключение пользователя к организации",
+        );
         enterCode({ code }).then(() => {
           dispatch(actionHideModal());
+          yaMetricaEvent("Пользователь добавлен в организацию");
         });
       }
     }
@@ -45,6 +50,7 @@ const EnterCodeModal = () => {
             name="code"
             variant="dark"
             placeholder="Введите код..."
+            onBlur={() => yaMetricaEvent("Ввести код организации")}
           />
         </div>
 

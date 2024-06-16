@@ -10,6 +10,7 @@ import { Input } from "@/shared/components/Input/Input";
 import { Select } from "@/shared/components/Select/Select";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useUser } from "@/shared/hooks/useUser";
 
 type CreateAnnouncementProps = {};
@@ -23,7 +24,6 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.dir(selectRef.current);
     if (form.current && selectRef.current) {
       const formData = new FormData(form.current);
       // @ts-ignore
@@ -35,6 +35,7 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
         content: formData.get("content") as string,
         classesId,
       });
+      yaMetricaEvent("Создать объявление");
       handleReset();
     }
   };

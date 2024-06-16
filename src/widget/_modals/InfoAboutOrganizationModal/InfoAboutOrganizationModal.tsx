@@ -1,29 +1,77 @@
 "use client";
 
-import React, { FormEventHandler, useRef } from "react";
+import React, { ChangeEvent, FormEventHandler, useRef, useState } from "react";
+import InputMask from "react-input-mask";
+import { toast } from "react-toastify";
 import Link from "next/link";
+
+import "react-toastify/dist/ReactToastify.css";
 
 import styles from "./InfoAboutOrganizationModal.module.scss";
 
+import { useCreateApplicationMutation } from "@/entity/School/query";
 import Button from "@/shared/components/Button/Button";
-import { Input } from "@/shared/components/Input/Input";
+import { Checkbox } from "@/shared/components/Checkbox";
+import { BaseInputProps, Input } from "@/shared/components/Input/Input";
 import { actionHideModal } from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 
 type InfoAboutOrganizationModalProps = {};
 
 const InfoAboutOrganizationModal = ({}: InfoAboutOrganizationModalProps) => {
   const dispatch = useAppDispatch();
+  const [createAnnouncement] = useCreateApplicationMutation();
+
   const form = useRef(null);
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      console.log(formData);
-      console.log(formData.get("address"));
+      console.log(formData.get("isLegalRulesAccepted"));
+      const email = formData.get("email")?.toString() || "";
+      const name = formData.get("name")?.toString() || "";
+      const address = formData.get("address")?.toString() || "";
+      const phone = formData.get("phone")?.toString() || "";
+      const isLegalRulesAccepted = Boolean(
+        formData.get("isLegalRulesAccepted")?.toString() || "",
+      );
+
+      console.log(phone.length);
+      if (!email || !name || !address || !phone) {
+        toast("Не все поля заполнены!", {
+          type: "error",
+        });
+        return;
+      }
+      if (phone.length < 18) {
+        toast("Неправильный номер телефона", {
+          type: "error",
+        });
+        return;
+      }
+      if (!isLegalRulesAccepted) {
+        toast('Согласитесь с "Пользовательским соглашением"', {
+          type: "error",
+        });
+        return;
+      }
+      createAnnouncement({
+        email,
+        name,
+        address,
+        phone,
+      }).then(() => {
+        yaMetricaEvent("Отправить заявку на создание учебной организации");
+        dispatch(actionHideModal());
+      });
     }
-    dispatch(actionHideModal());
+  };
+
+  const [phone, setPhone] = useState("");
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPhone(e.target.value);
   };
 
   return (
@@ -68,19 +116,32 @@ const InfoAboutOrganizationModal = ({}: InfoAboutOrganizationModalProps) => {
             />
           </div>
 
+          <div className={styles.formBlockWithInputs}>
+            <Typography variant="h3">Номер телефона организации:</Typography>
+            <InputMask
+              mask="+7 (999) 999 99 99"
+              maskChar={null}
+              value={phone}
+              onChange={handleChange}
+            >
+              {/* @ts-ignore */}
+              {(inputProps: BaseInputProps) => (
+                <Input
+                  {...inputProps}
+                  form="addOrganization"
+                  name="phone"
+                  variant="dark"
+                  placeholder="Введите номер телефона...."
+                />
+              )}
+            </InputMask>
+          </div>
+
           <div className={styles.flex}>
-            <Input
-              type="checkbox"
-              form="addOrganization"
-              name="isLegalRulesAccepted"
-            />
+            <Checkbox form="addOrganization" name="isLegalRulesAccepted" />
             <Typography variant="h3">
               Я согласен с{" "}
-              <Link
-                href="/privacy.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href="/privacy.pdf" target="_blank">
                 “Пользовательским соглашением”
               </Link>
             </Typography>

@@ -16,6 +16,7 @@ import { Checkbox } from "@/shared/components/Checkbox";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { formatDateForInput, getDayAndMonth } from "@/shared/helpers/date";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 
 // import styles from './LessonsTable.module.scss';
 
@@ -203,7 +204,13 @@ const DefaultLesson = ({
   return (
     <LessonComponent
       onClick={onClick}
-      onSave={(lesson) => updateLesson({ lessonId: baseLesson.id, ...lesson })}
+      onSave={(lesson) =>
+        updateLesson({ lessonId: baseLesson.id, ...lesson }).then(() => {
+          if (baseLesson.homework !== lesson.homework) {
+            yaMetricaEvent("Изменить домашнее задание в журнале");
+          }
+        })
+      }
       isEditing={isEditing}
       isCurrentEditing={isCurrentEditing}
       onDelete={handleDelete}
@@ -221,7 +228,7 @@ const CreateLesson = ({
   isCurrentEditing: boolean;
   onReset: () => void;
 }) => {
-  const lesson = {
+  const initLesson = {
     id: -1,
     lessonNumber: -1,
     theme: "",
@@ -237,13 +244,22 @@ const CreateLesson = ({
 
   return (
     <LessonComponent
-      onSave={(lesson) =>
-        addLesson({ classId, teacherSubjectId, scheduleId: -1, ...lesson })
-      }
+      onSave={(lesson) => {
+        addLesson({
+          classId,
+          teacherSubjectId,
+          scheduleId: -1,
+          ...lesson,
+        }).then(() => {
+          if (initLesson.homework !== lesson.homework) {
+            yaMetricaEvent("Выдать домашнее задание в журнале");
+          }
+        });
+      }}
       onReset={onReset}
       isEditing={isEditing}
       isCurrentEditing={isCurrentEditing}
-      {...lesson}
+      {...initLesson}
     />
   );
 };
