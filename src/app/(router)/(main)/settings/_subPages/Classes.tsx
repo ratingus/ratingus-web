@@ -1,9 +1,15 @@
 "use client";
 import React, { FormEventHandler, useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 import styles from "./Users.module.scss";
 
-import { useGetClassesQuery } from "@/entity/School/query";
+import { Class } from "@/entity/School/model";
+import {
+  useCreateClassMutation,
+  useGetClassesQuery,
+  useUpdateClassMutation,
+} from "@/entity/School/query";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Label } from "@/shared/components/Label/Label";
@@ -11,36 +17,78 @@ import { Typography } from "@/shared/components/Typography/Typography";
 
 const Classes = () => {
   const { data: classes = [] } = useGetClassesQuery(null);
+  const [addClass] = useCreateClassMutation();
+  const [updateClass] = useUpdateClassMutation();
   const [isActive, setIsActive] = useState<boolean>(false);
-  const [choosenClassIndex, setChoosenClassIndex] = useState<number>();
+  const [chosenClass, setChosenClass] = useState<Class>();
 
-  const form = useRef(null);
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const addClassForm = useRef(null);
+  const handleAddClassSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (form.current) {
-      const formData = new FormData(form.current);
+    if (addClassForm.current) {
+      const formData = new FormData(addClassForm.current);
+      const name = formData.get("class")?.toString();
+      if (!name) {
+        toast("Не все поля заполнены!", {
+          type: "error",
+        });
+        return;
+      }
+      if (classes.find((item) => item.name === name)) {
+        toast("Имена классов не должны совпадать!", {
+          type: "error",
+        });
+        return;
+      }
+      addClass({
+        name,
+      });
+    }
+  };
+  const updateClassForm = useRef(null);
+  const handleUpdateClassSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    if (updateClassForm.current) {
+      const formData = new FormData(updateClassForm.current);
+      const name = formData.get("class")?.toString();
+      if (!chosenClass || !name) {
+        toast("Не все поля заполнены!", {
+          type: "error",
+        });
+        return;
+      }
+      if (name === chosenClass.name) {
+        toast("Имена классов не должны совпадать!", {
+          type: "error",
+        });
+        return;
+      }
+      updateClass({
+        id: chosenClass.id,
+        name,
+      });
     }
   };
 
   const handleAddClassClick = () => {
-    setChoosenClassIndex(undefined);
+    setChosenClass(undefined);
     setIsActive(true);
   };
 
-  const handleChangeClassClick = (index: number) => {
-    setChoosenClassIndex(index);
+  const handleChangeClassClick = (classDto: Class) => {
+    setChosenClass(classDto);
     setIsActive(false);
   };
   return (
     <div className={styles.wrapper}>
       <div className={styles.listWrapper}>
         <ul className={styles.list}>
-          {classes.map(({ id, name }, index) => (
+          {classes.map(({ id, name }) => (
             <li key={id} className={styles.roleWrapper}>
               <Label
                 className={styles.role}
-                variant={index === choosenClassIndex ? "primary" : "secondary"}
-                onClick={() => handleChangeClassClick(index)}
+                variant={id === chosenClass?.id ? "primary" : "secondary"}
+                onClick={() => handleChangeClassClick({ id, name })}
               >
                 {name}
               </Label>
@@ -52,7 +100,7 @@ const Classes = () => {
           isActive={isActive}
           onClick={handleAddClassClick}
         >
-          Добавить роль
+          Добавить класс
         </Button>
       </div>
 
@@ -60,16 +108,16 @@ const Classes = () => {
         {isActive ? (
           <div>
             <form
-              id="addRole"
+              id="addClass"
               className={styles.form}
-              ref={form}
-              onSubmit={handleSubmit}
+              ref={addClassForm}
+              onSubmit={handleAddClassSubmit}
             >
               <div className={styles.formBlock}>
                 <Typography variant="h3">Название класса:</Typography>
                 <div className={styles.formBlockWithInputs}>
                   <Input
-                    form="addRole"
+                    form="addClass"
                     name="class"
                     variant="dark"
                     placeholder="Название класса"
@@ -82,24 +130,24 @@ const Classes = () => {
             </form>
           </div>
         ) : (
-          choosenClassIndex !== undefined && (
+          !!chosenClass && (
             <div>
               <form
-                id="addRole"
+                id="updateClass"
                 className={styles.form}
-                ref={form}
-                onSubmit={handleSubmit}
+                ref={updateClassForm}
+                onSubmit={handleUpdateClassSubmit}
               >
                 <div className={styles.formBlock}>
                   <Typography variant="h3">Название класса:</Typography>
                   <div className={styles.formBlockWithInputs}>
                     <Input
-                      key={choosenClassIndex}
-                      form="addRole"
+                      key={chosenClass.id}
+                      form="updateClass"
                       name="class"
                       variant="dark"
                       placeholder="Название класса"
-                      defaultValue={classes[choosenClassIndex].name}
+                      defaultValue={chosenClass.name}
                     />
                   </div>
                 </div>

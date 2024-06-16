@@ -28,6 +28,17 @@ export const classApi = baseApi.injectEndpoints({
         { type: "getClasses", id: "LIST" },
       ],
     }),
+    updateClass: build.mutation<Class, Class>({
+      query: (newClass) => ({
+        url: `/admin-panel/class/${newClass.id}`,
+        method: "put",
+        data: newClass,
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getClasses", id: "LIST" },
+      ],
+    }),
 
     chooseSchool: build.mutation<void, Pick<School, "id">>({
       query: (newClass) => ({
@@ -114,6 +125,7 @@ export const classApi = baseApi.injectEndpoints({
 export const {
   useGetClassesQuery,
   useCreateClassMutation,
+  useUpdateClassMutation,
   useChooseSchoolMutation,
 
   useGetApplicationsQuery,
