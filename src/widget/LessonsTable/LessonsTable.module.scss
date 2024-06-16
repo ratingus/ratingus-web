@@ -3,9 +3,13 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 16px;
-  height: calc(80dvh - 24px - 20px * 4 - 40px);
+  background: $background-main;
   width: 100%;
   position: relative;
+  height: calc(80dvh - 24px - 20px * 4 - 40px );
+  border-radius: 20px;
+  margin: -20px;
+  padding: 20px;
 }
 
 .lessons {

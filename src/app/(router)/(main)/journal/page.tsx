@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.scss";
 
 import { selectSelectedTeacherId } from "@/entity/Lesson/store/journal/selectors";
+import { RoleEnum } from "@/entity/User/model";
 import ClassSelector from "@/feature/ClassSelector/ClassSelector";
 import SubjectSelector from "@/feature/SubjectSelector/SubjectSelector";
 import Button from "@/shared/components/Button/Button";
@@ -45,7 +46,7 @@ export default function Journal() {
     );
   };
   const selectedValue = useAppSelector(selectSelectedTeacherId);
-  const { userRoleId } = useUser();
+  const { userRoleId, role } = useUser();
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -87,7 +88,7 @@ export default function Journal() {
         <SubjectSelector />
         {selectedValue !== null &&
           !!userRoleId &&
-          userRoleId === selectedValue && (
+          (userRoleId === selectedValue || role === RoleEnum.LOCAL_ADMIN) && (
             <Button
               isActive={isEditing}
               onClick={() => setIsEditing((prev) => !prev)}
