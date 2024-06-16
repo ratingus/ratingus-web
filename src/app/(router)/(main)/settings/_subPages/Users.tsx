@@ -96,7 +96,10 @@ const Users = () => {
             <li key={id} className={styles.userWrapper}>
               <Button
                 variant="ghost"
-                className={styles.user}
+                className={cl(
+                  styles.user,
+                  id === chosenUser?.id && styles.active,
+                )}
                 onClick={() => handleChooseUser(id)}
               >
                 <Avatar avatarClassName={styles.avatar} size={64} />

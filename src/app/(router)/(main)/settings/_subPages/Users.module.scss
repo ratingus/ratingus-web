@@ -22,13 +22,19 @@
 
 .userWrapper {
   margin: 5px 0;
-  padding: 4px 16px 4px 10px;
   display: flex;
   background: $background-paper;
+  border-radius: 20px;
 }
 .user {
+  padding: 4px 16px 4px 10px;
   display: flex;
+  justify-content: left;
+  width: 100%;
   gap: 10px;
+}
+.active {
+  box-shadow: inset 0 0 0 2px $primary-main;
 }
 .userDetails {
   display: flex;
