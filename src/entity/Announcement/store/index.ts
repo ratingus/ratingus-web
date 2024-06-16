@@ -30,11 +30,11 @@ export const optionsArray = Object.values(typedOptions);
 
 export type OptionType = keyof ArrayType<typeof options>;
 interface AnnouncementState {
-  selectedAnnouncementMode: TabOption<OptionType>;
+  selectedAnnouncementMode: TabOption<OptionType> | null;
 }
 
 const initialState = {
-  selectedAnnouncementMode: typedOptions.all,
+  selectedAnnouncementMode: null,
 } satisfies AnnouncementState as AnnouncementState;
 
 export const announcementSlice = createSlice({

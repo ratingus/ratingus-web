@@ -27,20 +27,24 @@ export default function Announcements() {
         <AnnouncementSwitch isLoading={isLoading} setClassId={setClassId} />
       </Typography>
       <div className={styles.announcements}>
-        {selectedOption.value === "add" ? (
-          <CreateAnnouncement />
+        {selectedOption ? (
+          selectedOption.value === "add" ? (
+            <CreateAnnouncement />
+          ) : (
+            announcements &&
+            announcements.map((announcement) => (
+              <AnnouncementCard
+                key={
+                  announcement.creator.fio +
+                  announcement.name +
+                  getDateTime(announcement.createDate)
+                }
+                {...announcement}
+              />
+            ))
+          )
         ) : (
-          announcements &&
-          announcements.map((announcement) => (
-            <AnnouncementCard
-              key={
-                announcement.creator.fio +
-                announcement.name +
-                getDateTime(announcement.createDate)
-              }
-              {...announcement}
-            />
-          ))
+          <div>loading...</div>
         )}
       </div>
     </PageContainer>
