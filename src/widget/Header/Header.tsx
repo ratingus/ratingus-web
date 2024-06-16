@@ -29,7 +29,6 @@ import SettingsIcon from "@/shared/icons/settings.svg";
 
 const Header = () => {
   const { data: session, status } = useSession();
-  console.log(session);
 
   const buttonsHeader = (): ButtonProps[] => {
     if (status !== "authenticated" || !session) {

@@ -142,7 +142,6 @@ export const updateJournalCache = (
       "getJournal",
       { classId, teacherSubjectId },
       (draft: MagazineDto) => {
-        console.log(current(draft));
         const studentIndex = current(draft).students.findIndex(
           (s: { id: number }) => s.id === studentDto.id,
         );
@@ -151,17 +150,13 @@ export const updateJournalCache = (
           const lessonIndex = student.marks.findIndex((lessonMarks: any[]) =>
             lessonMarks.some((m) => m.lessonId === data.lessonId),
           );
-          console.log(lessonIndex);
           if (lessonIndex >= 0) {
             const markIndex = student.marks[lessonIndex].findIndex(
               (m: { lessonId: number }) => m.lessonId === data.lessonId,
             );
-            console.log(markIndex);
             if (markIndex >= 0) {
-              console.log(student.marks[lessonIndex][markIndex]);
               draft.students[studentIndex].marks[lessonIndex][markIndex] =
                 newMarkDto[0];
-              console.log(student.marks[lessonIndex][markIndex]);
             }
           } else {
             draft.students[studentIndex].marks[index[0]].push(newMarkDto[0]);

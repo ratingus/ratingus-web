@@ -126,7 +126,6 @@ const StudentsTableDetails = (props: StudentsTableDetailsProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const { key } = event;
-      console.log(key);
       if (["1", "2", "3", "4", "5"].includes(key)) {
         setMarkValue(key);
       } else if (["Н", "О", "У"].includes(key.toUpperCase())) {
@@ -171,10 +170,6 @@ const StudentsTableDetails = (props: StudentsTableDetailsProps) => {
 
     setMarkValue(mark);
     setAttendanceValue(attendance);
-    console.log(markValue);
-    console.log(attendanceValue);
-    console.log(mark);
-    console.log(attendance);
   };
 
   return (

@@ -63,7 +63,6 @@ const providers = [
         const setCookie = response.headers["set-cookie"];
         if (setCookie) {
           const token = extractTokenFromSetCookie(setCookie);
-          console.log("Extracted token:", token);
 
           if (token) {
             api.defaults.headers["Authorization"] = `Bearer ${token}`;

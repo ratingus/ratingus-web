@@ -18,8 +18,6 @@ const Classes = () => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      console.log(formData);
-      console.log(formData.get("class"));
     }
   };
 

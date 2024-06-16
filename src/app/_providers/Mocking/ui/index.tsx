@@ -12,7 +12,6 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     setIsMockingStarted(true);
     // initMocks()
     //   .then(() => {
-    //     console.log("Mocking started");
     //     setIsMockingStarted(true);
     //   })
     //   .catch((error) => console.error("Mocking failed", error));

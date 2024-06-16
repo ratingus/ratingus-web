@@ -29,7 +29,6 @@ const InfoAboutOrganizationModal = ({}: InfoAboutOrganizationModalProps) => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      console.log(formData.get("isLegalRulesAccepted"));
       const email = formData.get("email")?.toString() || "";
       const name = formData.get("name")?.toString() || "";
       const address = formData.get("address")?.toString() || "";
@@ -38,7 +37,6 @@ const InfoAboutOrganizationModal = ({}: InfoAboutOrganizationModalProps) => {
         formData.get("isLegalRulesAccepted")?.toString() || "",
       );
 
-      console.log(phone.length);
       if (!email || !name || !address || !phone) {
         toast("Не все поля заполнены!", {
           type: "error",

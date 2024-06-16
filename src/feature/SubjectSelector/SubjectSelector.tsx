@@ -19,7 +19,6 @@ const SubjectSelector = () => {
   const path = usePathname();
   const dispatch = useAppDispatch();
 
-  console.log(subjects);
   const teacherSubjectFromParams = Number(searchParams.get("teacherSubject"));
   const teacherSubject =
     teacherSubjectFromParams ||
