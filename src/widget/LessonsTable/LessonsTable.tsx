@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import cl from "classnames";
 import { useSearchParams } from "next/navigation";
 
@@ -288,17 +288,19 @@ const LessonComponent = ({
   const [date, setDate] = useState<Date>(new Date(initDate));
   const [finished, setFinished] = useState<boolean | undefined>(initFinished);
 
-  const reset = () => {
+  const [saved, setSaved] = useState(false);
+
+  const reset = useCallback(() => {
     setTheme(initTheme);
     setHomework(initHomework);
     setDate(new Date(initDate));
     setFinished(initFinished);
-  };
+  }, [initDate, initFinished, initHomework, initTheme]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     reset();
     onReset?.();
-  };
+  }, [onReset, reset]);
 
   const handleSave = () => {
     onSave({
@@ -307,8 +309,15 @@ const LessonComponent = ({
       date: date.toISOString(),
       finished,
     });
-    reset();
+    setSaved(true);
   };
+
+  useEffect(() => {
+    if (!isCurrentEditing) {
+      setSaved(false);
+      handleReset();
+    }
+  }, [handleReset, isCurrentEditing, saved]);
 
   const handleDelete = () => {
     onDelete?.();
