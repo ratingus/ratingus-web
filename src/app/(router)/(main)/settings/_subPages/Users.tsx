@@ -205,7 +205,7 @@ const Users = () => {
                 </Button>
               </form>
               <Typography className={styles.codes} variant="h4">
-                Коды приглашения:
+                Не активированные коды приглашения:
               </Typography>
               <Typography className={styles.codesPanel}>
                 {userCodes.map(({ classDto, code, ...user }) => (
