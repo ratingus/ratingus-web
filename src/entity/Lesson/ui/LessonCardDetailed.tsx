@@ -19,13 +19,17 @@ const LessonCardDetailed = ({ day, ...lesson }: LessonCardProps) => {
           {homework && (
             <div className={styles.flexStart}>
               <Typography>Домашнее задание:</Typography>
-              <Typography variant="caption">{homework}</Typography>
+              <Typography variant="caption" className={styles.bigText}>
+                {homework}
+              </Typography>
             </div>
           )}
           {note && (
             <div className={styles.flexStart}>
               <Typography>Заметки:</Typography>
-              <Typography variant="caption">{note}</Typography>
+              <Typography variant="caption" className={styles.bigText}>
+                {note}
+              </Typography>
             </div>
           )}
         </>

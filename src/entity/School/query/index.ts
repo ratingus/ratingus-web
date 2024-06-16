@@ -2,6 +2,7 @@ import {
   ApplicationDto,
   Class,
   CreateApplication,
+  CreateUserCode,
   School,
 } from "@/entity/School/model";
 import { baseApi } from "@/shared/api/rtkq";
@@ -69,6 +70,44 @@ export const classApi = baseApi.injectEndpoints({
         { type: "getApplications", id: "LIST" },
       ],
     }),
+    approveApplication: build.mutation<void, { id: number } & CreateUserCode>({
+      query: ({ id, ...newApplication }) => ({
+        url: `/admin-panel-manager/application-approve/${id}`,
+        method: "post",
+        data: newApplication,
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getApplications", id: "LIST" },
+      ],
+    }),
+    rejectApplication: build.mutation<void, { id: number }>({
+      query: ({ id }) => ({
+        url: `/admin-panel-manager/application-reject/${id}`,
+        method: "post",
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getApplications", id: "LIST" },
+      ],
+    }),
+    recreateCodeApplication: build.mutation<
+      void,
+      { id: number } & CreateUserCode
+    >({
+      query: ({ id, ...newApplication }) => ({
+        url: `/admin-panel/user-code/${id}`,
+        method: "put",
+        data: {
+          ...newApplication,
+          code: null,
+        },
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getApplications", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -79,4 +118,8 @@ export const {
 
   useGetApplicationsQuery,
   useCreateApplicationMutation,
+
+  useApproveApplicationMutation,
+  useRejectApplicationMutation,
+  useRecreateCodeApplicationMutation,
 } = classApi;

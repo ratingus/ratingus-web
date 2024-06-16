@@ -1,4 +1,4 @@
-import React, { FocusEventHandler, useState } from "react";
+import React, { FocusEventHandler, useRef, useState } from "react";
 
 import styles from "./LessonBlockDetailed.module.scss";
 
@@ -26,6 +26,8 @@ const LessonBlockDetailed = ({
 }: LessonBlockDetailedProps) => {
   const [addNote] = useAddNoteMutation();
   const [prevValue, setPrevValue] = useState(note);
+  const textarea = useRef<HTMLTextAreaElement>();
+
   const handleBlurNote: FocusEventHandler<HTMLTextAreaElement> = (e) => {
     const { value } = e.target;
 
@@ -57,6 +59,8 @@ const LessonBlockDetailed = ({
         <div>
           <Typography variant="h4">Заметки:</Typography>
           <Textarea
+            //  @ts-ignore
+            ref={textarea}
             variant="dark"
             defaultValue={note}
             placeholder="Добавьте заметку, это позволит вам лучше запомнить материал и не забыть о важных моментах урока."

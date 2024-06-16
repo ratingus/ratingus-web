@@ -1,4 +1,4 @@
-import { RoleEnum } from "@/entity/User/model";
+import { RoleEnum, UserIdentity } from "@/entity/User/model";
 
 export type School = {
   id: number;
@@ -26,6 +26,12 @@ export type ApplicationDto = CreateApplication & {
   id: number;
   creatorId: number;
   status: ApplicationStatus;
+  code: UserCode | null;
+  isActivated: boolean | null;
+};
+
+export type UserCode = Omit<UserIdentity, "id"> & {
+  id: number;
   code: string;
 };
 
@@ -33,3 +39,5 @@ export enum ApplicationStatus {
   APPROVED = "APPROVED",
   REJECTED = "REJECTED",
 }
+
+export type CreateUserCode = Omit<UserIdentity, "id">;
