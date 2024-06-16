@@ -4,56 +4,31 @@ import cl from "classnames";
 
 import styles from "./page.module.scss";
 
+import { useGetApplicationsQuery } from "@/entity/School/query";
 import Button from "@/shared/components/Button/Button";
 import { Label } from "@/shared/components/Label/Label";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 export default function AdminPanel() {
-  const schools = [
-    {
-      id: 0,
-      schoolName: "Школа №31416",
-      address: "г. Город, ул. Улица, д. 123",
-      email: "school@school31416.edu",
-      status: {
-        type: "approved",
-        code: "faposfkpqwf@r2",
-      },
-    },
-    {
-      id: 1,
-      schoolName: "Школа №31417",
-      address: "г. Город, ул. Улица, д. 256",
-      email: "school@school31417.edu",
-    },
-    {
-      id: 2,
-      schoolName: "Школа №31418",
-      address: "г. Город, ул. Улица, д. 512",
-      email: "school@school31418.edu",
-      status: {
-        type: "cancelled",
-      },
-    },
-  ];
+  const { data: applications } = useGetApplicationsQuery(null);
+
+  if (!applications) return <div>loading...</div>;
 
   return (
     <PageContainer className={styles.panel} isPanel>
       <div className={styles.schools}>
-        {schools.map(({ id, schoolName, address, email, status }) => (
+        {applications.map(({ id, name, address, email, status, code }) => (
           <div key={id} className={cl(styles.flex, styles.grid)}>
             <div className={styles.school}>
               <Typography variant="small" color="textHelper">
                 Заявка №{id}
               </Typography>
               <div className={styles.flex}>
-                <Typography variant="h2">{schoolName}</Typography>
+                <Typography variant="h2">{name}</Typography>
                 {status && (
-                  <Label
-                    variant={status.type === "approved" ? "ghost" : "error"}
-                  >
-                    {getTextByStatus(status.type)}
+                  <Label variant={status === "APPROVED" ? "ghost" : "error"}>
+                    {getTextByStatus(status)}
                   </Label>
                 )}
               </div>
@@ -63,7 +38,7 @@ export default function AdminPanel() {
               <Typography variant="body">Почта для связи: {email}</Typography>
             </div>
             {status ? (
-              status.type === "approved" && (
+              status === "APPROVED" && (
                 <div
                   className={cl(
                     styles.additionalBlock,
@@ -73,7 +48,7 @@ export default function AdminPanel() {
                   <Typography weight="lighter">
                     Код приглашения локального администратора:
                   </Typography>
-                  <Typography>{status.code}</Typography>
+                  <Typography>{code}</Typography>
                   <Button variant="secondary">Пересоздать</Button>
                 </div>
               )
@@ -99,9 +74,9 @@ export default function AdminPanel() {
 
 const getTextByStatus = (status: string) => {
   switch (status) {
-    case "approved":
+    case "APPROVED":
       return "Одобрено";
-    case "cancelled":
+    case "REJECTED":
       return "Отклонено";
     default:
       return "В обработке";
