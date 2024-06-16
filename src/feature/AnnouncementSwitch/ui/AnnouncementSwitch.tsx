@@ -63,7 +63,7 @@ const AnnouncementSwitch = ({
           `?${addQueryInParamsString(searchParams, { name: "type", value: value.value })}`,
       );
     },
-    [classId, dispatch, path, router, searchParams, setClassId, type],
+    [classId, dispatch, path, router, searchParams, setClassId],
   );
 
   useEffect(() => {

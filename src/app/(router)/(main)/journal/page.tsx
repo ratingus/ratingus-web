@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import styles from "./page.module.scss";
 
@@ -9,23 +10,51 @@ import SubjectSelector from "@/feature/SubjectSelector/SubjectSelector";
 import Button from "@/shared/components/Button/Button";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { TabOption, Tabs } from "@/shared/components/Tabs/Tabs";
+import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 import { useAppSelector } from "@/shared/hooks/rtk";
 import { useUser } from "@/shared/hooks/useUser";
 import { LessonsTable } from "@/widget/LessonsTable/LessonsTable";
 import StudentsTable from "@/widget/StudentsTable/StudentsTable";
 
-export default function Journal() {
-  const [tab, setTab] = useState<TabOption<string>>({
+const options = [
+  {
     value: "students",
     label: "Ученики",
-  });
+  },
+  {
+    value: "lessons",
+    label: "Занятия",
+  },
+];
+
+export default function Journal() {
+  const router = useRouter();
+  const path = usePathname();
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
+  const selectedOptionType = type || "students";
+  const selectedOption =
+    options.find((option) => option.value === selectedOptionType) || null;
+
+  const [tab, setTab] = useState<TabOption<string> | null>(selectedOption);
   const handleChange = (value: TabOption<string>) => {
     setTab(value);
+    router.push(
+      path +
+        `?${addQueryInParamsString(searchParams, { name: "type", value: value.value })}`,
+    );
   };
   const selectedValue = useAppSelector(selectSelectedTeacherId);
   const { userRoleId } = useUser();
 
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if (selectedOption) {
+      handleChange(selectedOption);
+    }
+    //   eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (
@@ -37,6 +66,8 @@ export default function Journal() {
     }
   }, [selectedValue, userRoleId]);
 
+  if (!tab) return <div>loading...</div>;
+
   return (
     <PageContainer
       ignoreHeader
@@ -47,16 +78,7 @@ export default function Journal() {
           onChange={handleChange}
           sizeVariant="big"
           defaultOption={tab}
-          options={[
-            {
-              value: "students",
-              label: "Ученики",
-            },
-            {
-              value: "lessons",
-              label: "Занятия",
-            },
-          ]}
+          options={options}
         />
       }
     >
