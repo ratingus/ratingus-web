@@ -3,13 +3,14 @@ import React, { FormEventHandler, useRef, useState } from "react";
 
 import styles from "./Users.module.scss";
 
-import { classes } from "@/entity/School/mock";
+import { useGetClassesQuery } from "@/entity/School/query";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Label } from "@/shared/components/Label/Label";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 const Classes = () => {
+  const { data: classes = [] } = useGetClassesQuery(null);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [choosenClassIndex, setChoosenClassIndex] = useState<number>();
 
