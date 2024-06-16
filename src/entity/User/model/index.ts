@@ -1,4 +1,4 @@
-import { ProfileSchool } from "@/entity/School/model";
+import { Class, ProfileSchool } from "@/entity/School/model";
 
 export type UserIdentity = {
   id: number;
@@ -27,14 +27,22 @@ export type User = UserDetails & {
   fio: string;
 };
 
-export type Profile = {
-  id: number;
-  name: string;
-  surname: string;
-  patronymic?: string;
+export type Profile = UserIdentity & {
   login: string;
   birthdate: string;
   schools: ProfileSchool[];
+};
+
+export type UserRoleDto = UserIdentity & {
+  login: string;
+  birthdate: string;
+  school: ProfileSchool | null;
+};
+
+export type UserCodeDto = UserIdentity & {
+  classDto: Class | null;
+  code: string;
+  role: RoleEnum;
 };
 
 export type Teacher = UserIdentity;

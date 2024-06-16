@@ -73,6 +73,16 @@
   margin-top: 24px;
   margin-bottom: 12px;
 }
+.codesPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.code {
+  display: flex;
+  gap: 10px;
+
+}
 
 .otherWrapper {
   display: flex;

@@ -1,12 +1,24 @@
 "use client";
 
 import React, { FormEventHandler, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import cl from "classnames";
 
 import styles from "./Users.module.scss";
 
+import { useGetClassesQuery } from "@/entity/School/query";
 import MiniSchoolCardRole from "@/entity/School/ui/MiniSchoolCardRole";
-import { getFioByUser, getUserBirthdate } from "@/entity/User/helpers";
+import {
+  getFioByUser,
+  getRoleByType,
+  getUserBirthdate,
+} from "@/entity/User/helpers";
+import { RoleEnum, UserRoleDto } from "@/entity/User/model";
+import {
+  useCreateUserCodeMutation,
+  useGetUserCodesQuery,
+  useGetUsersQuery,
+} from "@/entity/User/query";
 import Avatar from "@/entity/User/ui/Avatar";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
@@ -14,73 +26,59 @@ import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 const Users = () => {
-  const users = [
-    // @ts-ignore
-    {
-      id: 1,
-      login: "Логин",
-      name: "Имя",
-      surname: "Фамилия",
-      patronymic: "Отчество",
-      userRole: {
-        role: "Ученик",
-        classes: ["Класс 9а"],
-      },
-      birthdate: new Date(Date.UTC(2002, 2, 12)),
-    },
-    // @ts-ignore
-    {
-      id: 2,
-      login: "Логин",
-      name: "Имя",
-      surname: "Фамилия",
-      patronymic: "Отчество",
-      userRole: {
-        role: "Ученик",
-        classes: ["Класс 8а"],
-      },
-      birthdate: new Date(Date.UTC(2002, 2, 12)),
-    },
-    // @ts-ignore
-    {
-      id: 3,
-      login: "Логин",
-      name: "Имя",
-      surname: "Фамилия",
-      patronymic: "Отчество",
-      userRole: {
-        role: "Ученик",
-        classes: ["Скрипка", "Хор"],
-      },
-      birthdate: new Date(Date.UTC(2002, 2, 12)),
-    },
-  ];
+  const { data: users } = useGetUsersQuery(null);
+  const { data: userCodes = [] } = useGetUserCodesQuery(null);
+  const { data: classes = [] } = useGetClassesQuery(null);
 
-  const userCodes = [
-    {
-      name: "Имя",
-      surname: "Фамилия",
-      patronymic: "Отчество",
-      userClass: "9а",
-      code: "favof8129fhaxf",
-    },
-    {
-      name: "Имя",
-      surname: "Фамилия",
-      patronymic: "Отчество",
-      userClass: "9а",
-      code: "fasfqw@FSaxz",
-    },
-    {
-      name: "Имя",
-      surname: "Фамилия",
-      patronymic: "Отчество",
-      userClass: "11",
-      code: "PXFOMXzfq29",
-    },
-  ];
+  const [createUserCode] = useCreateUserCodeMutation();
 
-  const [chosenUser, setChosenUser] = useState<any | undefined | null>();
+  const [chosenUser, setChosenUser] = useState<UserRoleDto | null>();
+
+  const form = useRef(null);
+
+  const [role, setRole] = useState("student");
+
+  if (!users) return <div>loading...</div>;
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    if (form.current) {
+      const formData = new FormData(form.current);
+      const formName = formData.get("name");
+      const formSurname = formData.get("surname");
+      const formPatronymic = formData.get("patronymic");
+      const formRole = formData.get("role");
+      const formClass = formData.get("class");
+      if (!formName || !formSurname || !formRole) {
+        toast("Не все поля заполнены!", {
+          type: "error",
+        });
+        return;
+      }
+      const name = formName.toString();
+      const surname = formSurname.toString();
+      const patronymic = formPatronymic?.toString();
+      const role = formRole.toString() as RoleEnum;
+      const classId = formClass?.toString();
+      const cl = classId
+        ? classes.find(({ id }) => id === parseInt(classId))
+        : undefined;
+
+      if (role === RoleEnum.STUDENT && !cl) {
+        toast("Не выбран класс для ученика!", {
+          type: "error",
+        });
+        return;
+      }
+      createUserCode({
+        name,
+        surname,
+        patronymic,
+        role,
+        classDto: cl || null,
+      });
+    }
+  };
 
   const handleChooseUser = (userId: number) => {
     setChosenUser(users.find(({ id }) => id === userId));
@@ -89,21 +87,6 @@ const Users = () => {
   const handleAddUser = () => {
     setChosenUser(null);
   };
-
-  const form = useRef(null);
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
-    if (form.current) {
-      const formData = new FormData(form.current);
-      console.log(formData.get("name"));
-      console.log(formData.get("surname"));
-      console.log(formData.get("patronymic"));
-      console.log(formData.get("role"));
-      console.log(formData.get("class"));
-    }
-  };
-
-  const [role, setRole] = useState("student");
 
   return (
     <div className={styles.wrapper}>
@@ -118,6 +101,11 @@ const Users = () => {
               >
                 <Avatar avatarClassName={styles.avatar} size={64} />
                 <div className={styles.userDetails}>
+                  {user.school && (
+                    <Typography variant="caption" color="textHelper">
+                      [{getRoleByType(user.school.role)}]
+                    </Typography>
+                  )}
                   <Typography variant="body">{login}</Typography>
                   <Typography variant="body">{getFioByUser(user)}</Typography>
                   <Typography variant="small" color="textHelper">
@@ -150,8 +138,7 @@ const Users = () => {
                 </Typography>
               </div>
             </div>
-            {/*// @ts-ignore*/}
-            <MiniSchoolCardRole {...chosenUser.userRole} />
+            {chosenUser.school && <MiniSchoolCardRole {...chosenUser.school} />}
           </div>
         ) : (
           chosenUser === null && (
@@ -188,11 +175,11 @@ const Users = () => {
                       // @ts-ignore
                       onChange={({ value }) => setRole(value)}
                       // @ts-ignore
-                      defaultValue={{ value: "student", label: "Ученик" }}
+                      defaultValue={{ value: "STUDENT", label: "Ученик" }}
                       options={[
-                        { value: "student", label: "Ученик" },
-                        { value: "teacher", label: "Учитель" },
-                        { value: "admin", label: "Локальный админ" },
+                        { value: "STUDENT", label: "Ученик" },
+                        { value: "TEACHER", label: "Учитель" },
+                        { value: "LOCAL_ADMIN", label: "Локальный админ" },
                       ]}
                     />
                   </div>
@@ -205,10 +192,10 @@ const Users = () => {
                         form="addUser"
                         name="class"
                         variant="dark"
-                        options={[
-                          { value: "9а", label: "9а" },
-                          { value: "10а", label: "10а" },
-                        ]}
+                        options={classes.map(({ id, name }) => ({
+                          value: id.toString(),
+                          label: name,
+                        }))}
                       />
                     </div>
                   </div>
@@ -220,13 +207,19 @@ const Users = () => {
               <Typography className={styles.codes} variant="h4">
                 Коды приглашения:
               </Typography>
-              <>
-                {userCodes.map(({ userClass, code, ...user }) => (
-                  <Typography key={code} variant="h5">
-                    {getFioByUser(user)}, Класс {userClass} {code}
-                  </Typography>
+              <Typography className={styles.codesPanel}>
+                {userCodes.map(({ classDto, code, ...user }) => (
+                  <div className={styles.code} key={code}>
+                    <Typography variant="h5">
+                      {getFioByUser(user)}
+                      {classDto && `, Класс ${classDto.name}`}
+                    </Typography>
+                    <Typography variant="h5" color="textHelper">
+                      {code}
+                    </Typography>
+                  </div>
                 ))}
-              </>
+              </Typography>
             </div>
           )
         )}
