@@ -15,7 +15,11 @@ import Button from "@/shared/components/Button/Button";
 import { Checkbox } from "@/shared/components/Checkbox";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
-import { formatDateForInput, getDayAndMonth } from "@/shared/helpers/date";
+import {
+  formatDateForInput,
+  getDayAndMonth,
+  toTimestamp,
+} from "@/shared/helpers/date";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 
 // import styles from './LessonsTable.module.scss';
@@ -306,7 +310,7 @@ const LessonComponent = ({
     onSave({
       theme,
       homework,
-      date: date.toISOString(),
+      date: toTimestamp(date.toISOString()).toISOString(),
       finished,
     });
     setSaved(true);

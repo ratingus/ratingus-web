@@ -90,3 +90,7 @@ export const parseTimestamp = (data: string): Date => {
   const dateDayjs = dayjs(data);
   return dateDayjs.add(-dateDayjs.utcOffset(), "minutes").toDate();
 };
+export const toTimestamp = (data: string): Date => {
+  const dateDayjs = dayjs(data);
+  return dateDayjs.add(dateDayjs.utcOffset(), "minutes").toDate();
+};
