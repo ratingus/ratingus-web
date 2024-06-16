@@ -21,15 +21,6 @@ export type DetailedPageProps = {
 };
 
 const ByDay = ({ week, day }: DetailedPageProps) => {
-  const date = getAcademicDateByWeek(week);
-  const weekDays = Array(6)
-    .fill([])
-    .map(
-      (_, i) =>
-        new Date(
-          Date.UTC(date.getFullYear(), date.getMonth(), date.getDate() + i),
-        ),
-    );
   const { data } = useGetLessonsByWeekQuery({
     week,
   });
@@ -46,16 +37,31 @@ const ByDay = ({ week, day }: DetailedPageProps) => {
     );
   };
   const swiperRef = useRef<SwiperRef>(null);
+  const index = data?.findIndex(({ dayOfWeek }) => dayOfWeek === day);
+  console.log(index);
+  console.log(data);
 
   useEffect(() => {
-    if (swiperRef.current) {
-      console.dir(swiperRef.current);
-      swiperRef.current.swiper.slideTo(day - 1);
+    if (swiperRef.current && data && index) {
+      console.log(swiperRef.current.swiper);
+      console.log(index);
+      swiperRef.current.swiper.slideTo(index);
     }
-  }, [day]);
+  }, [data, day, index]);
 
   if (!data) return <div>loading...</div>;
 
+  const dayData = data?.find(({ dayOfWeek }) => dayOfWeek === day);
+
+  if (!dayData || index === undefined || index < 0)
+    return <div>Нет такого дня</div>;
+
+  const date = getAcademicDateByWeek(week);
+  const weekDays = data.map(({ dayOfWeek }) => {
+    const newDate = new Date(date.getTime());
+    newDate.setDate(newDate.getDate() + dayOfWeek - 1);
+    return newDate;
+  });
   return (
     <div className={styles.wrapper}>
       <div className={styles.sliderWrapper}>
@@ -63,7 +69,7 @@ const ByDay = ({ week, day }: DetailedPageProps) => {
           ref={swiperRef}
           className={styles.slider}
           swiperProps={{
-            initialSlide: day - 1,
+            initialSlide: index,
             onSlideChange: (swiper) => {
               const currentSlide = swiper.activeIndex;
               const currentSlideDate =
@@ -97,7 +103,7 @@ const ByDay = ({ week, day }: DetailedPageProps) => {
       </Button>
       <div className={styles.lessonsWrapper}>
         <div className={styles.lessons}>
-          {data[day - 1].studies.map((lesson) => (
+          {dayData.studies.map((lesson) => (
             <LessonCardDetailed
               key={lesson.timetableNumber}
               day={day}
