@@ -5,10 +5,13 @@ import { LESSONS_CONTEXT_PATH, LESSONS_PATH } from "../constants";
 import {
   AddMarkDto,
   AddNote,
+  CreateMagazineLesson,
   DayLesson,
   MagazineDto,
+  MagazineLesson,
   MarkDto,
   StudentDto,
+  UpdateMagazineLesson,
 } from "../model";
 
 import { AppDispatch } from "@/app/_providers/Store/config/store";
@@ -39,6 +42,15 @@ export const lessonsApi = baseApi.injectEndpoints({
       query: (params) => ({ url: "/magazine/users", params, method: "get" }),
     }),
 
+    getLessons: build.query<
+      MagazineLesson[],
+      { classId: number; teacherSubjectId: number }
+    >({
+      query: (params) => ({ url: "/magazine/lessons", params, method: "GET" }),
+      // @ts-ignore
+      providesTags: [{ type: "getLessons", id: "LIST" }],
+    }),
+
     addMark: build.mutation<
       { studentLessonId: number; lessonId: number },
       AddMarkDto
@@ -49,6 +61,39 @@ export const lessonsApi = baseApi.injectEndpoints({
         data,
       }),
     }),
+
+    addLesson: build.mutation<
+      void,
+      CreateMagazineLesson & { classId: number; teacherSubjectId: number }
+    >({
+      query: ({ classId, teacherSubjectId, ...data }) => ({
+        url: `/magazine/lessons`,
+        method: "POST",
+        params: { teacherSubjectId, classId },
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "getLessons", id: "LIST" }],
+    }),
+
+    updateLesson: build.mutation<void, UpdateMagazineLesson>({
+      query: (data) => ({
+        url: `/magazine/lessons`,
+        method: "PUT",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "getLessons", id: "LIST" }],
+    }),
+
+    deleteLesson: build.mutation<void, number>({
+      query: (lessonId) => ({
+        url: `/magazine/lessons/${lessonId}`,
+        method: "DELETE",
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "getLessons", id: "LIST" }],
+    }),
   }),
 });
 
@@ -57,6 +102,10 @@ export const {
   useAddNoteMutation,
   useGetJournalQuery,
   useAddMarkMutation,
+  useGetLessonsQuery,
+  useAddLessonMutation,
+  useUpdateLessonMutation,
+  useDeleteLessonMutation,
 } = lessonsApi;
 
 interface UpdateJournalCacheParams {
@@ -93,7 +142,6 @@ export const updateJournalCache = (
       "getJournal",
       { classId, teacherSubjectId },
       (draft: MagazineDto) => {
-        console.log(current(draft));
         const studentIndex = current(draft).students.findIndex(
           (s: { id: number }) => s.id === studentDto.id,
         );
@@ -102,17 +150,13 @@ export const updateJournalCache = (
           const lessonIndex = student.marks.findIndex((lessonMarks: any[]) =>
             lessonMarks.some((m) => m.lessonId === data.lessonId),
           );
-          console.log(lessonIndex);
           if (lessonIndex >= 0) {
             const markIndex = student.marks[lessonIndex].findIndex(
               (m: { lessonId: number }) => m.lessonId === data.lessonId,
             );
-            console.log(markIndex);
             if (markIndex >= 0) {
-              console.log(student.marks[lessonIndex][markIndex]);
               draft.students[studentIndex].marks[lessonIndex][markIndex] =
                 newMarkDto[0];
-              console.log(student.marks[lessonIndex][markIndex]);
             }
           } else {
             draft.students[studentIndex].marks[index[0]].push(newMarkDto[0]);

@@ -1,5 +1,6 @@
 "use client";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import {
   actionSetSelectedAnnouncementMode,
@@ -8,6 +9,7 @@ import {
   selectAnnouncementMode,
 } from "@/entity/Announcement/store";
 import { TabOption, Tabs } from "@/shared/components/Tabs/Tabs";
+import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 import { useAppDispatch, useAppSelector } from "@/shared/hooks/rtk";
 import { useRole } from "@/shared/hooks/useRole";
 import { useUser } from "@/shared/hooks/useUser";
@@ -22,6 +24,11 @@ const AnnouncementSwitch = ({
   isLoading,
   setClassId,
 }: AnnouncementSwitchProps) => {
+  const router = useRouter();
+  const path = usePathname();
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
+
   const dispatch = useAppDispatch();
   const selectedOption = useAppSelector(selectAnnouncementMode);
   const { classId } = useUser();
@@ -43,14 +50,34 @@ const AnnouncementSwitch = ({
     return true;
   });
 
-  const handleChange = (value: TabOption<OptionType>) => {
-    dispatch(actionSetSelectedAnnouncementMode(value));
-    if (value.value === "class") {
-      setClassId(classId);
-    } else if (value.value === "all") {
-      setClassId(undefined);
+  const handleChange = useCallback(
+    (value: TabOption<OptionType>) => {
+      dispatch(actionSetSelectedAnnouncementMode(value));
+      if (value.value === "class") {
+        setClassId(classId);
+      } else {
+        setClassId(undefined);
+      }
+      router.push(
+        path +
+          `?${addQueryInParamsString(searchParams, { name: "type", value: value.value })}`,
+      );
+    },
+    [classId, dispatch, path, router, searchParams, setClassId, type],
+  );
+
+  useEffect(() => {
+    const selectedOptionType = type || "all";
+    const selectedOption = optionsArray.find(
+      (option) => option.value === selectedOptionType,
+    );
+    if (selectedOption) {
+      handleChange(selectedOption);
     }
-  };
+    //   eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (selectedOption === null) return <div>loading...</div>;
 
   return (
     <Tabs<OptionType>

@@ -1,49 +1,64 @@
 .wrapper {
-  height: calc(80dvh - 24px - 20px * 4);
-  width: 80%;
   display: flex;
-  flex: 1 1;
-  flex-basis: 80%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  height: calc(80dvh - 24px - 20px * 4 - 40px);
+  width: 100%;
+  position: relative;
 }
 
-.table {
+.lessons {
+  display: flex;
+  flex-direction: column;
   overflow: auto;
-  display: block;
-  width: 100%;
+  gap: 16px;
+}
+
+.lesson {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 20px * 2 - 6px);
+  padding: 20px;
+  border-radius: 20px;
+  gap: 8px;
+  background-color: $background-paper;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-items: flex-start;
   height: 100%;
-  border-collapse: collapse;
 
-  thead tr th {
-    background: mix($text-helper, $text-primary, 30%);
-  }
-  thead, tbody {
-    width: 100%;
-  }
-
-  th, td {
-    background: $text-primary;
-    color: $background-main;
-    border: 1px solid black;
-    padding: 4px;
+  & :first-child {
+    white-space: nowrap;
   }
 }
-
-.day {
-  min-width: 16px;
-  min-height: 48px;
+.clickable {
+    cursor: pointer;
+    &:hover {
+      box-shadow: inset 0 0 0 2px mix($primary-main, $primary-paper, 50%);
+    }
+}
+.clicked {
+  box-shadow: inset 0 0 0 2px $primary-main;
+}
+.centered {
+  align-items: center;
+}
+.buttonsContainer {
+  justify-content: space-between;
 }
 
-.fullsize {
-  width: 100%;
+.textarea {
+  width: calc(100% - 16px * 2);
+  box-sizing: border-box;
+  height: 100%;
+}
+.date {
+  width: 128px;
 }
 .add {
-  width: 100%;
-  border-radius: 0 !important;
-}
-.addWrapper {
-  padding: 0 !important;
-}
-
-.info {
-  flex-basis: 20%;
 }

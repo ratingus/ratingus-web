@@ -19,6 +19,7 @@ import { getFiByUser } from "@/entity/User/helpers";
 import Button from "@/shared/components/Button/Button";
 import { Select, SelectOption } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 import ArrowDownIcon from "@/shared/icons/arrow-down.svg";
 
@@ -81,7 +82,6 @@ const StudentsTableDetails = (props: StudentsTableDetailsProps) => {
           const newMarkDto: MarkDto[] = markDto.length
             ? [{ ...markDto[0], mark: markValue, attendance: attendanceValue }]
             : [{ ...data, mark: markValue, attendance: attendanceValue }];
-          console.log(newMarkDto);
           dispatch(
             actionSetSelectedStudentTeacher({
               ...props,
@@ -99,6 +99,7 @@ const StudentsTableDetails = (props: StudentsTableDetailsProps) => {
             newMarkDto,
             data,
           });
+          yaMetricaEvent("Поставить оценку в журнале");
         }
       });
     },
@@ -125,7 +126,6 @@ const StudentsTableDetails = (props: StudentsTableDetailsProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const { key } = event;
-      console.log(key);
       if (["1", "2", "3", "4", "5"].includes(key)) {
         setMarkValue(key);
       } else if (["Н", "О", "У"].includes(key.toUpperCase())) {
@@ -170,10 +170,6 @@ const StudentsTableDetails = (props: StudentsTableDetailsProps) => {
 
     setMarkValue(mark);
     setAttendanceValue(attendance);
-    console.log(markValue);
-    console.log(attendanceValue);
-    console.log(mark);
-    console.log(attendance);
   };
 
   return (

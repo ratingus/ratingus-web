@@ -68,7 +68,6 @@ export const Select = forwardRef<SelectProps, SelectProps>(
     );
 
     useEffect(() => {
-      console.log("Changed value: ", value);
       if (value) {
         setSelectedValue(
           value as

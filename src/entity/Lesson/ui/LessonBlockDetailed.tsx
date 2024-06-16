@@ -8,6 +8,7 @@ import { useAddNoteMutation } from "@/entity/Lesson/query";
 import { getFioByUser } from "@/entity/User/helpers";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 
 type LessonBlockDetailedProps = LessonDetailed & { date: Date };
 
@@ -36,7 +37,7 @@ const LessonBlockDetailed = ({
         date,
         lessonStudentId: studentLessonId,
         text: value,
-      });
+      }).then(() => yaMetricaEvent("Оставлена заметка в дневнике"));
     }
   };
   return (

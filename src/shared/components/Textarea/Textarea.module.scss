@@ -19,6 +19,13 @@
     color: rgba($text-primary, 0.5);
   }
 }
+.ghost {
+    color: $text-primary;
+    background-color: $background-paper;
+    &::placeholder {
+        color: rgba($text-primary, 0.5);
+    }
+}
 
 .big {
   padding: 12px 20px 6px;

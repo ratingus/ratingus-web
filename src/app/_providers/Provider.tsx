@@ -1,4 +1,5 @@
 import { ReactNode, Suspense } from "react";
+import { ToastContainer } from "react-toastify";
 
 import { Metrika } from "./Metrica/ui";
 import { MockingProvider } from "./Mocking";
@@ -17,7 +18,10 @@ const Provider = ({ children }: ProviderProps) => {
       </Suspense>
       <StoreProvider>
         <SessionProvider>
-          <MockingProvider>{children}</MockingProvider>
+          <MockingProvider>
+            {children}
+            <ToastContainer />
+          </MockingProvider>
         </SessionProvider>
       </StoreProvider>
     </>

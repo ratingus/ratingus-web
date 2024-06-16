@@ -1,10 +1,22 @@
-import React from "react";
+import { useRef, useState } from "react";
 import cl from "classnames";
+import { useSearchParams } from "next/navigation";
 
 import styles from "./LessonsTable.module.scss";
 
+import { BaseMagazineLesson, MagazineLesson } from "@/entity/Lesson/model";
+import {
+  useAddLessonMutation,
+  useDeleteLessonMutation,
+  useGetLessonsQuery,
+  useUpdateLessonMutation,
+} from "@/entity/Lesson/query";
 import Button from "@/shared/components/Button/Button";
-import { getDateString } from "@/shared/helpers/date";
+import { Checkbox } from "@/shared/components/Checkbox";
+import { Textarea } from "@/shared/components/Textarea/Textarea";
+import { Typography } from "@/shared/components/Typography/Typography";
+import { formatDateForInput, getDayAndMonth } from "@/shared/helpers/date";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 
 // import styles from './LessonsTable.module.scss';
 
@@ -12,158 +24,312 @@ type LessonsTableProps = {
   isEditing: boolean;
 };
 
-type Lesson = {
-  date: string;
-  theme: string;
-  homework: string;
-  was?: boolean;
-};
+export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
+  const searchParams = useSearchParams();
+  const classId = Number(searchParams.get("classId"));
+  const teacherSubjectId = Number(searchParams.get("teacherSubject"));
+  const { data: lessons } = useGetLessonsQuery(
+    { classId, teacherSubjectId },
+    { refetchOnMountOrArgChange: true },
+  );
 
-const lessons = [
-  {
-    date: new Date(Date.UTC(2024, 3, 29)),
-    theme: "1.1 Введение в программирование (ветвление)",
-    homework: "Задание 1.4 - 1.7",
-    was: true,
-  },
-  {
-    date: new Date(Date.UTC(2024, 3, 1)),
-    theme: "1.2 Введение в программирование (циклы)",
-    homework: "Задание 1.8 - 1.10",
-    was: true,
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 3)),
-    theme: "1.3 Введение в программирование (функции)",
-    homework: "Задание 1.11 - 1.13",
-    was: true,
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 5)),
-    theme: "1.4 Введение в программирование (массивы)",
-    homework: "Задание 1.14 - 1.16",
-    was: true,
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 8)),
-    theme: "1.5 Введение в программирование (строки)",
-    homework: "Задание 1.17 - 1.19",
-    was: true,
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 10)),
-    theme: "1.6 Введение в программирование (объекты)",
-    homework: "Задание 1.20 - 1.22",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 12)),
-    theme: "1.7 Введение в программирование (классы)",
-    homework: "Задание 1.23 - 1.25",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 13)),
-    theme: "1.8 Введение в программирование (рекурсия)",
-    homework: "Задание 1.26 - 1.28",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 15)),
-    theme: "2.1 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-    homework: "Задание 2.3 - 2.6",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 17)),
-    theme: "2.2 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-    homework: "Задание 2.7 - 2.10",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 19)),
-    theme: "2.3 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-    homework: "Задание 2.11 - 2.14",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 21)),
-    theme: "2.4 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 22)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 23)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 24)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 25)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 26)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 27)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 28)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 29)),
-    theme: "2.5 Введение в серверную разработку (Spring Boot + Kafka + K8s)",
-  },
-  {
-    date: new Date(Date.UTC(2024, 4, 30)),
-    theme:
-      "3.1 Делаем небольшой пет проект для резюме (Kittenx, PHP, Elastic, Celery, SendGrid, Tramvai, ClickHouse, Podman, Node.js, Express.js, MongoDB, Docker, Kubernetes, React Native, Vue.js, Angular, GraphQL, Apollo, Webpack, Babel, TypeScript, Redux, Jest, Cypress, Selenium, AWS Lambda, Google Cloud Functions, Azure Functions, Firebase, PostgreSQL, MySQL, SQLite, Redis, RabbitMQ, Kafka, Hadoop, Spark, ElasticSearch, Jenkins, Git, SVN, Mercurial, Bash, PowerShell, Nginx, Apache, IIS, Flask, Django, Ruby on Rails, Laravel, .NET Core, Java Spring Boot, Go, Rust, Swift, Kotlin, Dart, Flutter, Xamarin, Cordova, Ionic, Electron, TensorFlow, PyTorch, Keras, Pandas, NumPy)",
-    homework: "Выжить",
-  },
-];
+  const [isEditingId, setIsEditing] = useState<number | undefined>();
 
-const LessonsTable = ({ isEditing }: LessonsTableProps) => {
+  if (!lessons) return <div>loading...</div>;
+
   return (
-    <>
-      <div className={styles.wrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Дата</th>
-              <th>Тема</th>
-              <th className={styles.fullsize}>Домашнее задание</th>
-              <th>Проведено</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lessons.map((lesson) => (
-              <tr key={getDateString(lesson.date.toString(), "DD.MM")}>
-                <td>{getDateString(lesson.date.toString(), "DD.MM")}</td>
-                <td className={styles.fullsize}>{lesson.theme}</td>
-                <td>{lesson.homework}</td>
-                <td>
-                  <input type="checkbox" checked={lesson.was} />
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td
-                colSpan={4}
-                className={cl(styles.fullsize, styles.addWrapper)}
-              >
-                <Button variant="important" className={styles.add}>
-                  +
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div className={styles.wrapper}>
+      <div className={styles.lessons}>
+        {lessons.map((lesson) => (
+          <DefaultLesson
+            onClick={() => isEditing && setIsEditing(lesson.id)}
+            key={lesson.id}
+            isEditing={isEditing}
+            isCurrentEditing={isEditingId === lesson.id}
+            lesson={lesson}
+          />
+        ))}
       </div>
-      {isEditing && <div className={styles.info}>ТЕСТОВЫЕ ДАННЫЕ</div>}
-    </>
+      {!isEditing &&
+        (isEditingId === -1 ? (
+          <CreateLesson
+            isCurrentEditing
+            isEditing
+            onReset={() => setIsEditing(undefined)}
+          />
+        ) : (
+          <Button
+            variant="important"
+            className={styles.add}
+            onClick={() => setIsEditing(-1)}
+          >
+            +
+          </Button>
+        ))}
+    </div>
   );
 };
 
-export default LessonsTable;
+type Props = Omit<MagazineLesson, "id" | "lessonNumber"> & {
+  isEditing: boolean;
+  isCurrentEditing: boolean;
+  onDateChanged: (value: Date) => void;
+  onThemeChanged: (value: string) => void;
+  onHomeworkChanged: (value: string) => void;
+  onFinishedChange: (value: boolean) => void;
+  onReset: () => void;
+  onSave: () => void;
+  onDelete?: () => void;
+  onClick?: () => void;
+};
+
+const Lesson = ({
+  onClick,
+  isEditing,
+  isCurrentEditing,
+  date,
+  theme,
+  homework,
+  finished,
+  onDateChanged,
+  onThemeChanged,
+  onHomeworkChanged,
+  onFinishedChange,
+  onReset,
+  onSave,
+  onDelete,
+}: Props) => {
+  const themeTextarea = useRef<HTMLTextAreaElement>();
+  const homeworkTextarea = useRef<HTMLTextAreaElement>();
+
+  return (
+    <div
+      className={cl(
+        styles.lesson,
+        isEditing &&
+          cl(onClick && styles.clickable, isCurrentEditing && styles.clicked),
+      )}
+      onClick={onClick}
+    >
+      {!isEditing ? (
+        <Typography color="textHelper">{getDayAndMonth(date)}</Typography>
+      ) : (
+        <input
+          className={styles.date}
+          type="date"
+          value={formatDateForInput(new Date(date))}
+          onChange={({ target }) => onDateChanged(new Date(target.value))}
+        />
+      )}
+      <div className={styles.row}>
+        <Typography variant="h4" color="textHelper">
+          Тема:
+        </Typography>
+        <Textarea
+          // @ts-ignore
+          ref={themeTextarea}
+          className={styles.textarea}
+          variant="ghost"
+          disabled={!isEditing}
+          onChange={({ target }) => onThemeChanged(target.value)}
+          value={theme}
+        />
+      </div>
+      <div className={styles.row}>
+        <Typography variant="h4" color="textHelper">
+          Д/з:
+        </Typography>
+        <Textarea
+          // @ts-ignore
+          ref={homeworkTextarea}
+          className={styles.textarea}
+          variant="ghost"
+          disabled={!isEditing}
+          onChange={({ target }) => onHomeworkChanged(target.value)}
+          value={homework}
+        />
+      </div>
+      <div className={cl(styles.row, styles.buttonsContainer)}>
+        <div className={styles.row}>
+          <Typography variant="h4" color="textHelper">
+            Проведено:{" "}
+          </Typography>
+          <Checkbox
+            disabled={!isEditing}
+            checked={finished}
+            onChange={({ currentTarget }) =>
+              onFinishedChange(Boolean(currentTarget.checked))
+            }
+          />
+        </div>
+        {isEditing
+          ? isCurrentEditing && (
+              <div className={cl(styles.row, styles.centered)}>
+                <Button variant="error" onClick={onReset}>
+                  Отменить
+                </Button>
+                <Button variant="important" onClick={onSave}>
+                  Сохранить
+                </Button>
+              </div>
+            )
+          : onDelete && (
+              <Button variant="error" onClick={onDelete}>
+                Удалить
+              </Button>
+            )}
+      </div>
+    </div>
+  );
+};
+
+const DefaultLesson = ({
+  onClick,
+  lesson: baseLesson,
+  isEditing,
+  isCurrentEditing,
+}: {
+  onClick: () => void;
+  lesson: MagazineLesson;
+  isEditing: boolean;
+  isCurrentEditing: boolean;
+}) => {
+  const [updateLesson] = useUpdateLessonMutation();
+  const [deleteLesson] = useDeleteLessonMutation();
+
+  const handleDelete = () => {
+    deleteLesson(baseLesson.id);
+  };
+
+  return (
+    <LessonComponent
+      onClick={onClick}
+      onSave={(lesson) =>
+        updateLesson({ lessonId: baseLesson.id, ...lesson }).then(() => {
+          if (baseLesson.homework !== lesson.homework) {
+            yaMetricaEvent("Изменить домашнее задание в журнале");
+          }
+        })
+      }
+      isEditing={isEditing}
+      isCurrentEditing={isCurrentEditing}
+      onDelete={handleDelete}
+      {...baseLesson}
+    />
+  );
+};
+
+const CreateLesson = ({
+  isEditing,
+  isCurrentEditing,
+  onReset,
+}: {
+  isEditing: boolean;
+  isCurrentEditing: boolean;
+  onReset: () => void;
+}) => {
+  const initLesson = {
+    id: -1,
+    lessonNumber: -1,
+    theme: "",
+    date: new Date().toDateString(),
+    homework: "",
+    finished: false,
+  };
+
+  const searchParams = useSearchParams();
+  const classId = Number(searchParams.get("classId"));
+  const teacherSubjectId = Number(searchParams.get("teacherSubject"));
+  const [addLesson] = useAddLessonMutation();
+
+  return (
+    <LessonComponent
+      onSave={(lesson) => {
+        addLesson({
+          classId,
+          teacherSubjectId,
+          scheduleId: -1,
+          ...lesson,
+        }).then(() => {
+          if (initLesson.homework !== lesson.homework) {
+            yaMetricaEvent("Выдать домашнее задание в журнале");
+          }
+        });
+      }}
+      onReset={onReset}
+      isEditing={isEditing}
+      isCurrentEditing={isCurrentEditing}
+      {...initLesson}
+    />
+  );
+};
+
+const LessonComponent = ({
+  onClick,
+  isEditing,
+  isCurrentEditing,
+  theme: initTheme,
+  date: initDate,
+  homework: initHomework,
+  finished: initFinished,
+  onReset,
+  onSave,
+  onDelete,
+}: MagazineLesson & {
+  onClick?: () => void;
+  isEditing: boolean;
+  isCurrentEditing: boolean;
+  onReset?: () => void;
+  onDelete?: () => void;
+  onSave: (lesson: BaseMagazineLesson) => void;
+}) => {
+  const [theme, setTheme] = useState(initTheme);
+  const [homework, setHomework] = useState(initHomework);
+  const [date, setDate] = useState<Date>(new Date(initDate));
+  const [finished, setFinished] = useState<boolean | undefined>(initFinished);
+
+  const reset = () => {
+    setTheme(initTheme);
+    setHomework(initHomework);
+    setDate(new Date(initDate));
+    setFinished(initFinished);
+  };
+
+  const handleReset = () => {
+    reset();
+    onReset?.();
+  };
+
+  const handleSave = () => {
+    onSave({
+      theme,
+      homework,
+      date: date.toISOString(),
+      finished,
+    });
+    reset();
+  };
+
+  const handleDelete = () => {
+    onDelete?.();
+  };
+
+  return (
+    <Lesson
+      onClick={onClick}
+      theme={theme}
+      onThemeChanged={setTheme}
+      date={date.toISOString()}
+      onDateChanged={setDate}
+      homework={homework}
+      onHomeworkChanged={setHomework}
+      finished={finished}
+      onFinishedChange={(v) => setFinished(v)}
+      isEditing={isEditing}
+      isCurrentEditing={isCurrentEditing}
+      onReset={handleReset}
+      onSave={handleSave}
+      onDelete={handleDelete}
+    />
+  );
+};

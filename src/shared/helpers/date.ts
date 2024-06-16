@@ -63,6 +63,14 @@ export const getDayAndMonth = (date: string, isShort?: boolean) => {
   return `${day} ${capitalize(month)}`;
 };
 
+export function formatDateForInput(date: Date) {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Месяцы начинаются с 0 в JavaScript
+  const day = date.getDate().toString().padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 export const getWeekDateBetween = (date: Date) => {
   const dateDayjs = dayjs(date);
   const startOfWeek = dayjs(date)

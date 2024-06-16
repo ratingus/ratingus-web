@@ -1,0 +1,77 @@
+.wrapper {
+  position: relative;
+  svg {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    color: $text-primary;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    transform: translate(-50%, -50%);
+  }
+
+  input[type=checkbox] {
+    width: 48px;
+    height: 48px;
+    display: none;
+
+    &:checked + label:before {
+      background-color: $background-main;
+    }
+
+    &:checked {
+      + label:after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      &:disabled {
+        + label:after {
+          background-color: darken($background-main, 5);
+        }
+      }
+    }
+
+    &:disabled + label:before {
+      background-color: darken($background-main, 5);
+    }
+  }
+
+  label {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    font-size: 11px;
+
+    &:before {
+      content: "";
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      position: absolute;
+      background-color: $background-main;
+      border-radius: 20px;
+    }
+  }
+}
+
+
+.disabled {
+  svg {
+    color: $text-helper;
+  }
+
+  label {
+    &:before {
+      background-color: darken($background-main, 5);
+    }
+  }
+}

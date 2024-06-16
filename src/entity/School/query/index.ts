@@ -1,4 +1,9 @@
-import { Class, School } from "@/entity/School/model";
+import {
+  ApplicationDto,
+  Class,
+  CreateApplication,
+  School,
+} from "@/entity/School/model";
 import { baseApi } from "@/shared/api/rtkq";
 
 export const classApi = baseApi.injectEndpoints({
@@ -44,6 +49,26 @@ export const classApi = baseApi.injectEndpoints({
         { type: "getTeachers" },
       ],
     }),
+
+    getApplications: build.query<ApplicationDto[], null>({
+      query: () => ({
+        url: "/admin-panel-manager/application",
+        method: "get",
+      }),
+      // @ts-ignore
+      providesTags: [{ type: "getApplications", id: "LIST" }],
+    }),
+    createApplication: build.mutation<void, CreateApplication>({
+      query: (newApplication) => ({
+        url: "/admin-panel-manager/application",
+        method: "post",
+        data: newApplication,
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getApplications", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -51,4 +76,7 @@ export const {
   useGetClassesQuery,
   useCreateClassMutation,
   useChooseSchoolMutation,
+
+  useGetApplicationsQuery,
+  useCreateApplicationMutation,
 } = classApi;

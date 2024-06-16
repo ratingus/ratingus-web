@@ -86,3 +86,23 @@ export type MagazineLessonDto = {
   lessonNumber: number;
   lessonId: number;
 };
+
+export type BaseMagazineLesson = {
+  date: string;
+  theme: string;
+  homework?: string;
+  finished?: boolean;
+};
+
+export type MagazineLesson = {
+  id: number;
+  lessonNumber: number;
+} & BaseMagazineLesson;
+
+export type CreateMagazineLesson = {
+  scheduleId: number;
+} & BaseMagazineLesson;
+
+export type UpdateMagazineLesson = {
+  lessonId: number;
+} & BaseMagazineLesson;
