@@ -4,6 +4,7 @@ import React, { FormEvent, useRef } from "react";
 import styles from "./CreateAnnouncement.module.scss";
 
 import { usePostAnnouncementMutation } from "@/entity/Announcement/query";
+import { Class } from "@/entity/School/model";
 import { useGetClassesQuery } from "@/entity/School/query";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
@@ -27,13 +28,17 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
     if (form.current && selectRef.current) {
       const formData = new FormData(form.current);
       // @ts-ignore
-      const classesId = selectRef.current.state.selectValue.map(({ value }) =>
-        parseInt(value),
-      ) as number[];
+      const classes = selectRef.current.state.selectValue.map(
+        // @ts-ignore
+        ({ value, label }) => ({
+          id: parseInt(value),
+          name: label,
+        }),
+      ) as Class[];
       await createPost({
         name: formData.get("name") as string,
         content: formData.get("content") as string,
-        classesId,
+        classes,
       });
       yaMetricaEvent("Создать объявление");
       handleReset();

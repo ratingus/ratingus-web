@@ -5,6 +5,8 @@ import { getDateTime } from "../helpers";
 import styles from "./AnnouncementCard.module.scss";
 
 import { Announcement } from "@/entity/Announcement/model";
+import { useDeleteAnnouncementMutation } from "@/entity/Announcement/query";
+import Button from "@/shared/components/Button/Button";
 import { Label } from "@/shared/components/Label/Label";
 import { Typography } from "@/shared/components/Typography/Typography";
 import ViewIcon from "@/shared/icons/view.svg";
@@ -12,6 +14,7 @@ import ViewIcon from "@/shared/icons/view.svg";
 type AnnouncementCardProps = Announcement;
 
 const AnnouncementCard = ({
+  id,
   creator,
   classes,
   content,
@@ -19,6 +22,11 @@ const AnnouncementCard = ({
   name,
   views,
 }: AnnouncementCardProps) => {
+  const [deleteAnnouncement] = useDeleteAnnouncementMutation();
+
+  const handleDelete = () => {
+    deleteAnnouncement({ id });
+  };
   return (
     <article className={styles.base}>
       <header className={styles.header}>
@@ -49,6 +57,11 @@ const AnnouncementCard = ({
           {content}
         </Typography>
       )}
+      <div className={styles.deleteButton}>
+        <Button variant="error" onClick={handleDelete}>
+          Удалить
+        </Button>
+      </div>
     </article>
   );
 };

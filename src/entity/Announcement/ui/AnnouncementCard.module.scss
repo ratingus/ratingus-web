@@ -26,6 +26,14 @@
   gap: 8px
 }
 
+.deleteButton {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: right;
+  right: 0;
+}
+
 .content {
   margin-top: 4px;
 }

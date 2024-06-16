@@ -20,5 +20,5 @@ export type CreateAnnouncementDto = Pick<
   BaseAnnouncement,
   "name" | "content"
 > & {
-  classesId: number[];
+  classes: Class[];
 };
