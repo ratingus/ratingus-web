@@ -6,6 +6,7 @@
 
 .listWrapper {
   height: calc(100% - 8px*2);
+  width: 320px;
   padding: 8px 18px;
   background: $background-main;
   display: flex;
@@ -29,7 +30,7 @@
 .user {
   padding: 4px 16px 4px 10px;
   display: flex;
-  justify-content: left;
+  justify-content: flex-start !important;
   width: 100%;
   gap: 10px;
 }
@@ -39,6 +40,15 @@
 .userDetails {
   display: flex;
   flex-direction: column;
+}
+.bigText {
+  width: 100%;
+  word-break: break-all;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  overflow: hidden;
 }
 .bigUser {
   margin-bottom: 10px;

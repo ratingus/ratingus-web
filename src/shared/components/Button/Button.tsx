@@ -36,11 +36,11 @@ const Button = ({
     <button
       className={cl(
         baseClasses,
-        className,
         styles[variant],
         sizeVariant && styles[sizeVariant],
         styles[isActive ? "active" : ""],
         styles[isDisable ? "disable" : ""],
+        className,
       )}
       {...props}
     >

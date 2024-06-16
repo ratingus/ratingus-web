@@ -109,8 +109,12 @@ const Users = () => {
                       [{getRoleByType(user.school.role)}]
                     </Typography>
                   )}
-                  <Typography variant="body">{login}</Typography>
-                  <Typography variant="body">{getFioByUser(user)}</Typography>
+                  <Typography variant="body" className={styles.bigText}>
+                    {login}
+                  </Typography>
+                  <Typography variant="body" className={styles.bigText}>
+                    {getFioByUser(user)}
+                  </Typography>
                   <Typography variant="small" color="textHelper">
                     {getUserBirthdate(birthdate.toString())}
                   </Typography>
