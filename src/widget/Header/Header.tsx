@@ -42,7 +42,10 @@ const Header = () => {
     const logoutButton = {
       link: LOGIN_PAGE_LINK,
       children: (
-        <Button onClick={() => signOut()} variant="important">
+        <Button
+          onClick={() => signOut({ callbackUrl: "/login", redirect: true })}
+          variant="important"
+        >
           Выйти
         </Button>
       ),
