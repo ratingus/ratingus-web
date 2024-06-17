@@ -38,13 +38,9 @@ const ByDay = ({ week, day }: DetailedPageProps) => {
   };
   const swiperRef = useRef<SwiperRef>(null);
   const index = data?.findIndex(({ dayOfWeek }) => dayOfWeek === day);
-  console.log(index);
-  console.log(data);
 
   useEffect(() => {
     if (swiperRef.current && data && index) {
-      console.log(swiperRef.current.swiper);
-      console.log(index);
       swiperRef.current.swiper.slideTo(index);
     }
   }, [data, day, index]);
