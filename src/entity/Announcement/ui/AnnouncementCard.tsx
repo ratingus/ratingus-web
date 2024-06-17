@@ -6,9 +6,11 @@ import styles from "./AnnouncementCard.module.scss";
 
 import { Announcement } from "@/entity/Announcement/model";
 import { useDeleteAnnouncementMutation } from "@/entity/Announcement/query";
+import { RoleEnum } from "@/entity/User/model";
 import Button from "@/shared/components/Button/Button";
 import { Label } from "@/shared/components/Label/Label";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { useUser } from "@/shared/hooks/useUser";
 import ViewIcon from "@/shared/icons/view.svg";
 
 type AnnouncementCardProps = Announcement;
@@ -23,6 +25,7 @@ const AnnouncementCard = ({
   views,
 }: AnnouncementCardProps) => {
   const [deleteAnnouncement] = useDeleteAnnouncementMutation();
+  const { userRoleId, role } = useUser();
 
   const handleDelete = () => {
     deleteAnnouncement({ id });
@@ -57,11 +60,15 @@ const AnnouncementCard = ({
           {content}
         </Typography>
       )}
-      <div className={styles.deleteButton}>
-        <Button variant="error" onClick={handleDelete}>
-          Удалить
-        </Button>
-      </div>
+      {((role === RoleEnum.TEACHER && creator.id === userRoleId) ||
+        role === RoleEnum.LOCAL_ADMIN ||
+        role === RoleEnum.MANAGER) && (
+        <div className={styles.deleteButton}>
+          <Button variant="error" onClick={handleDelete}>
+            Удалить
+          </Button>
+        </div>
+      )}
     </article>
   );
 };
