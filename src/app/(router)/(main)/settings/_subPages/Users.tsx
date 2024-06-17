@@ -24,6 +24,7 @@ import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 
 const Users = () => {
   const { data: users } = useGetUsersQuery(null);
@@ -76,6 +77,8 @@ const Users = () => {
         patronymic,
         role,
         classDto: cl || null,
+      }).then(() => {
+        yaMetricaEvent("Cгенерировать код приглашения");
       });
     }
   };

@@ -22,6 +22,7 @@ import {
 } from "@/shared/components/Modal/slice";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 import MakeUserCodeModal from "@/widget/_modals/MakeUserCodeModal/MakeUserCodeModal";
 
@@ -57,7 +58,9 @@ export default function AdminPanel() {
 
     switch (type) {
       case "approve":
-        approveApplication({ id: selectedApplicationId, ...user });
+        approveApplication({ id: selectedApplicationId, ...user }).then(() => {
+          yaMetricaEvent("Одобрить заявку на создание учебной организации");
+        });
         return;
       case "recreate":
         recreateUserCode({ id: selectedApplicationId, ...user });
