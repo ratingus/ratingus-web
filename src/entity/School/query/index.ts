@@ -48,6 +48,8 @@ export const classApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [
         // @ts-ignore
+        { type: "getUsers" },
+        // @ts-ignore
         { type: "getClasses", id: "LIST" },
         // @ts-ignore
         { type: "getCalendar", id: "LIST" },

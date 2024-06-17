@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEventHandler, useRef, useState } from "react";
+import React, { FormEventHandler, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import cl from "classnames";
 
@@ -38,6 +38,21 @@ const Users = () => {
   const form = useRef(null);
 
   const [role, setRole] = useState("student");
+
+  const [searchUser, setSearchUser] = useState("");
+
+  const filtredUsers = useMemo(() => {
+    return (users ?? []).filter(({ login, name, surname, patronymic, fio }) => {
+      const searchUserLower = searchUser.toLowerCase();
+      return (
+        fio.toLowerCase().startsWith(searchUserLower) ||
+        surname.toLowerCase().startsWith(searchUserLower) ||
+        patronymic?.toLowerCase().startsWith(searchUserLower) ||
+        name.toLowerCase().startsWith(searchUserLower) ||
+        login.toLowerCase().startsWith(searchUserLower)
+      );
+    });
+  }, [users, searchUser]);
 
   if (!users) return <div>loading...</div>;
 
@@ -94,8 +109,14 @@ const Users = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.listWrapper}>
+        <Input
+          className={styles.search}
+          value={searchUser}
+          placeholder="Введите часть логина или ФИО..."
+          onChange={({ target }) => setSearchUser(target.value)}
+        />
         <ul className={styles.list}>
-          {users.map(({ id, login, birthdate, ...user }) => (
+          {filtredUsers.map(({ id, login, birthdate, ...user }) => (
             <li key={id} className={styles.userWrapper}>
               <Button
                 variant="ghost"
