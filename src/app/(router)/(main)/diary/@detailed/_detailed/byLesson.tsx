@@ -36,26 +36,26 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
   const { data } = useGetLessonsByWeekQuery({
     week,
   });
+  const dayData = data?.find(({ dayOfWeek }) => dayOfWeek === day);
+  const studies = dayData?.studies;
+  const study = studies?.find(
+    ({ timetableNumber }) => timetableNumber === lesson,
+  );
 
   useEffect(() => {
-    if (swiperRef.current) {
+    if (swiperRef.current && studies) {
       swiperRef.current.swiper.slideTo(
         studies.findIndex(({ timetableNumber }) => timetableNumber === lesson),
       );
     }
-  }, [day, lesson]);
+  }, [day, lesson, studies]);
 
   if (data === undefined) {
     return <div>loading...</div>;
   }
 
-  const dayData = data.find(({ dayOfWeek }) => dayOfWeek === day);
   if (!dayData) return <div>Нет такого дня</div>;
 
-  const studies = dayData.studies;
-  const study = studies.find(
-    ({ timetableNumber }) => timetableNumber === lesson,
-  );
   if (!studies || !study) return <div>Нет такого урока</div>;
 
   const date = getDayJs()(getAcademicDateByWeek(week))
