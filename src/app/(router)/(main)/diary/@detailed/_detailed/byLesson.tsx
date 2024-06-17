@@ -49,11 +49,14 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
     return <div>loading...</div>;
   }
 
-  const dayData = data[day - 1];
+  const dayData = data.find(({ dayOfWeek }) => dayOfWeek === day);
+  if (!dayData) return <div>Нет такого дня</div>;
+
   const studies = dayData.studies;
-  const study = studies.filter(
+  const study = studies.find(
     ({ timetableNumber }) => timetableNumber === lesson,
-  )[0];
+  );
+  if (!studies || !study) return <div>Нет такого урока</div>;
 
   const date = getDayJs()(getAcademicDateByWeek(week))
     .add(day - 1, "days")

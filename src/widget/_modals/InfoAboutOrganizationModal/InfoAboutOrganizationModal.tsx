@@ -5,8 +5,6 @@ import InputMask from "react-input-mask";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import styles from "./InfoAboutOrganizationModal.module.scss";
 
 import { useCreateApplicationMutation } from "@/entity/School/query";

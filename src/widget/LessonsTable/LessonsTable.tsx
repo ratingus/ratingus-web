@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import cl from "classnames";
 import { useSearchParams } from "next/navigation";
 
@@ -15,7 +15,11 @@ import Button from "@/shared/components/Button/Button";
 import { Checkbox } from "@/shared/components/Checkbox";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
-import { formatDateForInput, getDayAndMonth } from "@/shared/helpers/date";
+import {
+  formatDateForInput,
+  getDayAndMonth,
+  toTimestamp,
+} from "@/shared/helpers/date";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 
 // import styles from './LessonsTable.module.scss';
@@ -288,27 +292,36 @@ const LessonComponent = ({
   const [date, setDate] = useState<Date>(new Date(initDate));
   const [finished, setFinished] = useState<boolean | undefined>(initFinished);
 
-  const reset = () => {
+  const [saved, setSaved] = useState(false);
+
+  const reset = useCallback(() => {
     setTheme(initTheme);
     setHomework(initHomework);
     setDate(new Date(initDate));
     setFinished(initFinished);
-  };
+  }, [initDate, initFinished, initHomework, initTheme]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     reset();
     onReset?.();
-  };
+  }, [onReset, reset]);
 
   const handleSave = () => {
     onSave({
       theme,
       homework,
-      date: date.toISOString(),
+      date: toTimestamp(date.toISOString()).toISOString(),
       finished,
     });
-    reset();
+    setSaved(true);
   };
+
+  useEffect(() => {
+    if (!isCurrentEditing) {
+      setSaved(false);
+      handleReset();
+    }
+  }, [handleReset, isCurrentEditing, saved]);
 
   const handleDelete = () => {
     onDelete?.();

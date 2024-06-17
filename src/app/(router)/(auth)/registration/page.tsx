@@ -1,5 +1,6 @@
 "use client";
 import { FormEventHandler, useRef } from "react";
+import { toast } from "react-toastify";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -24,20 +25,32 @@ export default function Registration() {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      await api.post("/auth/register", {
-        name: formData.get("name"),
-        surname: formData.get("surname"),
-        patronymic: formData.get("patronymic"),
-        birthDate: formData.get("birthDate"),
-        login: formData.get("login"),
-        password: formData.get("pass"),
-      });
-      await signIn("credentials", {
-        login: formData.get("login"),
-        password: formData.get("pass"),
-        redirect: true,
-        callbackUrl: "/profile",
-      });
+      try {
+        await api.post("/auth/register", {
+          name: formData.get("name"),
+          surname: formData.get("surname"),
+          patronymic: formData.get("patronymic"),
+          birthDate: formData.get("birthDate"),
+          login: formData.get("login"),
+          password: formData.get("pass"),
+        });
+        const response = await signIn("credentials", {
+          login: formData.get("login"),
+          password: formData.get("pass"),
+          redirect: false,
+        });
+        if (!response) throw new Error("");
+        if (response.status === 401) {
+          handleLogin();
+        } else if (response.status === 200) {
+          router.push("/profile");
+        }
+      } catch (e) {
+        console.log(e);
+        toast("Что-то пошло не так, повторите попытку позже", {
+          type: "error",
+        });
+      }
     }
   };
 
@@ -74,11 +87,7 @@ export default function Registration() {
           <Input name="patronymic" placeholder="Отчество" />
           <Input name="birthDate" placeholder="Дата рождения" type="date" />
         </div>
-        <Button
-          className={styles.button}
-          variant="important"
-          onClick={handleLogin}
-        >
+        <Button className={styles.button} variant="important">
           Регистрация
         </Button>
       </form>

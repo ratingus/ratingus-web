@@ -3,7 +3,6 @@ import { useState } from "react";
 
 import styles from "./page.module.scss";
 
-import { getDateTime } from "@/entity/Announcement/helpers";
 import { useGetAnnouncementsQuery } from "@/entity/Announcement/query";
 import { selectAnnouncementMode } from "@/entity/Announcement/store";
 import AnnouncementCard from "@/entity/Announcement/ui/AnnouncementCard";
@@ -33,14 +32,7 @@ export default function Announcements() {
           ) : (
             announcements &&
             announcements.map((announcement) => (
-              <AnnouncementCard
-                key={
-                  announcement.creator.fio +
-                  announcement.name +
-                  getDateTime(announcement.createDate)
-                }
-                {...announcement}
-              />
+              <AnnouncementCard key={announcement.id} {...announcement} />
             ))
           )
         ) : (

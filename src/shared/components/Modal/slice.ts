@@ -7,10 +7,12 @@ import {
 export const INFO_ABOUT_ORGANIZATION_MODAL = "infoAboutOrganizationModal";
 export const PROFILE_EDIT_MODAL = "profileEditModal";
 export const ENTER_CODE_MODAL = "enterCodeModal";
+export const MAKE_USER_CODE_MODAL = "makeUserCodeModal";
 export type ModalName =
   | typeof INFO_ABOUT_ORGANIZATION_MODAL
   | typeof PROFILE_EDIT_MODAL
-  | typeof ENTER_CODE_MODAL;
+  | typeof ENTER_CODE_MODAL
+  | typeof MAKE_USER_CODE_MODAL;
 
 interface ModalState {
   activeModals: ModalName[];

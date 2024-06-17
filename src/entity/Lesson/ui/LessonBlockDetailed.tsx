@@ -1,4 +1,4 @@
-import React, { FocusEventHandler, useState } from "react";
+import React, { MouseEventHandler, useRef, useState } from "react";
 
 import styles from "./LessonBlockDetailed.module.scss";
 
@@ -6,6 +6,7 @@ import Mark from "@/entity/AttendanceMark/ui/Mark";
 import { LessonDetailed } from "@/entity/Lesson/model";
 import { useAddNoteMutation } from "@/entity/Lesson/query";
 import { getFioByUser } from "@/entity/User/helpers";
+import Button from "@/shared/components/Button/Button";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
@@ -26,8 +27,11 @@ const LessonBlockDetailed = ({
 }: LessonBlockDetailedProps) => {
   const [addNote] = useAddNoteMutation();
   const [prevValue, setPrevValue] = useState(note);
-  const handleBlurNote: FocusEventHandler<HTMLTextAreaElement> = (e) => {
-    const { value } = e.target;
+  const textarea = useRef<HTMLTextAreaElement>();
+
+  const handleBlurNote: MouseEventHandler<HTMLButtonElement> = (e) => {
+    if (!textarea.current) return;
+    const { value } = textarea.current;
 
     if (value !== prevValue) {
       setPrevValue(value);
@@ -57,12 +61,17 @@ const LessonBlockDetailed = ({
         <div>
           <Typography variant="h4">Заметки:</Typography>
           <Textarea
+            //  @ts-ignore
+            ref={textarea}
+            maxLength={1000}
             variant="dark"
             defaultValue={note}
             placeholder="Добавьте заметку, это позволит вам лучше запомнить материал и не забыть о важных моментах урока."
             className={styles.textarea}
-            onBlur={handleBlurNote}
           />
+          <Button variant="important" onClick={handleBlurNote}>
+            Сохранить
+          </Button>
         </div>
         <div className={styles.flexFlexov}>
           {mark && (

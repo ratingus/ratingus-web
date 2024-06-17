@@ -6,6 +6,7 @@
 
 .listWrapper {
   height: calc(100% - 8px*2);
+  width: 320px;
   padding: 8px 18px;
   background: $background-main;
   display: flex;
@@ -22,17 +23,32 @@
 
 .userWrapper {
   margin: 5px 0;
-  padding: 4px 16px 4px 10px;
   display: flex;
   background: $background-paper;
+  border-radius: 20px;
 }
 .user {
+  padding: 4px 16px 4px 10px;
   display: flex;
+  justify-content: flex-start !important;
+  width: 100%;
   gap: 10px;
+}
+.active {
+  box-shadow: inset 0 0 0 2px $primary-main;
 }
 .userDetails {
   display: flex;
   flex-direction: column;
+}
+.bigText {
+  width: 100%;
+  word-break: break-all;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  overflow: hidden;
 }
 .bigUser {
   margin-bottom: 10px;
@@ -72,6 +88,16 @@
 .codes {
   margin-top: 24px;
   margin-bottom: 12px;
+}
+.codesPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.code {
+  display: flex;
+  gap: 10px;
+
 }
 
 .otherWrapper {

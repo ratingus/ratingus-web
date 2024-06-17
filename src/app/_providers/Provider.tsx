@@ -1,6 +1,8 @@
 import { ReactNode, Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
+
 import { Metrika } from "./Metrica/ui";
 import { MockingProvider } from "./Mocking";
 import { SessionProvider } from "./Session";

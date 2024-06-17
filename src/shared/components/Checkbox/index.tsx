@@ -1,7 +1,10 @@
+"use client";
+
 import {
   ChangeEventHandler,
   DetailedHTMLProps,
   InputHTMLAttributes,
+  useEffect,
   useId,
   useState,
 } from "react";
@@ -27,6 +30,10 @@ export const Checkbox = ({
   const baseId = useId();
   const checkboxId = [baseId, id].join("_");
   const [value, setValue] = useState(!!checked);
+
+  useEffect(() => {
+    setValue(!!checked);
+  }, [checked]);
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setValue(e.currentTarget.checked);

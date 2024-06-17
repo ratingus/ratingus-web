@@ -21,7 +21,6 @@ import { Select, SelectOption } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useAppDispatch } from "@/shared/hooks/rtk";
-import ArrowDownIcon from "@/shared/icons/arrow-down.svg";
 
 const options: SelectOption[] = [
   {
@@ -223,22 +222,6 @@ const StudentsTableDetails = (props: StudentsTableDetailsProps) => {
         <Button type="reset" variant="error">
           Отменить
         </Button>
-        <div className={styles.movementButtons}>
-          <Button type="button">
-            <ArrowDownIcon className={styles.left} />
-          </Button>
-          <div className={styles.movementUpDownButtons}>
-            <Button type="button">
-              <ArrowDownIcon className={styles.up} />
-            </Button>
-            <Button type="button">
-              <ArrowDownIcon />
-            </Button>
-          </div>
-          <Button type="button">
-            <ArrowDownIcon className={styles.right} />
-          </Button>
-        </div>
       </div>
     </form>
   );

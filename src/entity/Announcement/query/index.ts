@@ -33,14 +33,61 @@ export const announcementsApi = baseApi.injectEndpoints({
             ]
           : [{ type: "getAnnouncements", id: "LIST" }],
     }),
-    postAnnouncement: build.mutation<Announcement, CreateAnnouncementDto>({
-      query: (newAnnouncement) => ({
+    postAnnouncement: build.mutation<
+      Announcement,
+      CreateAnnouncementDto & { classId?: number }
+    >({
+      query: ({ classId, ...newAnnouncement }) => ({
         url: ANNOUNCEMENTS_CONTEXT_PATH,
         method: "post",
         data: newAnnouncement,
       }),
-      // @ts-ignore
-      invalidatesTags: [{ type: "getAnnouncements", id: "LIST" }],
+      async onQueryStarted(
+        { classId, ...newAnnouncement },
+        { dispatch, queryFulfilled },
+      ) {
+        try {
+          const { data: createdAnnouncement } = await queryFulfilled;
+          dispatch(
+            announcementsApi.util.updateQueryData(
+              "getAnnouncements",
+              { classId },
+              (draft) => {
+                draft.unshift({
+                  ...createdAnnouncement,
+                  creator: {
+                    ...createdAnnouncement.creator,
+                    fio: getFioByUser(createdAnnouncement.creator),
+                  },
+                });
+              },
+            ),
+          );
+        } catch {}
+      },
+    }),
+    deleteAnnouncement: build.mutation<void, { classId?: number; id: number }>({
+      query: ({ id }) => ({
+        url: `${ANNOUNCEMENTS_CONTEXT_PATH}/${id}`,
+        method: "delete",
+      }),
+      async onQueryStarted({ classId, id }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          announcementsApi.util.updateQueryData(
+            "getAnnouncements",
+            { classId },
+            (draft) => {
+              return draft.filter((announcement) => announcement.id !== id);
+            },
+          ),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+          // handle error
+        }
+      },
     }),
   }),
 });
@@ -49,4 +96,5 @@ export const {
   useGetAnnouncementsQuery,
   useLazyGetAnnouncementsQuery,
   usePostAnnouncementMutation,
+  useDeleteAnnouncementMutation,
 } = announcementsApi;

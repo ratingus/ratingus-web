@@ -25,13 +25,28 @@ type InputProps = BaseInputProps & {
 };
 
 export const Textarea = forwardRef<HTMLTextAreaElement, InputProps>(
-  ({ className, sizeVariant = "medium", variant = "white", ...props }, ref) => {
+  (
+    {
+      className,
+      sizeVariant = "medium",
+      variant = "white",
+      maxLength,
+      ...props
+    },
+    ref,
+  ) => {
+    const [currentLength, setCurrentLength] = useState<number>();
+
     const autoResize: FormEventHandler<HTMLTextAreaElement> = useCallback(
       ({ currentTarget }) => {
         currentTarget.style.height = "auto";
         currentTarget.style.height = `${currentTarget.scrollHeight}px`;
+
+        if (maxLength) {
+          setCurrentLength(currentTarget.value.length);
+        }
       },
-      [],
+      [maxLength],
     );
     const [init, setInit] = useState(false);
 
@@ -46,18 +61,26 @@ export const Textarea = forwardRef<HTMLTextAreaElement, InputProps>(
     }, [autoResize, ref, init]);
 
     return (
-      <textarea
-        ref={ref}
-        className={cl(
-          baseClasses,
-          styles[sizeVariant],
-          styles[variant],
-          className,
+      <div className={styles.wrapper}>
+        <textarea
+          ref={ref}
+          className={cl(
+            baseClasses,
+            styles[sizeVariant],
+            styles[variant],
+            className,
+          )}
+          onInput={autoResize}
+          rows={1}
+          maxLength={maxLength}
+          {...props}
+        />
+        {maxLength && (
+          <div className={styles.counter}>
+            {currentLength} / {maxLength}
+          </div>
         )}
-        onInput={autoResize}
-        rows={1}
-        {...props}
-      />
+      </div>
     );
   },
 );
