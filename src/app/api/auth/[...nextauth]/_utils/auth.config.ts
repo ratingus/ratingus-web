@@ -12,6 +12,8 @@ import api, { extractTokenFromSetCookie } from "@/shared/api/axios";
 declare module "next-auth" {
   interface User {
     id: string;
+    login: string;
+    is_admin: boolean;
     role: RoleEnum;
     surname: string;
     name: string;
