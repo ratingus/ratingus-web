@@ -27,6 +27,13 @@ a {
 	}
 }
 
+.modal-open {
+	height: 100dvh;
+	overflow: hidden;
+	position: fixed;
+	width: 100dvw;
+}
+
 ::-webkit-scrollbar {
 	width: 4px;
 	height: 4px;

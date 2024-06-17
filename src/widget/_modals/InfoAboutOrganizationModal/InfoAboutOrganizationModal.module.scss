@@ -21,6 +21,15 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  margin-bottom: 20px;
+}
+
+.submitButtonWrapper {
+  display: flex;
+  button {
+    width: 100%;
+  }
+  padding-bottom: 20px;
 }
 
 .formBlockWithInputs {
