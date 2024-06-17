@@ -31,14 +31,9 @@ const SubjectSelector = () => {
 
   if (!subjects) return <div>loading...</div>;
 
-  if (teacherSubjectFromParams <= 0) {
+  if (!searchParams.has("teacherSubject")) {
     router.push(
       `${path}?${addQueryInParamsString(searchParams, { name: "teacherSubject", value: teacherSubject })}`,
-    );
-  }
-  if (teacherSubject === -1) {
-    router.push(
-      `${path}?${addQueryInParamsString(searchParams, { name: "teacherSubject", value: 0 })}`,
     );
   }
 
@@ -65,27 +60,29 @@ const SubjectSelector = () => {
       <Typography variant="h4" className={styles.label}>
         Предмет
       </Typography>
-      {currentSubject && (
-        <Select
-          variant="dark"
-          // @ts-ignore
-          defaultValue={{
-            label:
-              currentSubject.subject.name +
-              " (" +
-              getFioByUser(currentSubject.teacher) +
-              ")",
-            value: currentSubject.teacher.teacherSubjectId.toString(),
-          }}
-          onChange={({ value }) => {
-            router.push(
-              path +
-                `?${addQueryInParamsString(searchParams, { name: "teacherSubject", value: value })}`,
-            );
-          }}
-          options={options}
-        />
-      )}
+      <Select
+        variant="dark"
+        // @ts-ignore
+        defaultValue={
+          currentSubject
+            ? {
+                label:
+                  currentSubject.subject.name +
+                  " (" +
+                  getFioByUser(currentSubject.teacher) +
+                  ")",
+                value: currentSubject.teacher.teacherSubjectId.toString(),
+              }
+            : undefined
+        }
+        onChange={({ value }) => {
+          router.push(
+            path +
+              `?${addQueryInParamsString(searchParams, { name: "teacherSubject", value: value })}`,
+          );
+        }}
+        options={options}
+      />
     </div>
   );
 };

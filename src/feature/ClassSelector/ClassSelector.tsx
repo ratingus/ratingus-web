@@ -21,7 +21,7 @@ const ClassSelector = ({}: ClassSelectorProps) => {
   const classId =
     Number(params.get("classId")) ||
     classIdFromUser ||
-    (classes && classes[0].id) ||
+    (classes && classes[0] && classes[0].id) ||
     -1;
 
   if (!classes) {

@@ -32,6 +32,9 @@ export default function Journal() {
   const router = useRouter();
   const path = usePathname();
   const searchParams = useSearchParams();
+
+  const classId = Number(searchParams.get("classId"));
+  const teacherSubjectId = Number(searchParams.get("teacherSubject"));
   const type = searchParams.get("type");
   const selectedOptionType = type || "students";
   const selectedOption =
@@ -100,7 +103,9 @@ export default function Journal() {
           )}
       </div>
       <div className={styles.main}>
-        {tab.value === "students" ? (
+        {classId === -1 || teacherSubjectId === -1 ? (
+          <div>Не выбран класс или предмет</div>
+        ) : tab.value === "students" ? (
           <StudentsTable isEditing={isEditing} />
         ) : (
           <LessonsTable isEditing={isEditing} />
