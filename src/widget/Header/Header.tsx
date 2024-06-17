@@ -30,10 +30,7 @@ import SettingsIcon from "@/shared/icons/settings.svg";
 const logoutButton = {
   link: LOGIN_PAGE_LINK,
   children: (
-    <Button
-      onClick={() => signOut({ callbackUrl: "/login", redirect: true })}
-      variant="important"
-    >
+    <Button onClick={() => signOut()} variant="important">
       Выйти
     </Button>
   ),
