@@ -27,10 +27,39 @@ import HeaderIcon from "@/shared/icons/header.svg";
 import JournalIcon from "@/shared/icons/journal.svg";
 import SettingsIcon from "@/shared/icons/settings.svg";
 
+const logoutButton = {
+  link: LOGIN_PAGE_LINK,
+  children: (
+    <Button onClick={() => signOut()} variant="important">
+      Выйти
+    </Button>
+  ),
+};
+const adminButton = {
+  link: ADMIN_PANEL_PAGE_LINK,
+  children: <AdminPanelIcon />,
+};
+const profileButton = {
+  link: PROFILE_PAGE_LINK,
+  children: <EmptyProfileIcon />,
+};
+const announcementsButton = {
+  link: ANNOUNCEMENT_PAGE_LINK,
+  children: <AnnouncementIcon />,
+};
+const calendarButton = {
+  link: CALENDAR_PAGE_LINK,
+  children: <CalendarIcon />,
+};
+const journalButton = {
+  link: JOURNAL_PAGE_LINK,
+  children: <JournalIcon />,
+};
+
 const Header = () => {
   const { data: session, status } = useSession();
 
-  const buttonsHeader = (): ButtonProps[] => {
+  const buttonsHeader = (): (ButtonProps | null)[] => {
     if (status !== "authenticated" || !session) {
       return [
         {
@@ -39,94 +68,48 @@ const Header = () => {
         },
       ];
     }
-    const logoutButton = {
-      link: LOGIN_PAGE_LINK,
-      children: (
-        <Button
-          onClick={() => signOut({ callbackUrl: "/login", redirect: true })}
-          variant="important"
-        >
-          Выйти
-        </Button>
-      ),
-    };
+
     if (session.role === "GUEST") {
       return [
-        {
-          link: PROFILE_PAGE_LINK,
-          children: <EmptyProfileIcon />,
-        },
+        session.is_admin ? adminButton : null,
+        profileButton,
         logoutButton,
       ];
     }
     if (session.role === "STUDENT") {
       return [
-        {
-          link: ANNOUNCEMENT_PAGE_LINK,
-          children: <AnnouncementIcon />,
-        },
+        announcementsButton,
         {
           link: DIARY_PAGE_LINK,
           children: <DiaryIcon />,
         },
-        {
-          link: CALENDAR_PAGE_LINK,
-          children: <CalendarIcon />,
-        },
-        {
-          link: PROFILE_PAGE_LINK,
-          children: <EmptyProfileIcon />,
-        },
+        calendarButton,
+        session.is_admin ? adminButton : null,
+        profileButton,
         logoutButton,
       ];
     }
     if (session.role === "TEACHER") {
       return [
-        {
-          link: ANNOUNCEMENT_PAGE_LINK,
-          children: <AnnouncementIcon />,
-        },
-        {
-          link: CALENDAR_PAGE_LINK,
-          children: <CalendarIcon />,
-        },
-        {
-          link: JOURNAL_PAGE_LINK,
-          children: <JournalIcon />,
-        },
-        {
-          link: PROFILE_PAGE_LINK,
-          children: <EmptyProfileIcon />,
-        },
+        announcementsButton,
+        calendarButton,
+        journalButton,
+        session.is_admin ? adminButton : null,
+        profileButton,
         logoutButton,
       ];
     }
     if (session.role === "LOCAL_ADMIN") {
       return [
-        {
-          link: ANNOUNCEMENT_PAGE_LINK,
-          children: <AnnouncementIcon />,
-        },
-        {
-          link: CALENDAR_PAGE_LINK,
-          children: <CalendarIcon />,
-        },
-        {
-          link: JOURNAL_PAGE_LINK,
-          children: <JournalIcon />,
-        },
+        announcementsButton,
+        calendarButton,
+        journalButton,
         {
           link: SETTINGS_PAGE_LINK,
           children: <SettingsIcon />,
         },
-        {
-          link: ADMIN_PANEL_PAGE_LINK,
-          children: <AdminPanelIcon />,
-        },
-        {
-          link: PROFILE_PAGE_LINK,
-          children: <EmptyProfileIcon />,
-        },
+        session.is_admin ? adminButton : null,
+        profileButton,
         logoutButton,
       ];
     }
@@ -144,7 +127,9 @@ const Header = () => {
         <HeaderIcon className={styles.icon} />
       </Link>
       <nav className={styles.nav}>
-        <ButtonGroup buttons={buttonsHeader()} />
+        <ButtonGroup
+          buttons={buttonsHeader().filter((v) => v !== null) as ButtonProps[]}
+        />
       </nav>
     </header>
   );

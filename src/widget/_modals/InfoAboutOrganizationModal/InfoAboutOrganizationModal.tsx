@@ -144,11 +144,13 @@ const InfoAboutOrganizationModal = ({}: InfoAboutOrganizationModalProps) => {
           </div>
         </div>
 
-        <Button variant="important">
-          <Typography variant="h3" passColor>
-            Отправить заявку
-          </Typography>
-        </Button>
+        <div className={styles.submitButtonWrapper}>
+          <Button variant="important">
+            <Typography variant="h3" passColor>
+              Отправить заявку
+            </Typography>
+          </Button>
+        </div>
       </form>
     </div>
   );

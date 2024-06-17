@@ -22,7 +22,7 @@ export default function Calendar() {
   const classId =
     Number(params.get("classId")) ||
     classIdFromUser ||
-    (classes && classes[0].id) ||
+    (classes && classes[0] && classes[0].id) ||
     -1;
   const role = useRole();
 
@@ -55,7 +55,9 @@ export default function Calendar() {
         )}
       </div>
       <div className={styles.calendarWrapper}>
-        {isEditing ? (
+        {classId === -1 ? (
+          <div>Не выбран класс</div>
+        ) : isEditing ? (
           <DragDropCalendar
             isEditing={isEditing}
             lessonsByWeek={calendar}

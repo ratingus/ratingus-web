@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import ReactModal from "react-modal";
 import cl from "classnames";
 
@@ -25,6 +25,15 @@ export const Modal = ({
 }: ModalProps) => {
   const isModalActive = useAppSelector(selectIsModalActive(modalName));
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isModalActive) {
+      document.querySelector("body")?.classList.add("modal-open");
+      return () => {
+        document.querySelector("body")?.classList.remove("modal-open");
+      };
+    }
+  }, [isModalActive]);
 
   if (!isModalActive) {
     return null;

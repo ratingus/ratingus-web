@@ -13,9 +13,14 @@
   flex-direction: column;
   justify-content: space-between;
 }
+.search {
+  margin-bottom: 12px;
+}
 .list {
   padding: 0;
-  margin: 0;
+  margin: 0 0 20px 0;
+  height: 100%;
+  overflow: auto;
 }
 .lastUser {
     width: 100%;

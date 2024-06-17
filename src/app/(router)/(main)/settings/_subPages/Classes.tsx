@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEventHandler, useRef, useState } from "react";
+import React, { FormEventHandler, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import styles from "./Users.module.scss";
@@ -79,11 +79,26 @@ const Classes = () => {
     setChosenClass(classDto);
     setIsActive(false);
   };
+
+  const [searchClass, setSearchClass] = useState("");
+
+  const filtredClasses = useMemo(() => {
+    return (classes ?? []).filter(({ name }) =>
+      name.toLowerCase().startsWith(searchClass.toLowerCase()),
+    );
+  }, [classes, searchClass]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.listWrapper}>
+        <Input
+          className={styles.search}
+          value={searchClass}
+          placeholder="Введите часть класса..."
+          onChange={({ target }) => setSearchClass(target.value)}
+        />
         <ul className={styles.list}>
-          {classes.map(({ id, name }) => (
+          {filtredClasses.map(({ id, name }) => (
             <li key={id} className={styles.roleWrapper}>
               <Label
                 className={styles.role}
