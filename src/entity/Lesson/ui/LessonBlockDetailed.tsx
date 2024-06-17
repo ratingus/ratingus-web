@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useRef, useState } from "react";
+import React, { MouseEventHandler, useEffect, useRef, useState } from "react";
 
 import styles from "./LessonBlockDetailed.module.scss";
 
@@ -26,10 +26,14 @@ const LessonBlockDetailed = ({
   attendance,
 }: LessonBlockDetailedProps) => {
   const [addNote] = useAddNoteMutation();
-  const [prevValue, setPrevValue] = useState(note);
+  const [prevValue, setPrevValue] = useState(note || "");
   const textarea = useRef<HTMLTextAreaElement>();
 
-  const handleBlurNote: MouseEventHandler<HTMLButtonElement> = (e) => {
+  useEffect(() => {
+    setPrevValue(note || "");
+  }, [note]);
+
+  const handleSaveNote: MouseEventHandler<HTMLButtonElement> = (_) => {
     if (!textarea.current) return;
     const { value } = textarea.current;
 
@@ -63,13 +67,15 @@ const LessonBlockDetailed = ({
           <Textarea
             //  @ts-ignore
             ref={textarea}
+            key={[scheduleId, lessonId, studentLessonId].join("-")}
             maxLength={1000}
             variant="dark"
-            defaultValue={note}
+            value={prevValue}
+            onChange={({ target }) => setPrevValue(target.value)}
             placeholder="Добавьте заметку, это позволит вам лучше запомнить материал и не забыть о важных моментах урока."
             className={styles.textarea}
           />
-          <Button variant="important" onClick={handleBlurNote}>
+          <Button variant="important" onClick={handleSaveNote}>
             Сохранить
           </Button>
         </div>

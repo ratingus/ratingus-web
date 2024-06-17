@@ -31,11 +31,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, InputProps>(
       sizeVariant = "medium",
       variant = "white",
       maxLength,
+      value,
       ...props
     },
     ref,
   ) => {
     const [currentLength, setCurrentLength] = useState<number>();
+
+    useEffect(() => {
+      if (maxLength && value && typeof value === "string") {
+        setCurrentLength(value.length);
+      }
+    }, [value, maxLength]);
 
     const autoResize: FormEventHandler<HTMLTextAreaElement> = useCallback(
       ({ currentTarget }) => {
@@ -64,6 +71,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, InputProps>(
       <div className={styles.wrapper}>
         <textarea
           ref={ref}
+          value={value}
           className={cl(
             baseClasses,
             styles[sizeVariant],
