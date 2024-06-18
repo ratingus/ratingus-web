@@ -27,10 +27,12 @@ const LessonBlockDetailed = ({
 }: LessonBlockDetailedProps) => {
   const [addNote] = useAddNoteMutation();
   const [prevValue, setPrevValue] = useState(note || "");
+  const [value, setValue] = useState(note || "");
   const textarea = useRef<HTMLTextAreaElement>();
 
   useEffect(() => {
     setPrevValue(note || "");
+    setValue(note || "");
   }, [note]);
 
   const handleSaveNote: MouseEventHandler<HTMLButtonElement> = (_) => {
@@ -38,7 +40,7 @@ const LessonBlockDetailed = ({
     const { value } = textarea.current;
 
     if (value !== prevValue) {
-      setPrevValue(value);
+      setValue(value);
       addNote({
         scheduleId,
         lessonId,
@@ -70,8 +72,8 @@ const LessonBlockDetailed = ({
             key={[scheduleId, lessonId, studentLessonId].join("-")}
             maxLength={1000}
             variant="dark"
-            value={prevValue}
-            onChange={({ target }) => setPrevValue(target.value)}
+            value={value}
+            onChange={({ target }) => setValue(target.value)}
             placeholder="Добавьте заметку, это позволит вам лучше запомнить материал и не забыть о важных моментах урока."
             className={styles.textarea}
           />
