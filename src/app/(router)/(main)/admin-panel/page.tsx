@@ -26,6 +26,12 @@ import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 import MakeUserCodeModal from "@/widget/_modals/MakeUserCodeModal/MakeUserCodeModal";
 
+const statusPriority = {
+  null: 0,
+  APPROVED: 1,
+  REJECTED: 2,
+};
+
 export default function AdminPanel() {
   const dispatch = useAppDispatch();
   const { data: applications } = useGetApplicationsQuery(null);
@@ -71,13 +77,18 @@ export default function AdminPanel() {
   const handleRejectApplication = (id: number) => {
     rejectApplication({ id });
   };
-
   return (
     <>
       <PageContainer className={styles.panel} isPanel>
         <div className={styles.schools}>
-          {applications.map(
-            ({ id, name, address, email, status, code, isActivated }) => (
+          {[...applications]
+            .sort((a, b) => {
+              const priorityA = statusPriority[a.status] || 0;
+              const priorityB = statusPriority[b.status] || 0;
+
+              return priorityA - priorityB;
+            })
+            .map(({ id, name, address, email, status, code, isActivated }) => (
               <div key={id} className={cl(styles.flex, styles.grid)}>
                 <div className={styles.school}>
                   <Typography variant="small" color="textHelper">
@@ -148,8 +159,7 @@ export default function AdminPanel() {
                   </div>
                 )}
               </div>
-            ),
-          )}
+            ))}
         </div>
       </PageContainer>
       <Modal modalName={MAKE_USER_CODE_MODAL} maxContent>
