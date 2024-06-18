@@ -2,11 +2,12 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import Classes from "./_subPages/Classes";
+import Other from "./_subPages/Other";
+import Subjects from "./_subPages/Subjects";
 import Users from "./_subPages/Users";
 import styles from "./page.module.scss";
 
-import Classes from "@/app/(router)/(main)/settings/_subPages/Classes";
-import Other from "@/app/(router)/(main)/settings/_subPages/Other";
 import PageContainer from "@/shared/components/PageContainer/PageContainer";
 import { TabOption, Tabs } from "@/shared/components/Tabs/Tabs";
 import { addQueryInParamsString } from "@/shared/helpers/searchParams";
@@ -20,6 +21,10 @@ const options = {
   classes: {
     value: "classes",
     label: "Классы",
+  },
+  subjects: {
+    value: "subjects",
+    label: "Предметы",
   },
   other: {
     value: "other",
@@ -76,6 +81,7 @@ export default function Settings() {
     >
       {tab.value === "users" && <Users />}
       {tab.value === "classes" && <Classes />}
+      {tab.value === "subjects" && <Subjects />}
       {tab.value === "other" && <Other />}
     </PageContainer>
   );
