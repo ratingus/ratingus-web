@@ -46,8 +46,8 @@ export const scheduleApi = baseApi.injectEndpoints({
       { data: ChangeTeacherSubjectsInCalendarDto; classId: number }
     >({
       query: ({ data, classId }) => ({
-        url: `/schedule/change/${classId}`,
-        method: "POST",
+        url: `/schedule/${classId}`,
+        method: "PATCH",
         data,
       }),
       // @ts-ignore
@@ -61,14 +61,14 @@ export const scheduleApi = baseApi.injectEndpoints({
       { data: DeleteTeacherSubjectInCalendarDto; classId: number }
     >({
       query: ({ data, classId }) => ({
-        url: `/schedule/delete/${classId}`,
+        url: `/schedule/${classId}`,
         method: "DELETE",
         data,
       }),
       // @ts-ignore
       invalidatesTags: [
         // @ts-ignore
-        { type: "getCalendar" },
+        { type: "getCalendar", id: "LIST" },
       ],
     }),
 
@@ -124,6 +124,28 @@ export const scheduleApi = baseApi.injectEndpoints({
         { type: "getTeachers" },
       ],
     }),
+    addSubject: build.mutation<void, { name: string }>({
+      query: (newTeacherSubject) => ({
+        url: "/admin-panel/subject",
+        method: "post",
+        data: newTeacherSubject,
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getTeacherSubjects" },
+      ],
+    }),
+    updateSubject: build.mutation<void, { id: number; name: string }>({
+      query: ({ id, ...newTeacherSubject }) => ({
+        url: `/admin-panel/subject/${id}`,
+        method: "put",
+        data: newTeacherSubject,
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getTeacherSubjects" },
+      ],
+    }),
   }),
 });
 
@@ -136,4 +158,6 @@ export const {
   useGetTeachersQuery,
   useGetTeacherSubjectsQuery,
   useAddTeacherSubjectMutation,
+  useAddSubjectMutation,
+  useUpdateSubjectMutation,
 } = scheduleApi;
