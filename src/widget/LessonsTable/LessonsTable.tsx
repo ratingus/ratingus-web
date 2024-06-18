@@ -39,6 +39,10 @@ export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
 
   const [isEditingId, setIsEditing] = useState<number | undefined>();
 
+  useEffect(() => {
+    setIsEditing(undefined);
+  }, [isEditing]);
+
   if (!lessons) return <div>loading...</div>;
 
   return (
@@ -294,18 +298,18 @@ const LessonComponent = ({
   onDelete?: () => void;
   onSave: (lesson: BaseMagazineLesson) => void;
 }) => {
-  const [theme, setTheme] = useState(initTheme);
-  const [homework, setHomework] = useState(initHomework);
-  const [date, setDate] = useState<Date>(new Date(initDate));
+  const [theme, setTheme] = useState(initTheme || "");
+  const [homework, setHomework] = useState(initHomework || "");
+  const [date, setDate] = useState<Date>(new Date(initDate || ""));
   const [finished, setFinished] = useState<boolean | undefined>(initFinished);
 
   const [saved, setSaved] = useState(false);
 
   const reset = useCallback(() => {
-    setTheme(initTheme);
-    setHomework(initHomework);
-    setDate(new Date(initDate));
-    setFinished(initFinished);
+    setTheme(initTheme || "");
+    setHomework(initHomework || "");
+    setDate(new Date(initDate || ""));
+    setFinished(!!initFinished);
   }, [initDate, initFinished, initHomework, initTheme]);
 
   const handleReset = useCallback(() => {

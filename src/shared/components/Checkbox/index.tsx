@@ -50,8 +50,8 @@ export const Checkbox = ({
         onChange={handleChange}
         type="checkbox"
       />
-      {value && <Icon />}
       <label htmlFor={checkboxId} />
+      {value && <Icon />}
     </div>
   );
 };

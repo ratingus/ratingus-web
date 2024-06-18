@@ -1,16 +1,5 @@
 .wrapper {
   position: relative;
-  svg {
-    position: absolute;
-    z-index: 1;
-    pointer-events: none;
-    color: $text-primary;
-    top: 50%;
-    left: 50%;
-    width: 32px;
-    height: 32px;
-    transform: translate(-50%, -50%);
-  }
 
   input[type=checkbox] {
     width: 48px;
@@ -60,6 +49,16 @@
       background-color: $background-main;
       border-radius: 20px;
     }
+  }
+  svg {
+    position: absolute;
+    pointer-events: none;
+    color: $text-primary;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    transform: translate(-50%, -50%);
   }
 }
 
