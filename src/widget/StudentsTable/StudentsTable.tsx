@@ -30,6 +30,7 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
   const dispatch = useAppDispatch();
 
   const selectedStudentLesson = useAppSelector(selectSelectedStudentTeacher);
+  console.log(selectedStudentLesson);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -46,14 +47,12 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
 
         const verticalMax = students.length;
         const vertical = key === "ArrowDown" ? 1 : key === "ArrowUp" ? -1 : 0;
-        const normiziledVertical =
-          studentIndex + vertical >= verticalMax || studentIndex + vertical < 0
-            ? 0
-            : vertical;
 
-        const newStudentIndex = students.findIndex(
-          ({ id }) => id === studentDto.id + normiziledVertical,
-        );
+        const newStudentIndex =
+          studentIndex + vertical >= verticalMax || studentIndex + vertical < 0
+            ? -1
+            : studentIndex + vertical;
+
         if (newStudentIndex === -1) return;
 
         const monthMax = monthLessonDays.length;
