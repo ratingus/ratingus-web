@@ -152,7 +152,9 @@ const Users = () => {
         </Button>
       </div>
 
-      <div className={styles.main}>
+      <div
+        className={cl(styles.main, chosenUser === null && styles.mainOverflow)}
+      >
         {chosenUser ? (
           <div>
             <div className={cl(styles.user, styles.bigUser)}>
@@ -239,7 +241,7 @@ const Users = () => {
               <Typography className={styles.codesPanel}>
                 {userCodes
                   .filter(({ role }) => role === selectedRole)
-                  .map(({ classDto, code, ...user }) => (
+                  .map(({ classDto, code, ...user }, index) => (
                     <div className={styles.code} key={code}>
                       <Typography variant="h5">
                         {getFioByUser(user)}

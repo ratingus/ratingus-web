@@ -73,9 +73,14 @@
   border-left: 1px solid $background-main;
   padding: 20px;
   width: calc(100% - 40px);
+
+  height: calc(100% - 40px);
   & > div {
     height: 100%;
   }
+}
+.mainOverflow {
+  overflow: auto;
 }
 
 .form {
@@ -109,17 +114,15 @@
   margin-top: 24px;
   margin-bottom: 12px;
 }
+.codesPanelWrapper {
+}
 .codesPanel {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 10px;
-  overflow: auto;
-  box-sizing: border-box;
 }
 .code {
   display: flex;
   gap: 10px;
-
 }
 
 .otherWrapper {
