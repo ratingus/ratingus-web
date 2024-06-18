@@ -29,11 +29,6 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
         !(path === "/login" || path === "/registration" || path === "/")
       ) {
         router.push("/login");
-      } else if (
-        status === "authenticated" &&
-        (path === "/login" || path === "/registration")
-      ) {
-        router.push("/profile");
       }
     }
   }, [router, path, status]);
