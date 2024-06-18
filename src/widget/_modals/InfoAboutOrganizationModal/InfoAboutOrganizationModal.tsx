@@ -13,6 +13,7 @@ import { Checkbox } from "@/shared/components/Checkbox";
 import { BaseInputProps, Input } from "@/shared/components/Input/Input";
 import { actionHideModal } from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 
@@ -27,12 +28,12 @@ const InfoAboutOrganizationModal = ({}: InfoAboutOrganizationModalProps) => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      const email = formData.get("email")?.toString() || "";
-      const name = formData.get("name")?.toString() || "";
-      const address = formData.get("address")?.toString() || "";
-      const phone = formData.get("phone")?.toString() || "";
+      const email = getFromForm(formData, "email");
+      const name = getFromForm(formData, "name");
+      const address = getFromForm(formData, "address");
+      const phone = getFromForm(formData, "phone");
       const isLegalRulesAccepted = Boolean(
-        formData.get("isLegalRulesAccepted")?.toString() || "",
+        getFromForm(formData, "isLegalRulesAccepted"),
       );
 
       if (!email || !name || !address || !phone) {

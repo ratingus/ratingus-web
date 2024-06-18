@@ -11,6 +11,7 @@ import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { actionHideModal } from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 
 type Props = {
@@ -26,13 +27,10 @@ const MakeUserCodeModal = ({ onSubmit, code }: Props) => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      const formName = formData.get("name");
-      const formSurname = formData.get("surname");
-      const formPatronymic = formData.get("patronymic");
-      if (formName && formSurname) {
-        const name = formName.toString();
-        const surname = formSurname.toString();
-        const patronymic = formPatronymic?.toString();
+      const name = getFromForm(formData, "name");
+      const surname = getFromForm(formData, "surname");
+      const patronymic = getFromForm(formData, "patronymic") || undefined;
+      if (name && surname) {
         onSubmit({
           name,
           surname,

@@ -24,6 +24,7 @@ import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 
 const Users = () => {
@@ -60,22 +61,17 @@ const Users = () => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      const formName = formData.get("name");
-      const formSurname = formData.get("surname");
-      const formPatronymic = formData.get("patronymic");
-      const formRole = formData.get("role");
-      const formClass = formData.get("class");
-      if (!formName || !formSurname || !formRole) {
+      const name = getFromForm(formData, "name");
+      const surname = getFromForm(formData, "surname");
+      const patronymic = getFromForm(formData, "patronymic") || undefined;
+      const role = getFromForm(formData, "role") as RoleEnum | null;
+      const classId = getFromForm(formData, "class");
+      if (!name || !surname || !role) {
         toast("Не все поля заполнены!", {
           type: "error",
         });
         return;
       }
-      const name = formName.toString();
-      const surname = formSurname.toString();
-      const patronymic = formPatronymic?.toString();
-      const role = formRole.toString() as RoleEnum;
-      const classId = formClass?.toString();
       const cl = classId
         ? classes.find(({ id }) => id === parseInt(classId))
         : undefined;

@@ -14,6 +14,7 @@ import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Label } from "@/shared/components/Label/Label";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 
 const Classes = () => {
   const { data: classes = [] } = useGetClassesQuery(null);
@@ -27,7 +28,7 @@ const Classes = () => {
     e.preventDefault();
     if (addClassForm.current) {
       const formData = new FormData(addClassForm.current);
-      const name = formData.get("class")?.toString();
+      const name = getFromForm(formData, "class");
       if (!name) {
         toast("Не все поля заполнены!", {
           type: "error",
@@ -50,7 +51,7 @@ const Classes = () => {
     e.preventDefault();
     if (updateClassForm.current) {
       const formData = new FormData(updateClassForm.current);
-      const name = formData.get("class")?.toString();
+      const name = getFromForm(formData, "class");
       if (!chosenClass || !name) {
         toast("Не все поля заполнены!", {
           type: "error",
