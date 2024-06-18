@@ -128,7 +128,8 @@ export const DragDropCalendar = ({
     setIsDragging(true);
   };
 
-  if (!teachers || !teacherSubjects) return <div>loading...</div>;
+  if (!teachers || !teacherSubjects)
+    return <div>Нет учителей или предметов...</div>;
 
   const handleMergeTeacherSubject = async (id: number) => {
     if (chosenSubject) {

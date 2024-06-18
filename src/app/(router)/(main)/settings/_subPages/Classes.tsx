@@ -94,7 +94,7 @@ const Classes = () => {
         <Input
           className={styles.search}
           value={searchClass}
-          placeholder="Введите часть класса..."
+          placeholder="Введите название класса..."
           onChange={({ target }) => setSearchClass(target.value)}
         />
         <ul className={styles.list}>

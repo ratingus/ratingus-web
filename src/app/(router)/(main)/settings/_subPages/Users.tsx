@@ -37,7 +37,7 @@ const Users = () => {
 
   const form = useRef(null);
 
-  const [role, setRole] = useState("student");
+  const [selectedRole, setSelectedRole] = useState("STUDENT");
 
   const [searchUser, setSearchUser] = useState("");
 
@@ -112,7 +112,7 @@ const Users = () => {
         <Input
           className={styles.search}
           value={searchUser}
-          placeholder="Введите часть логина или ФИО..."
+          placeholder="Введите логин или ФИО..."
           onChange={({ target }) => setSearchUser(target.value)}
         />
         <ul className={styles.list}>
@@ -196,41 +196,43 @@ const Users = () => {
                     />
                   </div>
                 </div>
-                <div className={styles.formBlock}>
-                  <Typography variant="h3">Роль:</Typography>
-                  <div>
-                    <Select
-                      form="addUser"
-                      name="role"
-                      variant="dark"
-                      // @ts-ignore
-                      onChange={({ value }) => setRole(value)}
-                      // @ts-ignore
-                      defaultValue={{ value: "STUDENT", label: "Ученик" }}
-                      options={[
-                        { value: "STUDENT", label: "Ученик" },
-                        { value: "TEACHER", label: "Учитель" },
-                        { value: "LOCAL_ADMIN", label: "Локальный админ" },
-                      ]}
-                    />
-                  </div>
-                </div>
-                {role === "student" && (
+                <div className={styles.formButtons}>
                   <div className={styles.formBlock}>
-                    <Typography variant="h3">Класс:</Typography>
+                    <Typography variant="h3">Роль:</Typography>
                     <div>
                       <Select
                         form="addUser"
-                        name="class"
+                        name="role"
                         variant="dark"
-                        options={classes.map(({ id, name }) => ({
-                          value: id.toString(),
-                          label: name,
-                        }))}
+                        // @ts-ignore
+                        onChange={({ value }) => setSelectedRole(value)}
+                        // @ts-ignore
+                        defaultValue={{ value: "STUDENT", label: "Ученик" }}
+                        options={[
+                          { value: "STUDENT", label: "Ученик" },
+                          { value: "TEACHER", label: "Учитель" },
+                          { value: "LOCAL_ADMIN", label: "Локальный админ" },
+                        ]}
                       />
                     </div>
                   </div>
-                )}
+                  {selectedRole === "STUDENT" && (
+                    <div className={styles.formBlock}>
+                      <Typography variant="h3">Класс:</Typography>
+                      <div>
+                        <Select
+                          form="addUser"
+                          name="class"
+                          variant="dark"
+                          options={classes.map(({ id, name }) => ({
+                            value: id.toString(),
+                            label: name,
+                          }))}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <Button className={styles.formButton} variant="secondary">
                   Добавить
                 </Button>
@@ -239,17 +241,19 @@ const Users = () => {
                 Не активированные коды приглашения:
               </Typography>
               <Typography className={styles.codesPanel}>
-                {userCodes.map(({ classDto, code, ...user }) => (
-                  <div className={styles.code} key={code}>
-                    <Typography variant="h5">
-                      {getFioByUser(user)}
-                      {classDto && `, Класс ${classDto.name}`}
-                    </Typography>
-                    <Typography variant="h5" color="textHelper">
-                      {code}
-                    </Typography>
-                  </div>
-                ))}
+                {userCodes
+                  .filter(({ role }) => role === selectedRole)
+                  .map(({ classDto, code, ...user }) => (
+                    <div className={styles.code} key={code}>
+                      <Typography variant="h5">
+                        {getFioByUser(user)}
+                        {classDto && `, Класс ${classDto.name}`}
+                      </Typography>
+                      <Typography variant="h5" color="textHelper">
+                        {code}
+                      </Typography>
+                    </div>
+                  ))}
               </Typography>
             </div>
           )
