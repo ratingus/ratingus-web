@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FormEventHandler, useRef } from "react";
+import { toast } from "react-toastify";
 
 import styles from "./EnterCodeModal.module.scss";
 
@@ -27,9 +28,16 @@ const EnterCodeModal = () => {
         yaMetricaEvent(
           "Отправлен запрос на подключение пользователя к организации",
         );
-        enterCode({ code }).then(() => {
-          dispatch(actionHideModal());
-          yaMetricaEvent("Пользователь добавлен в организацию");
+        enterCode({ code }).then((r) => {
+          // @ts-ignore
+          if (r?.error || r?.error?.status === 400) {
+            toast("Неверный код приглашения", {
+              type: "error",
+            });
+          } else if (r) {
+            dispatch(actionHideModal());
+            yaMetricaEvent("Пользователь добавлен в организацию");
+          }
         });
       }
     }
