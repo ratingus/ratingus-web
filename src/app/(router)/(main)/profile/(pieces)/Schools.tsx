@@ -13,7 +13,7 @@ const Schools = ({ schools }: SchoolsProps) => {
   return (
     <div className={styles.base}>
       {schools.map((school) => (
-        <MiniSchoolCard key={school.name} {...school} />
+        <MiniSchoolCard key={school.id} {...school} />
       ))}
     </div>
   );
