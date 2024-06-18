@@ -15,6 +15,7 @@ import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Label } from "@/shared/components/Label/Label";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 
 const Subjects = () => {
   const { data: subjects = [] } = useGetTeacherSubjectsQuery(null);
@@ -28,7 +29,7 @@ const Subjects = () => {
     e.preventDefault();
     if (addSubjectForm.current) {
       const formData = new FormData(addSubjectForm.current);
-      const name = formData.get("subject")?.toString();
+      const name = getFromForm(formData, "subject");
       if (!name) {
         toast("Не все поля заполнены!", {
           type: "error",

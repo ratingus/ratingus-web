@@ -13,6 +13,7 @@ import Button from "@/shared/components/Button/Button";
 import { Checkbox } from "@/shared/components/Checkbox";
 import { Input } from "@/shared/components/Input/Input";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 
 export default function Registration() {
   const router = useRouter();
@@ -27,18 +28,34 @@ export default function Registration() {
     if (form.current) {
       const formData = new FormData(form.current);
 
-      const login = formData.get("login")?.toString() || "";
-      const password = formData.get("pass")?.toString() || "";
-      const name = formData.get("name")?.toString() || "";
-      const surname = formData.get("surname")?.toString() || "";
-      const patronymic = formData.get("patronymic")?.toString() || "";
-      const birthDate = formData.get("birthDate")?.toString();
+      const birthdate = getFromForm(formData, "birthDate");
+      const login = getFromForm(formData, "login");
+      const password = getFromForm(formData, "pass");
+      const name = getFromForm(formData, "name");
+      const surname = getFromForm(formData, "surname");
+      const patronymic = getFromForm(formData, "patronymic");
       const isLegalRulesAccepted = Boolean(
         formData.get("isLegalRulesAccepted")?.toString() || "",
       );
 
-      if (!login || !password || !name || !surname || !birthDate) {
+      if (!login || !password || !name || !surname || !birthdate) {
         toast("Не все поля заполнены!", {
+          type: "error",
+        });
+        return;
+      }
+      if (
+        password !== password.replace(/[^\da-zA-Z]/g, "") ||
+        login !== login.replace(/[^\da-zA-Z]/g, "")
+      ) {
+        toast("Только латинские буквы и цифры!", {
+          type: "error",
+        });
+        return;
+      }
+      const birthDate = new Date(birthdate);
+      if (birthDate.getFullYear() < 1900 || birthDate.getFullYear() > 2018) {
+        toast("Некорректная дата рождения", {
           type: "error",
         });
         return;
@@ -71,7 +88,7 @@ export default function Registration() {
         }
       } catch (e) {
         console.log(e);
-        toast("Что-то пошло не так, повторите попытку позже", {
+        toast("Такой пользователь уже существует", {
           type: "error",
         });
       }

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { FormEventHandler, useRef } from "react";
+import { toast } from "react-toastify";
 
 import styles from "./EditProfileModal.module.scss";
 
@@ -9,6 +10,7 @@ import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { actionHideModal } from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 import { useAppDispatch } from "@/shared/hooks/rtk";
 
 const EditProfileModal = () => {
@@ -20,12 +22,28 @@ const EditProfileModal = () => {
     e.preventDefault();
     if (form.current) {
       const formData = new FormData(form.current);
-      const birthDate = formData.get("birthDate")?.toString();
+      const birthdate = getFromForm(formData, "birthDate");
+      const name = getFromForm(formData, "name");
+      const surname = getFromForm(formData, "surname");
+      const patronymic = getFromForm(formData, "patronymic");
+      if (!name || !birthdate || !surname) {
+        toast("Обязательно должна быть дата рождения", {
+          type: "error",
+        });
+        return;
+      }
+      const birthDate = new Date(birthdate);
+      if (birthDate.getFullYear() < 1900 || birthDate.getFullYear() > 2018) {
+        toast("Некорректная дата рождения", {
+          type: "error",
+        });
+        return;
+      }
       await editProfile({
-        name: formData.get("name")?.toString() || null,
-        surname: formData.get("surname")?.toString() || null,
-        patronymic: formData.get("patronymic")?.toString() || null,
-        birthDate: !!birthDate ? new Date(birthDate) : null,
+        name,
+        surname,
+        patronymic,
+        birthDate: new Date(birthDate),
       });
       dispatch(actionHideModal());
     }

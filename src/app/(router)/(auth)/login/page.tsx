@@ -10,6 +10,7 @@ import styles from "./page.module.scss";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 
 export default function Login() {
   const router = useRouter();
@@ -19,9 +20,11 @@ export default function Login() {
     if (form.current) {
       const formData = new FormData(form.current);
       try {
+        const login = getFromForm(formData, "login");
+        const password = getFromForm(formData, "pass");
         const response = await signIn("credentials", {
-          login: formData.get("login"),
-          password: formData.get("pass"),
+          login: login,
+          password: password,
           redirect: false,
         });
         if (!response) throw new Error("");
@@ -49,8 +52,23 @@ export default function Login() {
         className={styles.form}
         onSubmit={handleLogin}
       >
-        <Input form="login" name="login" placeholder="Логин" />
-        <Input form="login" name="pass" placeholder="Пароль" type="password" />
+        <Input
+          form="login"
+          name="login"
+          placeholder="Логин"
+          onChange={({ target }) => {
+            target.value = target.value.replace(/\s+/g, "");
+          }}
+        />
+        <Input
+          form="login"
+          name="pass"
+          placeholder="Пароль"
+          type="password"
+          onChange={({ target }) => {
+            target.value = target.value.replace(/\s+/g, "");
+          }}
+        />
         <Button form="login" className={styles.button} variant="important">
           Вход
         </Button>

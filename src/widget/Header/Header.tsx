@@ -18,6 +18,7 @@ import {
 } from "@/shared/api/links";
 import Button, { ButtonProps } from "@/shared/components/Button/Button";
 import { ButtonGroup } from "@/shared/components/ButtonGroup/ButtonGroup";
+import { Typography } from "@/shared/components/Typography/Typography";
 import AdminPanelIcon from "@/shared/icons/admin-panel.svg";
 import AnnouncementIcon from "@/shared/icons/announcement.svg";
 import CalendarIcon from "@/shared/icons/calendar.svg";
@@ -40,23 +41,48 @@ const logoutButton = {
 };
 const adminButton = {
   link: ADMIN_PANEL_PAGE_LINK,
-  children: <AdminPanelIcon />,
+  children: (
+    <div>
+      <AdminPanelIcon />
+      <Typography variant="caption">Заявки</Typography>
+    </div>
+  ),
 };
 const profileButton = {
   link: PROFILE_PAGE_LINK,
-  children: <EmptyProfileIcon />,
+  children: (
+    <div>
+      <EmptyProfileIcon />
+      <Typography variant="caption">Профиль</Typography>
+    </div>
+  ),
 };
 const announcementsButton = {
   link: ANNOUNCEMENT_PAGE_LINK,
-  children: <AnnouncementIcon />,
+  children: (
+    <div>
+      <AnnouncementIcon />
+      <Typography variant="caption">Объявления</Typography>
+    </div>
+  ),
 };
 const calendarButton = {
   link: CALENDAR_PAGE_LINK,
-  children: <CalendarIcon />,
+  children: (
+    <div>
+      <CalendarIcon />
+      <Typography variant="caption">Расписание</Typography>
+    </div>
+  ),
 };
 const journalButton = {
   link: JOURNAL_PAGE_LINK,
-  children: <JournalIcon />,
+  children: (
+    <div>
+      <JournalIcon />
+      <Typography variant="caption">Журнал</Typography>
+    </div>
+  ),
 };
 
 const Header = () => {
@@ -84,7 +110,12 @@ const Header = () => {
         announcementsButton,
         {
           link: DIARY_PAGE_LINK,
-          children: <DiaryIcon />,
+          children: (
+            <div>
+              <DiaryIcon />
+              <Typography variant="caption">Дневник</Typography>
+            </div>
+          ),
         },
         calendarButton,
         session.is_admin ? adminButton : null,
@@ -109,7 +140,12 @@ const Header = () => {
         journalButton,
         {
           link: SETTINGS_PAGE_LINK,
-          children: <SettingsIcon />,
+          children: (
+            <div>
+              <SettingsIcon />
+              <Typography variant="caption">Админ-панель</Typography>
+            </div>
+          ),
         },
         session.is_admin ? adminButton : null,
         profileButton,

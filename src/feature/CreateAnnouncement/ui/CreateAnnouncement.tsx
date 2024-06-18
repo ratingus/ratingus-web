@@ -1,5 +1,6 @@
 "use client";
 import React, { FormEvent, useRef } from "react";
+import { toast } from "react-toastify";
 
 import styles from "./CreateAnnouncement.module.scss";
 
@@ -11,6 +12,7 @@ import { Input } from "@/shared/components/Input/Input";
 import { Select } from "@/shared/components/Select/Select";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
 import { useUser } from "@/shared/hooks/useUser";
 
@@ -35,9 +37,17 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
           name: label,
         }),
       ) as Class[];
+      const name = getFromForm(formData, "name");
+      const content = getFromForm(formData, "content") || "";
+      if (!name) {
+        toast("Заголовок обязательно должен быть!", {
+          type: "error",
+        });
+        return;
+      }
       await createPost({
-        name: formData.get("name") as string,
-        content: formData.get("content") as string,
+        name,
+        content,
         classes,
       });
       yaMetricaEvent("Создать объявление");
