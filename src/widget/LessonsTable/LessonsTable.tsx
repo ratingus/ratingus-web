@@ -50,6 +50,7 @@ export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
             key={lesson.id}
             isEditing={isEditing}
             isCurrentEditing={isEditingId === lesson.id}
+            onReset={() => setIsEditing(undefined)}
             lesson={lesson}
           />
         ))}
@@ -67,7 +68,9 @@ export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
             className={styles.add}
             onClick={() => setIsEditing(-1)}
           >
-            +
+            <Typography variant="h4" passColor>
+              Добавить новый урок
+            </Typography>
           </Button>
         ))}
     </div>
@@ -189,11 +192,13 @@ const Lesson = ({
 
 const DefaultLesson = ({
   onClick,
+  onReset,
   lesson: baseLesson,
   isEditing,
   isCurrentEditing,
 }: {
   onClick: () => void;
+  onReset: () => void;
   lesson: MagazineLesson;
   isEditing: boolean;
   isCurrentEditing: boolean;
@@ -210,6 +215,7 @@ const DefaultLesson = ({
       onClick={onClick}
       onSave={(lesson) =>
         updateLesson({ lessonId: baseLesson.id, ...lesson }).then(() => {
+          onReset();
           if (baseLesson.homework !== lesson.homework) {
             yaMetricaEvent("Изменить домашнее задание в журнале");
           }
@@ -255,6 +261,7 @@ const CreateLesson = ({
           scheduleId: -1,
           ...lesson,
         }).then(() => {
+          onReset();
           if (initLesson.homework !== lesson.homework) {
             yaMetricaEvent("Выдать домашнее задание в журнале");
           }
@@ -313,6 +320,7 @@ const LessonComponent = ({
       date: toTimestamp(date.toISOString()).toISOString(),
       finished,
     });
+    handleReset();
     setSaved(true);
   };
 
