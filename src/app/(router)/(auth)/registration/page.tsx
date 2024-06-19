@@ -54,7 +54,7 @@ export default function Registration() {
         return;
       }
       const birthDate = new Date(birthdate);
-      if (birthDate.getFullYear() < 1900 || birthDate.getFullYear() > 2018) {
+      if (birthDate.getFullYear() < 1900 || birthDate.getFullYear() > 2020) {
         toast("Некорректная дата рождения", {
           type: "error",
         });
@@ -133,7 +133,7 @@ export default function Registration() {
             name="birthDate"
             placeholder="Дата рождения"
             type="date"
-            max="2024-01-01"
+            max="2020-01-01"
           />
         </div>
         <div className={styles.miniForm}>

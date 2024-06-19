@@ -1,6 +1,12 @@
 "use client";
 
-import React, { FormEventHandler, useMemo, useRef, useState } from "react";
+import React, {
+  FormEventHandler,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "react-toastify";
 import cl from "classnames";
 
@@ -16,13 +22,14 @@ import {
 import { RoleEnum, UserRoleDto } from "@/entity/User/model";
 import {
   useCreateUserCodeMutation,
+  useEditUserMutation,
   useGetUserCodesQuery,
   useGetUsersQuery,
 } from "@/entity/User/query";
 import Avatar from "@/entity/User/ui/Avatar";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
-import { Select } from "@/shared/components/Select/Select";
+import { Select, SelectOption } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getFromForm } from "@/shared/helpers/strings";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
@@ -33,10 +40,12 @@ const Users = () => {
   const { data: classes = [] } = useGetClassesQuery(null);
 
   const [createUserCode] = useCreateUserCodeMutation();
+  const [editUser] = useEditUserMutation();
 
   const [chosenUser, setChosenUser] = useState<UserRoleDto | null>();
 
   const form = useRef(null);
+  const editForm = useRef(null);
 
   const [selectedRole, setSelectedRole] = useState("STUDENT");
 
@@ -54,6 +63,23 @@ const Users = () => {
       );
     });
   }, [users, searchUser]);
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [role, setRole] = useState<RoleEnum>();
+
+  useEffect(() => {
+    if (users && chosenUser?.id && !isEditing) {
+      const user = users.filter(({ id }) => id === chosenUser.id)[0];
+      if (user) {
+        setChosenUser(user);
+      }
+    }
+  }, [isEditing, chosenUser, users]);
+
+  useEffect(() => {
+    setRole(chosenUser?.school?.role);
+  }, [chosenUser]);
 
   if (!users) return <div>loading...</div>;
 
@@ -100,6 +126,43 @@ const Users = () => {
 
   const handleAddUser = () => {
     setChosenUser(null);
+  };
+
+  const handleEditUser: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    if (editForm.current && chosenUser) {
+      const formData = new FormData(editForm.current);
+      const id = chosenUser.id;
+      const name = getFromForm(formData, "name");
+      const surname = getFromForm(formData, "surname");
+      const patronymic = getFromForm(formData, "patronymic") || undefined;
+      const classId = getFromForm(formData, "class");
+      if (!name || !surname || !role) {
+        toast("Не все поля заполнены!", {
+          type: "error",
+        });
+        return;
+      }
+      const classDto = classId
+        ? classes.find(({ id }) => id === parseInt(classId))
+        : undefined;
+
+      if (role === RoleEnum.STUDENT && !classDto) {
+        toast("Не выбран класс для ученика!", {
+          type: "error",
+        });
+        return;
+      }
+      editUser({
+        id,
+        name,
+        surname,
+        patronymic,
+        role,
+        classDto: classDto || null,
+      });
+      setIsEditing(false);
+    }
   };
 
   return (
@@ -156,19 +219,130 @@ const Users = () => {
         className={cl(styles.main, chosenUser === null && styles.mainOverflow)}
       >
         {chosenUser ? (
-          <div>
-            <div className={cl(styles.user, styles.bigUser)}>
-              <Avatar size={128} />
-              <div className={styles.userDetails}>
-                <Typography variant="h3">{chosenUser.login}</Typography>
-                <Typography variant="h3">{getFioByUser(chosenUser)}</Typography>
-                <Typography variant="h5" color="textHelper">
-                  {getUserBirthdate(chosenUser.birthdate)}
-                </Typography>
+          isEditing ? (
+            <form
+              key={chosenUser.id}
+              id="editUser"
+              ref={editForm}
+              onSubmit={handleEditUser}
+            >
+              <div className={cl(styles.user, styles.bigUser)}>
+                <Avatar size={128} />
+                <div className={styles.userDetails}>
+                  <Typography variant="h3">{chosenUser.login}</Typography>
+                  <Typography variant="h3">
+                    <Input
+                      form="editUser"
+                      name="name"
+                      defaultValue={chosenUser.name}
+                    />
+                    <Input
+                      form="editUser"
+                      name="surname"
+                      defaultValue={chosenUser.surname}
+                    />
+                    <Input
+                      form="editUser"
+                      name="patronymic"
+                      defaultValue={chosenUser.patronymic}
+                    />
+                  </Typography>
+                  <Typography variant="h5" color="textHelper">
+                    {getUserBirthdate(chosenUser.birthdate)}
+                  </Typography>
+                </div>
+              </div>
+
+              <div className={styles.formButtons}>
+                <div className={styles.formBlock}>
+                  <Typography variant="h3">Роль:</Typography>
+                  <div>
+                    <Select
+                      form="editUser"
+                      name="role"
+                      variant="dark"
+                      onChange={(v) => setRole(v.value as RoleEnum | undefined)}
+                      // @ts-ignore
+                      defaultValue={
+                        chosenUser.school?.role && {
+                          value: chosenUser.school.role,
+                          label: getRoleByType(chosenUser.school.role),
+                        }
+                      }
+                      options={[
+                        { value: "STUDENT", label: "Ученик" },
+                        { value: "TEACHER", label: "Учитель" },
+                        { value: "LOCAL_ADMIN", label: "Локальный админ" },
+                      ]}
+                    />
+                  </div>
+                </div>
+                {role === "STUDENT" && (
+                  <div className={styles.formBlock}>
+                    <Typography variant="h3">Класс:</Typography>
+                    <div>
+                      <Select
+                        form="editUser"
+                        name="class"
+                        variant="dark"
+                        // @ts-ignore
+                        defaultValue={
+                          chosenUser.school &&
+                          chosenUser.school.classDto &&
+                          chosenUser.school.classDto.id
+                            ? ({
+                                value: chosenUser.school.classDto.id.toString(),
+                                label:
+                                  chosenUser.school.classDto.name.toString(),
+                              } as SelectOption)
+                            : undefined
+                        }
+                        options={classes.map(({ id, name }) => ({
+                          value: id.toString(),
+                          label: name,
+                        }))}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className={styles.buttonWrapper}>
+                <Button
+                  type="button"
+                  variant="error"
+                  onClick={() => setIsEditing(false)}
+                >
+                  Отменить
+                </Button>
+                <Button type="submit" variant="important">
+                  Сохранить
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <div>
+              <div className={cl(styles.user, styles.bigUser)}>
+                <Avatar size={128} />
+                <div className={styles.userDetails}>
+                  <Typography variant="h3">{chosenUser.login}</Typography>
+                  <Typography variant="h3">
+                    {getFioByUser(chosenUser)}
+                  </Typography>
+                  <Typography variant="h5" color="textHelper">
+                    {getUserBirthdate(chosenUser.birthdate)}
+                  </Typography>
+                </div>
+              </div>
+              {chosenUser.school && (
+                <MiniSchoolCardRole {...chosenUser.school} />
+              )}
+              <div className={styles.buttonWrapper}>
+                <Button variant="secondary" onClick={() => setIsEditing(true)}>
+                  Редактировать
+                </Button>
               </div>
             </div>
-            {chosenUser.school && <MiniSchoolCardRole {...chosenUser.school} />}
-          </div>
+          )
         ) : (
           chosenUser === null && (
             <div>

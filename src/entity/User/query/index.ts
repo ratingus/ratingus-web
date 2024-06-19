@@ -73,6 +73,16 @@ export const profileApi = baseApi.injectEndpoints({
       // @ts-ignore
       invalidatesTags: [{ type: "getUserCodes", id: "LIST" }],
     }),
+
+    editUser: build.mutation<void, Omit<UserCodeDto, "code">>({
+      query: ({ id, ...data }) => ({
+        url: `/admin-panel/user/${id}`,
+        method: "patch",
+        data,
+      }),
+      // @ts-ignore
+      invalidatesTags: [{ type: "getUsers", id: "LIST" }],
+    }),
   }),
 });
 
@@ -84,4 +94,5 @@ export const {
   useGetUsersQuery,
   useGetUserCodesQuery,
   useCreateUserCodeMutation,
+  useEditUserMutation,
 } = profileApi;
