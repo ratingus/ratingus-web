@@ -17,6 +17,9 @@ import { getWeekDateBetween } from "@/shared/helpers/date";
 import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 
 const getThreeDatesFromWeek = (week: number) => {
+  console.log(week);
+  console.log(getAcademicDateByWeek(0));
+  console.log(getAcademicDateByWeek(1));
   const prevWeek = getAcademicDateByWeek(week - 1);
   const currWeek = getAcademicDateByWeek(week);
   const nextWeek = getAcademicDateByWeek(week + 1);
