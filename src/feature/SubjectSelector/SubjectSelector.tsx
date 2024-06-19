@@ -4,16 +4,21 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import styles from "./SubjectSelector.module.scss";
 
-import { actionSetSelectedTeacherId } from "@/entity/Lesson/store/journal/slice";
+import {
+  actionSetSelectedTeacherId,
+  actionSetTeacherSubjectIdLoading,
+} from "@/entity/Lesson/store/journal/slice";
 import { useGetTeacherSubjectsQuery } from "@/entity/Schedule/query";
 import { getFioByUser } from "@/entity/User/helpers";
 import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { addQueryInParamsString } from "@/shared/helpers/searchParams";
 import { useAppDispatch } from "@/shared/hooks/rtk";
+import { useUser } from "@/shared/hooks/useUser";
 
 const SubjectSelector = () => {
   const { data: subjects } = useGetTeacherSubjectsQuery(null);
+  const { userRoleId } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
@@ -22,6 +27,12 @@ const SubjectSelector = () => {
   const teacherSubjectFromParams = Number(searchParams.get("teacherSubject"));
   const teacherSubject =
     teacherSubjectFromParams ||
+    subjects
+      ?.find((subject) =>
+        subject.teachers?.some((teacher) => teacher.id === userRoleId),
+      )
+      ?.teachers?.find((teacher) => teacher.id === userRoleId)
+      ?.teacherSubjectId ||
     (subjects &&
       subjects[0] &&
       subjects[0].teachers &&
@@ -76,9 +87,10 @@ const SubjectSelector = () => {
             : undefined
         }
         onChange={({ value }) => {
+          dispatch(actionSetTeacherSubjectIdLoading(true));
           router.push(
             path +
-              `?${addQueryInParamsString(searchParams, { name: "teacherSubject", value: value })}`,
+              `?${addQueryInParamsString(searchParams, { name: "teacherSubject", value })}`,
           );
         }}
         options={options}

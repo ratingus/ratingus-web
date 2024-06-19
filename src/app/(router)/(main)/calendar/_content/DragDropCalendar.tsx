@@ -68,6 +68,7 @@ export const DragDropCalendar = ({
   };
 
   const handleDragEnd: OnDragEndResponder = async (result: DropResult) => {
+    setIsDragging(false);
     if (!result?.destination) return;
 
     const sourceId = parseInt(result.source.droppableId);
@@ -123,8 +124,6 @@ export const DragDropCalendar = ({
         classId,
       });
     }
-
-    setIsDragging(false);
   };
   const handleDragStart: OnBeforeDragStartResponder = (start: DragStart) => {
     console.dir(start);

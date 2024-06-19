@@ -11,3 +11,13 @@ export const selectSelectedStudentTeacher = createDraftSafeSelector(
   [selectState],
   (state) => state.selectedStudentLesson,
 );
+
+export const selectClassLoading = createDraftSafeSelector(
+  [selectState],
+  (state) => state.classLoading,
+);
+
+export const selectTeacherSubjectIdLoading = createDraftSafeSelector(
+  [selectState],
+  (state) => state.teacherSubjectIdLoading,
+);

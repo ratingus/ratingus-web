@@ -63,7 +63,7 @@ const ByLesson = ({ week, day, lesson }: DetailedPageProps) => {
     .toDate();
 
   return (
-    <div>
+    <div className={styles.lessonWrapper}>
       <div className={styles.sliderHeader}>
         <Typography variant="h4">
           {capitalize(getDateString(dayData.dateTime, "dddd"))}

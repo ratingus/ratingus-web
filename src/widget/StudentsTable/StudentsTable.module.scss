@@ -120,6 +120,29 @@
 .marksWrapper {
   overflow: auto;
 }
+.disabled {
+  filter: gray(60);
+    opacity: 0.7;
+  pointer-events: none;
+    animation: disabled 2s infinite ease-in-out;
+}
+
+@keyframes disabled {
+  from {
+    filter: gray(100);
+    opacity: 0.6;
+  }
+  50% {
+    filter: gray(0);
+    opacity: 0.4;
+  }
+  to {
+    filter: gray(100);
+    opacity: 0.6;
+  }
+}
+
+
 .marks {
   width: max-content;
 }

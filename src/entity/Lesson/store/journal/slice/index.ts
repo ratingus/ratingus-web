@@ -5,11 +5,15 @@ import { StudentsTableMarkProps } from "@/widget/StudentsTable/StudentsTableMark
 interface JournalState {
   selectedTeacherId: number | null;
   selectedStudentLesson: StudentsTableMarkProps | null;
+  teacherSubjectIdLoading: boolean;
+  classLoading: boolean;
 }
 
 const initialState = {
   selectedTeacherId: null,
   selectedStudentLesson: null,
+  teacherSubjectIdLoading: false,
+  classLoading: false,
 } satisfies JournalState as JournalState;
 
 export const journalSlice = createSlice({
@@ -21,6 +25,18 @@ export const journalSlice = createSlice({
   },
 
   reducers: {
+    actionSetTeacherSubjectIdLoading(
+      state,
+      action: PayloadAction<JournalState["teacherSubjectIdLoading"]>,
+    ) {
+      state.teacherSubjectIdLoading = action.payload;
+    },
+    actionSetClassLoading(
+      state,
+      action: PayloadAction<JournalState["classLoading"]>,
+    ) {
+      state.classLoading = action.payload;
+    },
     actionSetSelectedTeacherId(
       state,
       action: PayloadAction<JournalState["selectedTeacherId"]>,
@@ -36,8 +52,12 @@ export const journalSlice = createSlice({
   },
 });
 
-export const { actionSetSelectedTeacherId, actionSetSelectedStudentTeacher } =
-  journalSlice.actions;
+export const {
+  actionSetSelectedTeacherId,
+  actionSetTeacherSubjectIdLoading,
+  actionSetClassLoading,
+  actionSetSelectedStudentTeacher,
+} = journalSlice.actions;
 
 export const { selectState } = journalSlice.selectors;
 

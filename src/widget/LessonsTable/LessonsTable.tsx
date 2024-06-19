@@ -11,6 +11,14 @@ import {
   useGetLessonsQuery,
   useUpdateLessonMutation,
 } from "@/entity/Lesson/query";
+import {
+  selectClassLoading,
+  selectTeacherSubjectIdLoading,
+} from "@/entity/Lesson/store/journal/selectors";
+import {
+  actionSetClassLoading,
+  actionSetTeacherSubjectIdLoading,
+} from "@/entity/Lesson/store/journal/slice";
 import Button from "@/shared/components/Button/Button";
 import { Checkbox } from "@/shared/components/Checkbox";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
@@ -21,6 +29,7 @@ import {
   toTimestamp,
 } from "@/shared/helpers/date";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/rtk";
 
 // import styles from './LessonsTable.module.scss';
 
@@ -29,13 +38,21 @@ type LessonsTableProps = {
 };
 
 export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const classId = Number(searchParams.get("classId"));
   const teacherSubjectId = Number(searchParams.get("teacherSubject"));
-  const { data: lessons } = useGetLessonsQuery(
+  const {
+    data: lessons,
+    isFetching,
+    isSuccess,
+  } = useGetLessonsQuery(
     { classId, teacherSubjectId },
     { refetchOnMountOrArgChange: true },
   );
+
+  const classLoading = useAppSelector(selectClassLoading);
+  const teacherSubjectLoading = useAppSelector(selectTeacherSubjectIdLoading);
 
   const [isEditingId, setIsEditing] = useState<number | undefined>();
 
@@ -43,10 +60,23 @@ export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
     setIsEditing(undefined);
   }, [isEditing]);
 
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      dispatch(actionSetTeacherSubjectIdLoading(false));
+      dispatch(actionSetClassLoading(false));
+    }
+  }, [dispatch, isSuccess, isFetching]);
+
   if (!lessons) return <div>loading...</div>;
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={cl(
+        styles.wrapper,
+        (isFetching || classLoading || teacherSubjectLoading) &&
+          styles.disabled,
+      )}
+    >
       <div className={styles.lessons}>
         {lessons.map((lesson) => (
           <DefaultLesson
@@ -217,8 +247,8 @@ const DefaultLesson = ({
   return (
     <LessonComponent
       onClick={onClick}
-      onSave={(lesson) =>
-        updateLesson({ lessonId: baseLesson.id, ...lesson }).then(() => {
+      onSave={async (lesson) =>
+        await updateLesson({ lessonId: baseLesson.id, ...lesson }).then(() => {
           onReset();
           if (baseLesson.homework !== lesson.homework) {
             yaMetricaEvent("Изменить домашнее задание в журнале");
@@ -258,18 +288,17 @@ const CreateLesson = ({
 
   return (
     <LessonComponent
-      onSave={(lesson) => {
-        addLesson({
+      onSave={async (lesson) => {
+        await addLesson({
           classId,
           teacherSubjectId,
           scheduleId: -1,
           ...lesson,
-        }).then(() => {
-          onReset();
-          if (initLesson.homework !== lesson.homework) {
-            yaMetricaEvent("Выдать домашнее задание в журнале");
-          }
         });
+        onReset();
+        if (initLesson.homework !== lesson.homework) {
+          yaMetricaEvent("Выдать домашнее задание в журнале");
+        }
       }}
       onReset={onReset}
       isEditing={isEditing}
@@ -296,14 +325,12 @@ const LessonComponent = ({
   isCurrentEditing: boolean;
   onReset?: () => void;
   onDelete?: () => void;
-  onSave: (lesson: BaseMagazineLesson) => void;
+  onSave: (lesson: BaseMagazineLesson) => Promise<void>;
 }) => {
   const [theme, setTheme] = useState(initTheme || "");
   const [homework, setHomework] = useState(initHomework || "");
   const [date, setDate] = useState<Date>(new Date(initDate || ""));
   const [finished, setFinished] = useState<boolean | undefined>(initFinished);
-
-  const [saved, setSaved] = useState(false);
 
   const reset = useCallback(() => {
     setTheme(initTheme || "");
@@ -317,23 +344,14 @@ const LessonComponent = ({
     onReset?.();
   }, [onReset, reset]);
 
-  const handleSave = () => {
-    onSave({
+  const handleSave = async () => {
+    await onSave({
       theme,
       homework,
       date: toTimestamp(date.toISOString()).toISOString(),
       finished,
     });
-    handleReset();
-    setSaved(true);
   };
-
-  useEffect(() => {
-    if (!isCurrentEditing) {
-      setSaved(false);
-      handleReset();
-    }
-  }, [handleReset, isCurrentEditing, saved]);
 
   const handleDelete = () => {
     onDelete?.();
