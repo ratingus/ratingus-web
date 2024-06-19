@@ -41,3 +41,17 @@ export enum ApplicationStatus {
 }
 
 export type CreateUserCode = Omit<UserIdentity, "id">;
+
+export type BaseSchool = School & CreateApplication;
+export type SchoolProfile = BaseSchool & {
+  totalStudents: number;
+  totalTeachers: number;
+  timetable: Timetable[];
+};
+
+export type Timetable = {
+  id: number;
+  lessonNumber: number;
+  startTime: string;
+  endTime: string;
+};

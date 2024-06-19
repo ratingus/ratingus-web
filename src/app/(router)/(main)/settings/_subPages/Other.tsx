@@ -1,56 +1,198 @@
-import React from "react";
+import React, { FormEventHandler, useEffect, useRef, useState } from "react";
+import InputMask from "react-input-mask";
+import { toast } from "react-toastify";
 import cl from "classnames";
 
 import styles from "./Users.module.scss";
 
+import { getTime } from "@/entity/Announcement/helpers";
+import {
+  useGetSchoolQuery,
+  useUpdateSchoolMutation,
+} from "@/entity/School/query";
+import Button from "@/shared/components/Button/Button";
+import { BaseInputProps, Input } from "@/shared/components/Input/Input";
+import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
 
 const Other = () => {
+  const { data: school } = useGetSchoolQuery(null);
+  const [updateSchool] = useUpdateSchoolMutation();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const textareaName = useRef(null);
+
+  const [name, setName] = useState(school?.name);
+  const [address, setAddress] = useState(school?.address);
+  const [phone, setPhone] = useState(school?.phone);
+  const [email, setEmail] = useState(school?.email);
+
+  useEffect(() => {
+    if (school) {
+      setName(school.name);
+      setAddress(school.address);
+      setPhone(school.phone);
+      setEmail(school.email);
+    }
+  }, [school]);
+
+  if (!school) return <div>loading...</div>;
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    if (!name || !address || !phone || !email) {
+      toast("Поля не могут быть пустыми", {
+        type: "error",
+      });
+      return;
+    }
+    updateSchool({
+      id: school.id,
+      name,
+      address,
+      phone,
+      email,
+    }).then((r) => {
+      setIsEditing(false);
+    });
+  };
+
   return (
     <div className={cl(styles.wrapper, styles.otherWrapper)}>
-      <Typography variant="h4">Длительность занятий:</Typography>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>№</th>
-            <th>Промежуток</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>1</th>
-            <th>8:00 - 8:40</th>
-          </tr>
-          <tr>
-            <th>2</th>
-            <th>8:50 - 9:30</th>
-          </tr>
-          <tr>
-            <th>3</th>
-            <th>9:45 - 10:25</th>
-          </tr>
-          <tr>
-            <th>4</th>
-            <th>10:45 - 11:25</th>
-          </tr>
-          <tr>
-            <th>5</th>
-            <th>11:40 - 12:20</th>
-          </tr>
-          <tr>
-            <th>6</th>
-            <th>12:35 - 13:15</th>
-          </tr>
-          <tr>
-            <th>5</th>
-            <th>13:25 - 14:05</th>
-          </tr>
-          <tr>
-            <th>6</th>
-            <th>14:15 - 14:55</th>
-          </tr>
-        </tbody>
-      </table>
+      <form className={styles.fields} onSubmit={handleSubmit}>
+        <div>
+          <Typography variant="h2">
+            {isEditing ? (
+              <Textarea
+                className={styles.textArea}
+                ref={textareaName}
+                autoResizeProperty={{
+                  height: true,
+                }}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                name="name"
+                variant="dark"
+              />
+            ) : (
+              <Typography variant="h2">{school.name}</Typography>
+            )}
+          </Typography>
+        </div>
+        <Typography variant="h5">
+          <Typography color="textHelper" component="span">
+            Адрес:
+          </Typography>{" "}
+          {isEditing ? (
+            <Input
+              className={styles.input}
+              name="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              defaultValue={school.address}
+              variant="dark"
+            />
+          ) : (
+            <Typography variant="h5">{school.address}</Typography>
+          )}
+        </Typography>
+        <Typography variant="h5">
+          <Typography color="textHelper" component="span">
+            Номер телефона:
+          </Typography>{" "}
+          {isEditing ? (
+            <InputMask
+              mask="+7 (999) 999 99 99"
+              maskChar={null}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              defaultValue={school.phone}
+            >
+              {/* @ts-ignore */}
+              {(inputProps: BaseInputProps) => (
+                <Input
+                  {...inputProps}
+                  name="phone"
+                  variant="dark"
+                  placeholder="Введите номер телефона..."
+                />
+              )}
+            </InputMask>
+          ) : (
+            <Typography variant="h5">{school.phone}</Typography>
+          )}
+        </Typography>
+        <Typography variant="h5">
+          <Typography color="textHelper" component="span">
+            Почта:
+          </Typography>{" "}
+          {isEditing ? (
+            <Input
+              className={styles.input}
+              defaultValue={school.email}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              variant="dark"
+            />
+          ) : (
+            <Typography variant="h5">{school.email}</Typography>
+          )}
+        </Typography>
+        <div className={styles.button}>
+          {isEditing ? (
+            <div className={styles.flex}>
+              <Button
+                onClick={() => setIsEditing(false)}
+                type="button"
+                variant="error"
+              >
+                Отменить
+              </Button>
+              <Button variant="secondary">Изменить данные о школе</Button>
+            </div>
+          ) : (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setIsEditing(true)}
+            >
+              Редактировать
+            </Button>
+          )}
+        </div>
+      </form>
+      <div>
+        <div className={styles.dop}>
+          <div>
+            <Typography variant="h4">Длительность занятий:</Typography>
+            <div className={styles.timetableWrapper}>
+              {school.timetable.map(
+                ({ id, lessonNumber, startTime, endTime }) => (
+                  <div key={id} className={styles.timetable}>
+                    <div>№{lessonNumber}</div>
+                    <div>
+                      {" "}
+                      {getTime(startTime)} - {getTime(endTime)}
+                    </div>
+                  </div>
+                ),
+              )}
+            </div>
+          </div>
+          <div>
+            <Typography variant="h4">Статистика:</Typography>
+            <div className={cl(styles.stata)}>
+              <Typography variant="h6">
+                Количество учеников: {school.totalStudents}
+              </Typography>
+              <Typography variant="h6">
+                Количество учителей: {school.totalTeachers}
+              </Typography>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
