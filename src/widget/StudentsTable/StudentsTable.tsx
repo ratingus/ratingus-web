@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import cl from "classnames";
 import { useSearchParams } from "next/navigation";
 
@@ -23,14 +23,13 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
   const searchParams = useSearchParams();
   const classId = Number(searchParams.get("classId"));
   const teacherSubjectId = Number(searchParams.get("teacherSubject"));
-  const { data } = useGetJournalQuery(
+  const { data, isSuccess } = useGetJournalQuery(
     { classId, teacherSubjectId },
     { refetchOnMountOrArgChange: true },
   );
   const dispatch = useAppDispatch();
 
   const selectedStudentLesson = useAppSelector(selectSelectedStudentTeacher);
-  console.log(selectedStudentLesson);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -104,6 +103,41 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
     };
   }, [data, dispatch, selectedStudentLesson]);
 
+  const headerStudentsRef = useRef<HTMLDivElement>(null);
+  const headerMonthsRef = useRef<HTMLDivElement>(null);
+  const headerMarksRef = useRef<HTMLDivElement>(null);
+  const headerItogRef = useRef<HTMLDivElement>(null);
+  const [init, setInit] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        headerStudentsRef.current &&
+        headerMarksRef.current &&
+        headerItogRef.current &&
+        headerMonthsRef.current
+      ) {
+        const scrollTop = headerMarksRef.current.scrollTop;
+        headerStudentsRef.current.scrollTop = scrollTop;
+        headerItogRef.current.scrollTop = scrollTop;
+      }
+    };
+
+    const header = headerMarksRef.current;
+    if (header) {
+      header.addEventListener("scroll", handleScroll);
+    }
+
+    if (isSuccess) {
+      setInit(true);
+    }
+    return () => {
+      if (header) {
+        header.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [init, isSuccess]);
+
   if (!data) return <div>loading...</div>;
   const { students, monthLessonDays } = data;
 
@@ -112,8 +146,13 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
 
   return (
     <>
-      <div className={styles.wrapper}>
-        <div className={styles.mainHeader}>
+      <div
+        className={cl(
+          styles.wrapper,
+          isEditing && !!selectedStudentLesson && styles.wrapperEditable,
+        )}
+      >
+        <div>
           <div className={styles.header}>
             <div className={cl(styles.block, styles.headerBlock)}>
               <Typography variant="h3">№</Typography>
@@ -122,15 +161,27 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
               <Typography variant="h4">Фамилия Имя</Typography>
             </div>
           </div>
-          {students.map((student, index) => (
-            <div key={getKey(student.id)} className={styles.header}>
-              <div className={styles.block}>{index + 1}</div>
-              <div className={styles.fi}>{getFioByUser(student)}</div>
-            </div>
-          ))}
+          <div
+            className={cl(
+              styles.mainHeader,
+              styles.students,
+              styles.hideVerticalScroll,
+            )}
+            ref={headerStudentsRef}
+          >
+            {students.map((student, index) => (
+              <div key={getKey(student.id)} className={styles.header}>
+                <div className={styles.block}>{index + 1}</div>
+                <div className={styles.fi}>{getFioByUser(student)}</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className={cl(styles.overflow, styles.mainHeader)}>
-          <div className={cl(styles.header, styles.absolute)}>
+        <div className={cl(styles.marksWrapper, styles.hideVerticalScroll)}>
+          <div
+            className={cl(styles.header, styles.absolute)}
+            ref={headerMonthsRef}
+          >
             {monthLessonDays.map(({ month, lessonDays }) => (
               <div key={getKey(month)} className={styles.months}>
                 <div className={cl(styles.monthsAndDays, styles.headerBlock)}>
@@ -153,68 +204,79 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
               </div>
             ))}
           </div>
-          {students.map((student) => (
-            <div
-              key={getKey(student.id, student.studentId)}
-              className={cl(styles.header, styles.headerMonths)}
-            >
-              {monthLessonDays.map(({ month, lessonDays }, monthIndex) => (
-                <div key={getKey(month)} className={styles.header}>
-                  {lessonDays.map(({ day, lessonId }, dayIndex) => {
-                    const markDto = student.marks[month - 1].filter(
-                      ({ lessonId: lesson }) =>
-                        lessonId.some(({ lessonId }) => lesson === lessonId),
-                    );
-                    const { mark, attendance } = markDto[0] || {
-                      mark: undefined,
-                      attendance: undefined,
-                    };
-                    return (
-                      <div
-                        key={getKey(day, mark, attendance)}
-                        className={styles.block}
-                      >
-                        <StudentsTableMark
-                          index={[monthIndex, dayIndex]}
-                          date={`${day} ${getMonthName(month - 1, true)}`}
-                          isEditing={isEditing}
-                          lessonId={lessonId}
-                          studentDto={student}
-                          markDto={markDto}
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          ))}
+          <div
+            className={cl(
+              styles.mainHeader,
+              styles.marks,
+              styles.hideVerticalScroll,
+            )}
+            ref={headerMarksRef}
+          >
+            {students.map((student) => (
+              <div
+                key={getKey(student.id, student.studentId)}
+                className={cl(styles.header, styles.headerMonths)}
+              >
+                {monthLessonDays.map(({ month, lessonDays }, monthIndex) => (
+                  <div key={getKey(month)} className={styles.header}>
+                    {lessonDays.map(({ day, lessonId }, dayIndex) => {
+                      const markDto = student.marks[month - 1].filter(
+                        ({ lessonId: lesson }) =>
+                          lessonId.some(({ lessonId }) => lesson === lessonId),
+                      );
+                      const { mark, attendance } = markDto[0] || {
+                        mark: undefined,
+                        attendance: undefined,
+                      };
+                      return (
+                        <div
+                          key={getKey(day, mark, attendance)}
+                          className={styles.block}
+                        >
+                          <StudentsTableMark
+                            index={[monthIndex, dayIndex]}
+                            date={`${day} ${getMonthName(month - 1, true)}`}
+                            isEditing={isEditing}
+                            lessonId={lessonId}
+                            studentDto={student}
+                            markDto={markDto}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
-        <div className={styles.mainHeader}>
+        <div className={cl(styles.itogWrapper)}>
           <div className={cl(styles.block, styles.headerBlock, styles.itog)}>
             <Typography variant="h3">Итог</Typography>
           </div>
-          {students.map(({ id, marks }) => {
-            let length = 0;
-            const mark = marks.reduce((acc, mark) => {
-              const add = mark.reduce((acc, { mark }) => {
-                if (mark) {
-                  length++;
-                  return acc + Number(mark);
-                }
-                return acc;
+          <div className={styles.mainHeader} ref={headerItogRef}>
+            {students.map(({ id, marks }) => {
+              let length = 0;
+              const mark = marks.reduce((acc, mark) => {
+                const add = mark.reduce((acc, { mark }) => {
+                  if (mark) {
+                    length++;
+                    return acc + Number(mark);
+                  }
+                  return acc;
+                }, 0);
+                return acc + add;
               }, 0);
-              return acc + add;
-            }, 0);
 
-            const avgMark = mark / length;
+              const avgMark = mark / length;
 
-            return (
-              <div key={id} className={styles.itog}>
-                <Mark mark={length === 0 ? "-" : avgMark.toFixed(2)} />
-              </div>
-            );
-          })}
+              return (
+                <div key={id} className={styles.itog}>
+                  <Mark mark={length === 0 ? "-" : avgMark.toFixed(2)} />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       {isEditing && !!selectedStudentLesson && (
