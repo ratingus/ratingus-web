@@ -247,8 +247,8 @@ const DefaultLesson = ({
   return (
     <LessonComponent
       onClick={onClick}
-      onSave={(lesson) =>
-        updateLesson({ lessonId: baseLesson.id, ...lesson }).then(() => {
+      onSave={async (lesson) =>
+        await updateLesson({ lessonId: baseLesson.id, ...lesson }).then(() => {
           onReset();
           if (baseLesson.homework !== lesson.homework) {
             yaMetricaEvent("Изменить домашнее задание в журнале");
@@ -288,18 +288,17 @@ const CreateLesson = ({
 
   return (
     <LessonComponent
-      onSave={(lesson) => {
-        addLesson({
+      onSave={async (lesson) => {
+        await addLesson({
           classId,
           teacherSubjectId,
           scheduleId: -1,
           ...lesson,
-        }).then(() => {
-          onReset();
-          if (initLesson.homework !== lesson.homework) {
-            yaMetricaEvent("Выдать домашнее задание в журнале");
-          }
         });
+        onReset();
+        if (initLesson.homework !== lesson.homework) {
+          yaMetricaEvent("Выдать домашнее задание в журнале");
+        }
       }}
       onReset={onReset}
       isEditing={isEditing}
@@ -326,14 +325,12 @@ const LessonComponent = ({
   isCurrentEditing: boolean;
   onReset?: () => void;
   onDelete?: () => void;
-  onSave: (lesson: BaseMagazineLesson) => void;
+  onSave: (lesson: BaseMagazineLesson) => Promise<void>;
 }) => {
   const [theme, setTheme] = useState(initTheme || "");
   const [homework, setHomework] = useState(initHomework || "");
   const [date, setDate] = useState<Date>(new Date(initDate || ""));
   const [finished, setFinished] = useState<boolean | undefined>(initFinished);
-
-  const [saved, setSaved] = useState(false);
 
   const reset = useCallback(() => {
     setTheme(initTheme || "");
@@ -347,23 +344,14 @@ const LessonComponent = ({
     onReset?.();
   }, [onReset, reset]);
 
-  const handleSave = () => {
-    onSave({
+  const handleSave = async () => {
+    await onSave({
       theme,
       homework,
       date: toTimestamp(date.toISOString()).toISOString(),
       finished,
     });
-    handleReset();
-    setSaved(true);
   };
-
-  useEffect(() => {
-    if (!isCurrentEditing) {
-      setSaved(false);
-      handleReset();
-    }
-  }, [handleReset, isCurrentEditing, saved]);
 
   const handleDelete = () => {
     onDelete?.();
