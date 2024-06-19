@@ -74,10 +74,17 @@ export const DragDropCalendar = ({
     const sourceIndex = result.source.index;
     const destinationId = parseInt(result.destination.droppableId);
     const destinationIndex = result.destination.index;
+    console.log(
+      "sourceId, sourceIndex, destinationId, destinationIndex",
+      sourceId,
+      sourceIndex,
+      destinationId,
+      destinationIndex,
+    );
 
     if (sourceId === destinationId && sourceIndex === destinationIndex) return;
 
-    if (sourceId === -1) {
+    if (sourceId === -1 && destinationId !== -1) {
       const studyWithTeacherId = parseInt(result.draggableId);
       addTeacherSubjectCalendar({
         data: {
@@ -151,7 +158,7 @@ export const DragDropCalendar = ({
           <div className={styles.listWrapper}>
             <Droppable droppableId={`-1`}>
               {(provided) => {
-                let index = -1;
+                let index = 0;
                 return (
                   <div
                     className={styles.list}
