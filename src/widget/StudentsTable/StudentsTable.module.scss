@@ -7,15 +7,19 @@
 
 .wrapper {
   height: calc(80dvh - 24px - 20px * 6);
+  max-height: calc(80dvh - 24px - 20px * 6);
   background: $background-main;
-  width: 80%;
-  display: flex;
-  flex: 1 1;
-  flex-basis: 80%;
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: 400px auto 200px;
   gap: 10px;
+  flex: 1 1;
   margin: -20px;
   border-radius: 20px;
-  padding: 20px 40px 20px 20px;
+  padding: 20px;
+}
+.wrapperEditable {
+  width: 80%;
 }
 
 .header {
@@ -24,12 +28,20 @@
 }
 
 .absolute {
-  width: 100%;
 }
 .overflow {
   overflow: auto;
   position: relative;
 }
+  .hideVerticalScroll {
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  }
 
 .months {
   display: flex;
@@ -83,8 +95,8 @@
   max-height: 55px;
   height: 55px;
   min-height: 55px;
-  min-width: 100%;
-  width: 100%;
+  min-width: calc(100% - 24px);
+  width: calc(100% - 24px);
   text-align: center;
   justify-content: center;
 }
@@ -95,9 +107,27 @@
 }
 
 .mainHeader {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: calc(100% - 55px - 10px);
+  height: inherit;
+  height: calc(80dvh - 24px - 20px * 6 - 55px);
+  max-height: calc(80dvh - 24px - 20px * 6  - 55px);
+  overflow: auto;
+}
+.marksWrapper {
+  overflow: auto;
+}
+.marks {
+  width: max-content;
+}
+.students {
+  min-width: 400px;
+}
+.itogWrapper {
+  min-width: 150px;
 }
 
 .markButton {

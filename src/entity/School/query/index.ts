@@ -1,9 +1,11 @@
 import {
   ApplicationDto,
+  BaseSchool,
   Class,
   CreateApplication,
   CreateUserCode,
   School,
+  SchoolProfile,
 } from "@/entity/School/model";
 import { baseApi } from "@/shared/api/rtkq";
 
@@ -121,6 +123,27 @@ export const classApi = baseApi.injectEndpoints({
         { type: "getApplications", id: "LIST" },
       ],
     }),
+
+    getSchool: build.query<SchoolProfile, null>({
+      query: () => ({
+        url: "/admin-panel/school",
+        method: "get",
+      }),
+      // @ts-ignore
+      providesTags: [{ type: "getSchool", id: "LIST" }],
+    }),
+
+    updateSchool: build.mutation<void, BaseSchool>({
+      query: (data) => ({
+        url: `/admin-panel/school`,
+        method: "patch",
+        data,
+      }),
+      invalidatesTags: [
+        // @ts-ignore
+        { type: "getSchool", id: "LIST" },
+      ],
+    }),
   }),
 });
 
@@ -136,4 +159,7 @@ export const {
   useApproveApplicationMutation,
   useRejectApplicationMutation,
   useRecreateCodeApplicationMutation,
+
+  useGetSchoolQuery,
+  useUpdateSchoolMutation,
 } = classApi;

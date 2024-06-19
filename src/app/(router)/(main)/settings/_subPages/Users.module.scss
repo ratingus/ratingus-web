@@ -150,3 +150,55 @@
     padding: 4px 20px;
   }
 }
+.timetableWrapper {
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.timetable {
+  display: grid;
+  grid-template-columns: 50px 70%;
+  width: 100%;
+  justify-content: space-between;
+  justify-items: center;
+  & div {
+    width: 100%;
+    text-align: center;
+    background: $background-main;
+    border-radius: 20px;
+    padding: 10px;
+  }
+}
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.input {
+  width: 400px;
+}
+.textArea {
+  width: calc(100% - 40px);
+}
+.button {
+    width: 300px;
+    margin-top: 10px;
+}
+.flex {
+  display: flex;
+  gap: 10px
+}
+.dop {
+    display: flex;
+    gap: 50px;
+    margin-top: 10px;
+}
+.stata {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+
+}

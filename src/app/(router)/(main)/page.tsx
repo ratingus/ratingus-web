@@ -6,7 +6,10 @@ import styles from "./page.module.scss";
 
 import JoinOrganizationButton from "@/feature/JoinOrganization/JoinOrganizationButton";
 import { Modal } from "@/shared/components/Modal/Modal";
-import { INFO_ABOUT_ORGANIZATION_MODAL } from "@/shared/components/Modal/slice";
+import {
+  APPLICATION_SEND_MODAL,
+  INFO_ABOUT_ORGANIZATION_MODAL,
+} from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
 import HeaderIcon from "@/shared/icons/header.svg";
 
@@ -15,6 +18,9 @@ const InfoAboutOrganizationModal = dynamic(
     import(
       "@/widget/_modals/InfoAboutOrganizationModal/InfoAboutOrganizationModal"
     ),
+);
+const ApplicationSendModal = dynamic(
+  () => import("@/widget/_modals/ApplicationSendModal/ApplicationSendModal"),
 );
 
 const list = [
@@ -89,6 +95,12 @@ export default function Home() {
       </div>
       <Modal modalName={INFO_ABOUT_ORGANIZATION_MODAL} className={styles.modal}>
         <InfoAboutOrganizationModal />
+      </Modal>
+      <Modal
+        modalName={APPLICATION_SEND_MODAL}
+        className={styles.applicationModal}
+      >
+        <ApplicationSendModal />
       </Modal>
     </>
   );

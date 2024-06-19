@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -49,14 +49,6 @@ export const DragDropCalendar = ({
   const { data: teacherSubjects } = useGetTeacherSubjectsQuery(null);
   const [addTeacherSubject] = useAddTeacherSubjectMutation();
 
-  const maxTeachers = useMemo(
-    () =>
-      teacherSubjects?.reduce((acc, { teachers }) => {
-        return Math.max(acc, teachers?.length || 0);
-      }, 0) || 0,
-    [teacherSubjects],
-  );
-
   const [chosenSubject, setChosenSubject] = useState<TeacherSubjects | null>(
     null,
   );
@@ -82,10 +74,17 @@ export const DragDropCalendar = ({
     const sourceIndex = result.source.index;
     const destinationId = parseInt(result.destination.droppableId);
     const destinationIndex = result.destination.index;
+    console.log(
+      "sourceId, sourceIndex, destinationId, destinationIndex",
+      sourceId,
+      sourceIndex,
+      destinationId,
+      destinationIndex,
+    );
 
     if (sourceId === destinationId && sourceIndex === destinationIndex) return;
 
-    if (sourceId === -1) {
+    if (sourceId === -1 && destinationId !== -1) {
       const studyWithTeacherId = parseInt(result.draggableId);
       addTeacherSubjectCalendar({
         data: {
@@ -95,7 +94,7 @@ export const DragDropCalendar = ({
         },
         classId,
       });
-    } else if (destinationId === -1) {
+    } else if (destinationId === -1 && sourceId !== -1) {
       deleteTeacherSubjectCalendar({
         data: {
           lessonNumber: sourceIndex,
@@ -103,7 +102,11 @@ export const DragDropCalendar = ({
         },
         classId,
       });
-    } else if (destinationIndex === 0) {
+    } else if (
+      destinationIndex === 0 &&
+      sourceId !== -1 &&
+      destinationId !== -1
+    ) {
       await changeTeacherSubjectsCalendar({
         data: {
           from: { lessonNumber: sourceIndex, dayOfWeek: sourceId },
@@ -111,7 +114,7 @@ export const DragDropCalendar = ({
         },
         classId,
       });
-    } else {
+    } else if (sourceId !== -1 && destinationId !== -1) {
       await changeTeacherSubjectsCalendar({
         data: {
           from: { lessonNumber: sourceIndex, dayOfWeek: sourceId },
@@ -159,7 +162,7 @@ export const DragDropCalendar = ({
           <div className={styles.listWrapper}>
             <Droppable droppableId={`-1`}>
               {(provided) => {
-                let index = -1;
+                let index = 0;
                 return (
                   <div
                     className={styles.list}
@@ -207,8 +210,9 @@ export const DragDropCalendar = ({
                       teacherSubjects
                         .filter(
                           ({ teachers: teachersFromSubject }) =>
+                            teachersFromSubject == null ||
                             (teachersFromSubject || []).length <
-                            teachers.length,
+                              teachers.length,
                         )
                         .map(({ subject: { id, name } }) => (
                           <li
@@ -227,7 +231,7 @@ export const DragDropCalendar = ({
                               variant="secondary"
                               onClick={() => handleAddTeacher(id)}
                             >
-                              +
+                              Добавить учителя
                             </Button>
                           </li>
                         ))}
