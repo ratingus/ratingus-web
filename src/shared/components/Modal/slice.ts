@@ -5,11 +5,13 @@ import {
 } from "@reduxjs/toolkit";
 
 export const INFO_ABOUT_ORGANIZATION_MODAL = "infoAboutOrganizationModal";
+export const APPLICATION_SEND_MODAL = "applicationSendModal";
 export const PROFILE_EDIT_MODAL = "profileEditModal";
 export const ENTER_CODE_MODAL = "enterCodeModal";
 export const MAKE_USER_CODE_MODAL = "makeUserCodeModal";
 export type ModalName =
   | typeof INFO_ABOUT_ORGANIZATION_MODAL
+  | typeof APPLICATION_SEND_MODAL
   | typeof PROFILE_EDIT_MODAL
   | typeof ENTER_CODE_MODAL
   | typeof MAKE_USER_CODE_MODAL;

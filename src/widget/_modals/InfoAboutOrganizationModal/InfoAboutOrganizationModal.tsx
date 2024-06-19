@@ -11,7 +11,7 @@ import { useCreateApplicationMutation } from "@/entity/School/query";
 import Button from "@/shared/components/Button/Button";
 import { Checkbox } from "@/shared/components/Checkbox";
 import { BaseInputProps, Input } from "@/shared/components/Input/Input";
-import { actionHideModal } from "@/shared/components/Modal/slice";
+import {actionHideModal, actionShowModalCloseOther, APPLICATION_SEND_MODAL} from "@/shared/components/Modal/slice";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getFromForm } from "@/shared/helpers/strings";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
@@ -61,7 +61,7 @@ const InfoAboutOrganizationModal = ({}: InfoAboutOrganizationModalProps) => {
         phone,
       }).then(() => {
         yaMetricaEvent("Отправить заявку на создание учебной организации");
-        dispatch(actionHideModal());
+        dispatch(actionShowModalCloseOther(APPLICATION_SEND_MODAL));
       });
     }
   };
