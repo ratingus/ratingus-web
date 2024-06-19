@@ -40,7 +40,7 @@ const Other = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    if (!name || !address || !phone || !email) {
+    if (!name?.trim() || !address?.trim() || !phone?.trim() || !email?.trim()) {
       toast("Поля не могут быть пустыми", {
         type: "error",
       });
@@ -48,10 +48,10 @@ const Other = () => {
     }
     updateSchool({
       id: school.id,
-      name,
-      address,
-      phone,
-      email,
+      name: name.trim(),
+      address: address.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
     }).then((r) => {
       setIsEditing(false);
     });
