@@ -7,8 +7,16 @@ import { StudentsTableMark } from "./StudentsTableMark";
 
 import Mark from "@/entity/AttendanceMark/ui/Mark";
 import { useGetJournalQuery } from "@/entity/Lesson/query";
-import { selectSelectedStudentTeacher } from "@/entity/Lesson/store/journal/selectors";
-import { actionSetSelectedStudentTeacher } from "@/entity/Lesson/store/journal/slice";
+import {
+  selectClassLoading,
+  selectSelectedStudentTeacher,
+  selectTeacherSubjectIdLoading,
+} from "@/entity/Lesson/store/journal/selectors";
+import {
+  actionSetClassLoading,
+  actionSetSelectedStudentTeacher,
+  actionSetTeacherSubjectIdLoading,
+} from "@/entity/Lesson/store/journal/slice";
 import { getFioByUser } from "@/entity/User/helpers";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { getMonthName } from "@/shared/helpers/date";
@@ -23,13 +31,15 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
   const searchParams = useSearchParams();
   const classId = Number(searchParams.get("classId"));
   const teacherSubjectId = Number(searchParams.get("teacherSubject"));
-  const { data, isSuccess } = useGetJournalQuery(
+  const { data, isSuccess, isFetching } = useGetJournalQuery(
     { classId, teacherSubjectId },
     { refetchOnMountOrArgChange: true },
   );
   const dispatch = useAppDispatch();
 
   const selectedStudentLesson = useAppSelector(selectSelectedStudentTeacher);
+  const classLoading = useAppSelector(selectClassLoading);
+  const teacherSubjectLoading = useAppSelector(selectTeacherSubjectIdLoading);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -138,6 +148,13 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
     };
   }, [init, isSuccess]);
 
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      dispatch(actionSetTeacherSubjectIdLoading(false));
+      dispatch(actionSetClassLoading(false));
+    }
+  }, [dispatch, isSuccess, isFetching]);
+
   if (!data) return <div>loading...</div>;
   const { students, monthLessonDays } = data;
 
@@ -150,6 +167,8 @@ const StudentsTable = ({ isEditing }: StudentsTableProps) => {
         className={cl(
           styles.wrapper,
           isEditing && !!selectedStudentLesson && styles.wrapperEditable,
+          (isFetching || classLoading || teacherSubjectLoading) &&
+            styles.disabled,
         )}
       >
         <div>

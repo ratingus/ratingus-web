@@ -4,15 +4,18 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import styles from "./ClassSelector.module.scss";
 
+import { actionSetClassLoading } from "@/entity/Lesson/store/journal/slice";
 import { useGetClassesQuery } from "@/entity/School/query";
 import { Select } from "@/shared/components/Select/Select";
 import { Typography } from "@/shared/components/Typography/Typography";
 import { addQueryInParamsString } from "@/shared/helpers/searchParams";
+import { useAppDispatch } from "@/shared/hooks/rtk";
 import { useUser } from "@/shared/hooks/useUser";
 
 type ClassSelectorProps = {};
 
 const ClassSelector = ({}: ClassSelectorProps) => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const params = useSearchParams();
   const path = usePathname();
@@ -55,6 +58,7 @@ const ClassSelector = ({}: ClassSelectorProps) => {
         }
         onChange={({ value }) => {
           if (value !== classId.toString()) {
+            dispatch(actionSetClassLoading(true));
             router.push(
               `${path}?${addQueryInParamsString(params, { name: "classId", value })}`,
             );

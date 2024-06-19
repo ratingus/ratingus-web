@@ -11,6 +11,14 @@ import {
   useGetLessonsQuery,
   useUpdateLessonMutation,
 } from "@/entity/Lesson/query";
+import {
+  selectClassLoading,
+  selectTeacherSubjectIdLoading,
+} from "@/entity/Lesson/store/journal/selectors";
+import {
+  actionSetClassLoading,
+  actionSetTeacherSubjectIdLoading,
+} from "@/entity/Lesson/store/journal/slice";
 import Button from "@/shared/components/Button/Button";
 import { Checkbox } from "@/shared/components/Checkbox";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
@@ -21,6 +29,7 @@ import {
   toTimestamp,
 } from "@/shared/helpers/date";
 import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
+import { useAppDispatch, useAppSelector } from "@/shared/hooks/rtk";
 
 // import styles from './LessonsTable.module.scss';
 
@@ -29,13 +38,21 @@ type LessonsTableProps = {
 };
 
 export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const classId = Number(searchParams.get("classId"));
   const teacherSubjectId = Number(searchParams.get("teacherSubject"));
-  const { data: lessons } = useGetLessonsQuery(
+  const {
+    data: lessons,
+    isFetching,
+    isSuccess,
+  } = useGetLessonsQuery(
     { classId, teacherSubjectId },
     { refetchOnMountOrArgChange: true },
   );
+
+  const classLoading = useAppSelector(selectClassLoading);
+  const teacherSubjectLoading = useAppSelector(selectTeacherSubjectIdLoading);
 
   const [isEditingId, setIsEditing] = useState<number | undefined>();
 
@@ -43,10 +60,23 @@ export const LessonsTable = ({ isEditing }: LessonsTableProps) => {
     setIsEditing(undefined);
   }, [isEditing]);
 
+  useEffect(() => {
+    if (isSuccess && !isFetching) {
+      dispatch(actionSetTeacherSubjectIdLoading(false));
+      dispatch(actionSetClassLoading(false));
+    }
+  }, [dispatch, isSuccess, isFetching]);
+
   if (!lessons) return <div>loading...</div>;
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={cl(
+        styles.wrapper,
+        (isFetching || classLoading || teacherSubjectLoading) &&
+          styles.disabled,
+      )}
+    >
       <div className={styles.lessons}>
         {lessons.map((lesson) => (
           <DefaultLesson
