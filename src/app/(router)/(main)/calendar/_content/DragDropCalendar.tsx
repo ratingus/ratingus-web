@@ -94,7 +94,7 @@ export const DragDropCalendar = ({
         },
         classId,
       });
-    } else if (destinationId === -1) {
+    } else if (destinationId === -1 && sourceId !== -1) {
       deleteTeacherSubjectCalendar({
         data: {
           lessonNumber: sourceIndex,
@@ -102,7 +102,11 @@ export const DragDropCalendar = ({
         },
         classId,
       });
-    } else if (destinationIndex === 0) {
+    } else if (
+      destinationIndex === 0 &&
+      sourceId !== -1 &&
+      destinationId !== -1
+    ) {
       await changeTeacherSubjectsCalendar({
         data: {
           from: { lessonNumber: sourceIndex, dayOfWeek: sourceId },
@@ -110,7 +114,7 @@ export const DragDropCalendar = ({
         },
         classId,
       });
-    } else {
+    } else if (sourceId !== -1 && destinationId !== -1) {
       await changeTeacherSubjectsCalendar({
         data: {
           from: { lessonNumber: sourceIndex, dayOfWeek: sourceId },
