@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -48,14 +48,6 @@ export const DragDropCalendar = ({
 
   const { data: teacherSubjects } = useGetTeacherSubjectsQuery(null);
   const [addTeacherSubject] = useAddTeacherSubjectMutation();
-
-  const maxTeachers = useMemo(
-    () =>
-      teacherSubjects?.reduce((acc, { teachers }) => {
-        return Math.max(acc, teachers?.length || 0);
-      }, 0) || 0,
-    [teacherSubjects],
-  );
 
   const [chosenSubject, setChosenSubject] = useState<TeacherSubjects | null>(
     null,
@@ -207,8 +199,9 @@ export const DragDropCalendar = ({
                       teacherSubjects
                         .filter(
                           ({ teachers: teachersFromSubject }) =>
+                            teachersFromSubject == null ||
                             (teachersFromSubject || []).length <
-                            teachers.length,
+                              teachers.length,
                         )
                         .map(({ subject: { id, name } }) => (
                           <li
@@ -227,7 +220,7 @@ export const DragDropCalendar = ({
                               variant="secondary"
                               onClick={() => handleAddTeacher(id)}
                             >
-                              +
+                              Добавить учителя
                             </Button>
                           </li>
                         ))}
