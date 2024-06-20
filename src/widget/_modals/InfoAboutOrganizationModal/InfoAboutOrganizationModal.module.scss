@@ -1,0 +1,39 @@
+.wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.formContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.flex {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.submitButtonWrapper {
+  display: flex;
+  button {
+    width: 100%;
+  }
+  padding-bottom: 20px;
+}
+
+.formBlockWithInputs {
+  & input {
+    width: calc(100% - 20px * 2);
+  }
+}

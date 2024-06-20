@@ -1,0 +1,89 @@
+@mixin blocked {
+  background: $background-paper;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+.wrapper {
+  height: calc(100% - 12px*2);
+  background: $background-main;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.block {
+  @include blocked;
+  max-height: 55px;
+  height: 55px;
+  min-height: 55px;
+  max-width: 55px;
+  width: 55px;
+  min-width: 55px;
+  aspect-ratio: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bubble {
+  background: mix($text-primary, $background-main, 10%);
+    border-radius: 20px;
+    padding: 2px 12px;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.select {
+  min-width: 225px;
+}
+.buttons {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.movementButtons {
+  display: flex;
+  gap: 4px;
+
+  & .movementUpDownButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+.left {
+  transform: rotateZ(90deg);
+}
+.up {
+  transform: rotateZ(180deg);
+}
+.right {
+  transform: rotateZ(-90deg);
+}

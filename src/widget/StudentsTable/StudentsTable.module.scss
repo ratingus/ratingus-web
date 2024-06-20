@@ -1,33 +1,171 @@
+@mixin blocked {
+  background: $background-paper;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+
 .wrapper {
-  height: calc(80dvh - 24px - 20px * 4);
+  height: calc(80dvh - 24px - 20px * 6);
+  max-height: calc(80dvh - 24px - 20px * 6);
+  background: $background-main;
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: 400px auto 200px;
+  gap: 10px;
+  flex: 1 1;
+  margin: -20px;
+  border-radius: 20px;
+  padding: 20px;
+}
+.wrapperEditable {
+  width: 80%;
 }
 
-.table {
+.header {
+  display: flex;
+  gap: 4px;
+}
+
+.absolute {
+}
+.overflow {
   overflow: auto;
-  display: block;
+  position: relative;
+}
+  .hideVerticalScroll {
+    overflow-y: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+  }
+
+.months {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+
+.headerMonths {
+  display: flex;
+  gap: 12px;
+  padding: 0 4px;
+}
+
+.monthsAndDays {
+  display: flex;
+  justify-content: center;
+  text-align: center;
   width: 100%;
-  height: 100%;
-  border-collapse: collapse;
+  border-radius: 20px;
+}
+.days {
+  max-width: 55px;
+  width: 55px;
+  min-width: 55px;
+}
 
-  thead tr th {
-    background: mix($text-helper, $text-primary, 30%);
-  }
-  thead, tbody {
-    width: 100%;
-  }
+.fi {
+  @include blocked;
+  padding: 12px;
+  max-width: 310px !important;
+  width: 310px !important;
+  min-width: 310px !important;
+}
 
-  th, td {
-    background: $text-primary;
-    color: $background-main;
-    border: 1px solid black;
-    padding: 4px;
+.block {
+  @include blocked;
+  max-height: 55px;
+  height: 55px;
+  min-height: 55px;
+  max-width: 55px;
+  width: 55px;
+  min-width: 55px;
+  aspect-ratio: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+.itog {
+  @include blocked;
+  padding: 0 12px;
+  max-height: 55px;
+  height: 55px;
+  min-height: 55px;
+  min-width: calc(100% - 24px);
+  width: calc(100% - 24px);
+  text-align: center;
+  justify-content: center;
+}
+
+.headerBlock {
+  background: mix($text-primary, $background-main, 10%);
+  margin-bottom: 10px;
+}
+
+.mainHeader {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: calc(100% - 55px - 10px);
+  height: inherit;
+  height: calc(80dvh - 24px - 20px * 6 - 55px);
+  max-height: calc(80dvh - 24px - 20px * 6  - 55px);
+  overflow: auto;
+}
+.marksWrapper {
+  overflow: auto;
+}
+.disabled {
+  filter: gray(60);
+    opacity: 0.7;
+  pointer-events: none;
+    animation: disabled 2s infinite ease-in-out;
+}
+
+@keyframes disabled {
+  from {
+    filter: gray(100);
+    opacity: 0.6;
+  }
+  50% {
+    filter: gray(0);
+    opacity: 0.4;
+  }
+  to {
+    filter: gray(100);
+    opacity: 0.6;
   }
 }
 
-.day {
-  min-width: 16px;
-  min-height: 48px;
+
+.marks {
+  width: max-content;
 }
-.fullsize {
-  width: 100%;
+.students {
+  min-width: 400px;
 }
+.itogWrapper {
+  min-width: 150px;
+}
+
+.markButton {
+  min-width: 100%;
+  min-height: 100%;
+  border-radius: 20px;
+}
+
+.selected {
+  border: 2px solid $primary-main !important;
+}
+
+.info {
+  flex-basis: 20%;
+  padding-left: 40px;
+  margin: -20px;
+}
+

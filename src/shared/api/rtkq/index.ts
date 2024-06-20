@@ -1,9 +1,11 @@
 import { BaseQueryFn } from "@reduxjs/toolkit/query";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { AxiosError, AxiosRequestConfig } from "axios";
+import { getSession } from "next-auth/react";
 
-import api from "../axios";
+import api from "@/shared/api/axios";
 
-export const axiosBaseQuery =
+const axiosBaseQuery =
   (
     { baseUrl }: { baseUrl: string } = { baseUrl: "" },
   ): BaseQueryFn<{
@@ -15,15 +17,16 @@ export const axiosBaseQuery =
   }> =>
   async ({ url, method, data, params, headers }) => {
     try {
-      console.log("rtkq url:");
-      console.log(process.env.NEXT_PUBLIC_API_URL);
-      console.log(baseUrl + url);
+      const session = await getSession();
       const result = await api({
         url: baseUrl + url,
         method,
         data,
         params,
-        headers,
+        headers: {
+          ...headers,
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
       });
       return { data: result.data };
     } catch (axiosError) {
@@ -36,3 +39,8 @@ export const axiosBaseQuery =
       };
     }
   };
+
+export const baseApi = createApi({
+  baseQuery: axiosBaseQuery(),
+  endpoints: () => ({}),
+});

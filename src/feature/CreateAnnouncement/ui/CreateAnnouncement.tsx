@@ -1,45 +1,78 @@
 "use client";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useRef } from "react";
+import { toast } from "react-toastify";
 
 import styles from "./CreateAnnouncement.module.scss";
 
-import { useUser } from "@/entity/User/hooks";
+import { usePostAnnouncementMutation } from "@/entity/Announcement/query";
+import { Class } from "@/entity/School/model";
+import { useGetClassesQuery } from "@/entity/School/query";
 import Button from "@/shared/components/Button/Button";
 import { Input } from "@/shared/components/Input/Input";
 import { Select } from "@/shared/components/Select/Select";
 import { Textarea } from "@/shared/components/Textarea/Textarea";
 import { Typography } from "@/shared/components/Typography/Typography";
+import { getFromForm } from "@/shared/helpers/strings";
+import { yaMetricaEvent } from "@/shared/helpers/yaMetrica";
+import { useUser } from "@/shared/hooks/useUser";
 
 type CreateAnnouncementProps = {};
 
-const options = [
-  {
-    value: "-1",
-    label: "Всем",
-  },
-  {
-    value: "0",
-    label: "Класс 9а",
-  },
-  {
-    value: "1",
-    label: "Класс 9б",
-  },
-];
-
 const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
   const { fio } = useUser();
+  const [createPost] = usePostAnnouncementMutation();
+  const { data: classes } = useGetClassesQuery(null);
+  const form = useRef(null);
+  const selectRef = useRef();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    console.log(e);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (form.current && selectRef.current) {
+      const formData = new FormData(form.current);
+      // @ts-ignore
+      const classes = selectRef.current.state.selectValue.map(
+        // @ts-ignore
+        ({ value, label }) => ({
+          id: parseInt(value),
+          name: label,
+        }),
+      ) as Class[];
+      const name = getFromForm(formData, "name");
+      const content = getFromForm(formData, "content") || "";
+      if (!name) {
+        toast("Заголовок обязательно должен быть!", {
+          type: "error",
+        });
+        return;
+      }
+      await createPost({
+        name,
+        content,
+        classes,
+      });
+      yaMetricaEvent("Создать объявление");
+      handleReset();
+    }
   };
 
-  const handleReset = (e: FormEvent<HTMLFormElement>) => {
-    console.log(e);
+  const handleReset = () => {
+    // @ts-ignore
+    if (selectRef.current) selectRef.current.clearValue();
+    // @ts-ignore
+    if (form.current) form.current.reset();
   };
+
+  const options =
+    classes?.map(({ id, name }) => ({ value: id, label: name })) ?? [];
 
   return (
-    <article className={styles.base}>
+    <form
+      className={styles.base}
+      ref={form}
+      id="createAnnouncement"
+      onSubmit={handleSubmit}
+      onReset={handleReset}
+    >
       <header className={styles.header}>
         <div className={styles.for}>
           <Typography component="span" color="textHelper">
@@ -53,20 +86,19 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
           <Typography component="span" color="textHelper">
             Для кого:
           </Typography>{" "}
-          <Select multiple options={options} />
+          {/*@ts-ignore*/}
+          <Select ref={selectRef} multiple options={options} />
         </div>
       </header>
-      <form
-        className={styles.form}
-        onSubmit={handleSubmit}
-        onReset={handleReset}
-      >
+      <div className={styles.form}>
         <Typography
           variant="h1"
           component="div"
           className={styles.inputWrapper}
         >
           <Input
+            form="createAnnouncement"
+            name="name"
             type="text"
             sizeVariant="big"
             variant="dark"
@@ -75,6 +107,8 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
           />
         </Typography>
         <Textarea
+          form="createAnnouncement"
+          name="content"
           variant="dark"
           placeholder="Введите текст объявления"
           className={styles.textarea}
@@ -87,8 +121,8 @@ const CreateAnnouncement = ({}: CreateAnnouncementProps) => {
             Готово
           </Button>
         </div>
-      </form>
-    </article>
+      </div>
+    </form>
   );
 };
 

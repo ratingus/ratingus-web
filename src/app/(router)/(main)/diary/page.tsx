@@ -1,86 +1,92 @@
 "use client";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { SwiperSlide } from "swiper/react";
 
 import styles from "./page.module.scss";
 
-import { DayLesson } from "@/entity/Lesson/model";
+import { useGetLessonsByWeekQuery } from "@/entity/Lesson/query";
 import DayLessonCard from "@/entity/Lesson/ui/DayLessonCard";
 import { Slider } from "@/shared/components/Slider/Slider";
 import { Typography } from "@/shared/components/Typography/Typography";
+import {
+  getAcademicDateByWeek,
+  getAcademicWeekOfYear,
+} from "@/shared/helpers/academicDate";
+import { getWeekDateBetween } from "@/shared/helpers/date";
+import { addQueryInParamsString } from "@/shared/helpers/searchParams";
+
+const getThreeDatesFromWeek = (week: number) => {
+  console.log(week);
+  console.log(getAcademicDateByWeek(0));
+  console.log(getAcademicDateByWeek(1));
+  const prevWeek = getAcademicDateByWeek(week - 1);
+  const currWeek = getAcademicDateByWeek(week);
+  const nextWeek = getAcademicDateByWeek(week + 1);
+  return [prevWeek, currWeek, nextWeek];
+};
 
 export default function Diary() {
-  const lessonsByWeek: DayLesson[] = Array(6)
-    .fill([])
-    .map((_, i) => ({
-      dateTime: new Date(Date.UTC(2024, 3, 29 + i)),
-      studies: [
-        {
-          id: 1 + 3 * i,
-          studyId: 0,
-          subject: "Математика",
-          teacher: {
-            id: 1,
-            name: "Иван",
-            surname: "Иванов",
-            patronymic: "Иванович",
-          },
-          timetableNumber: 1,
-          mark: "5",
-          attendance: "was",
-        },
-        {
-          id: 2 + 3 * i,
-          studyId: 1,
-          subject: "Физика",
-          teacher: {
-            id: 2,
-            name: "Петр",
-            surname: "Петров",
-            patronymic: "Петрович",
-          },
-          timetableNumber: 2,
-          mark: "4",
-          attendance: "was",
-        },
-        {
-          id: 3 + 3 * i,
-          studyId: 2,
-          subject: "Химия",
-          teacher: {
-            id: 3,
-            name: "Сидор",
-            surname: "Сидоров",
-            patronymic: "Сидорович",
-          },
-          timetableNumber: 3,
-          mark: "3",
-          attendance: "was",
-        },
-      ],
-    }));
+  const router = useRouter();
+  const path = usePathname();
+  const searchParams = useSearchParams();
+  const weekInParams = searchParams.get("week");
+  const hasWeekInParams = Boolean(
+    searchParams.has("week") && Number(weekInParams),
+  );
+  const nowWeek = getAcademicWeekOfYear(new Date());
+  const [week, setWeek] = useState(
+    hasWeekInParams ? Number(weekInParams) : nowWeek,
+  );
+
+  useEffect(() => {
+    setWeek(hasWeekInParams ? Number(weekInParams) : nowWeek);
+  }, [hasWeekInParams, nowWeek, weekInParams]);
+
+  const { data: lessonsByWeek } = useGetLessonsByWeekQuery({
+    week,
+  });
+
+  if (!lessonsByWeek) return <div>loading...</div>;
 
   return (
     <>
-      <Slider className={styles.slider}>
-        <SwiperSlide>
-          <Typography color="textPrimary">22 - 27 Апр</Typography>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Typography color="textPrimary">29 Апр - 4 Мая</Typography>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Typography color="textPrimary">6 - 11 Мая</Typography>
-        </SwiperSlide>
-        <SwiperSlide>
-          <Typography color="textPrimary">13 - 18 Мая</Typography>
-        </SwiperSlide>
+      <Slider
+        className={styles.slider}
+        swiperProps={{
+          onInit: (swiper) => {
+            swiper.slideTo(1);
+          },
+          onSlideChange: (swiper) => {
+            const currentSlide = swiper.activeIndex;
+            const currentSlideDate =
+              // @ts-ignore
+              swiper.slides[currentSlide].attributes.getNamedItem(
+                "data-week",
+              ).value;
+            setWeek(Number(currentSlideDate) + 1);
+            swiper.activeIndex = 1;
+            router.push(
+              path +
+                `?${addQueryInParamsString(searchParams, { name: "week", value: Number(currentSlideDate) + 1 })}`,
+            );
+          },
+        }}
+      >
+        {getThreeDatesFromWeek(week).map((date) => (
+          <SwiperSlide
+            key={date.toDateString()}
+            data-week={getAcademicWeekOfYear(date)}
+          >
+            <Typography color="textPrimary">
+              {getWeekDateBetween(date)}
+            </Typography>
+          </SwiperSlide>
+        ))}
       </Slider>
       <div className={styles.lessons}>
         {lessonsByWeek.map((dayLesson) => (
-          <DayLessonCard
-            key={dayLesson.dateTime.toISOString()}
-            {...dayLesson}
-          />
+          <DayLessonCard key={dayLesson.dateTime} {...dayLesson} />
         ))}
       </div>
     </>

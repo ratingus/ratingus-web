@@ -3,7 +3,6 @@ import { useState } from "react";
 
 import styles from "./page.module.scss";
 
-import { getDateTime } from "@/entity/Announcement/helpers";
 import { useGetAnnouncementsQuery } from "@/entity/Announcement/query";
 import { selectAnnouncementMode } from "@/entity/Announcement/store";
 import AnnouncementCard from "@/entity/Announcement/ui/AnnouncementCard";
@@ -20,7 +19,6 @@ export default function Announcements() {
     { classId },
     { refetchOnMountOrArgChange: true },
   );
-  console.log(announcements);
 
   return (
     <PageContainer isPanel className={styles.base}>
@@ -28,20 +26,17 @@ export default function Announcements() {
         <AnnouncementSwitch isLoading={isLoading} setClassId={setClassId} />
       </Typography>
       <div className={styles.announcements}>
-        {selectedOption.value === "add" ? (
-          <CreateAnnouncement />
+        {selectedOption ? (
+          selectedOption.value === "add" ? (
+            <CreateAnnouncement />
+          ) : (
+            announcements &&
+            announcements.map((announcement) => (
+              <AnnouncementCard key={announcement.id} {...announcement} />
+            ))
+          )
         ) : (
-          announcements &&
-          announcements.map((announcement) => (
-            <AnnouncementCard
-              key={
-                announcement.authorFio +
-                announcement.title +
-                getDateTime(announcement.date)
-              }
-              {...announcement}
-            />
-          ))
+          <div>loading...</div>
         )}
       </div>
     </PageContainer>

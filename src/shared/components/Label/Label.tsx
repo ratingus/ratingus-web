@@ -12,7 +12,7 @@ type BaseLabelProps = DetailedHTMLProps<
 type LabelProps = BaseLabelProps & {
   className?: string;
   children: ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "ghost" | "error";
 };
 
 export const Label = ({
@@ -21,7 +21,7 @@ export const Label = ({
   variant = "primary",
   ...props
 }: LabelProps) => (
-  <div className={cl(baseClasses, className, styles[variant])} {...props}>
+  <div className={cl(baseClasses, styles[variant], className)} {...props}>
     {children}
   </div>
 );

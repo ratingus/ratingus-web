@@ -2,19 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-import { initMocks } from "@/app/_providers/Mocking/model";
+// import { initMocks } from "@/app/_providers/Mocking/model";
 import HeaderIcon from "@/shared/icons/header.svg";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   const [isMockingStarted, setIsMockingStarted] = useState(false);
 
   useEffect(() => {
-    initMocks()
-      .then(() => {
-        console.log("Mocking started");
-        setIsMockingStarted(true);
-      })
-      .catch((error) => console.error("Mocking failed", error));
+    setIsMockingStarted(true);
+    // initMocks()
+    //   .then(() => {
+    //     setIsMockingStarted(true);
+    //   })
+    //   .catch((error) => console.error("Mocking failed", error));
   }, []);
 
   // TODO: вынести в loading.tsx и пока не загрузилось, вызывать лоадер некста, а не вот это вот что это вообще такое

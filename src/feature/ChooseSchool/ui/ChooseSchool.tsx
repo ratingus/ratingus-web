@@ -1,7 +1,9 @@
 "use client";
 import React, { ReactNode } from "react";
+import { useSession } from "next-auth/react";
 
 import { School } from "@/entity/School/model";
+import { useChooseSchoolMutation } from "@/entity/School/query";
 import {
   actionSetSelectedSchool,
   selectSelectedSchool,
@@ -17,15 +19,19 @@ type ChooseSchoolProps = {
 
 const ChooseSchool = ({ buttonProps, children, school }: ChooseSchoolProps) => {
   const dispatch = useAppDispatch();
+  const [chooseSchool] = useChooseSchoolMutation();
   const selectedSchool = useAppSelector(selectSelectedSchool);
+  const { update } = useSession();
 
-  const handleSelectSchool = () => {
-    dispatch(actionSetSelectedSchool(school));
+  const handleSelectSchool = async () => {
+    await chooseSchool({ id: school.id });
+    await update({ school: school.id.toString() });
+    dispatch(actionSetSelectedSchool(school.id));
   };
   return (
     <Button
       {...buttonProps}
-      isActive={school.id === selectedSchool?.id}
+      isActive={school.id === selectedSchool}
       onClick={handleSelectSchool}
     >
       {children}

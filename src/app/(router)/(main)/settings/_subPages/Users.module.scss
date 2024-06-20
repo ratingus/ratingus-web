@@ -1,0 +1,211 @@
+.wrapper {
+  display: flex;
+  gap: 8px;
+  height: 100%;
+}
+
+.listWrapper {
+  height: calc(100% - 8px*2);
+  min-width: 340px;
+  padding: 8px 18px;
+  background: $background-main;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.search {
+  margin-bottom: 12px;
+}
+.list {
+  padding: 0;
+  margin: 0 0 20px 0;
+  height: 100%;
+  overflow: auto;
+}
+.lastUser {
+    width: 100%;
+}
+
+.userWrapper {
+  margin: 5px 0;
+  display: flex;
+  background: $background-paper;
+  border-radius: 20px;
+}
+.user {
+  padding: 4px 16px 4px 10px;
+  display: flex;
+  justify-content: flex-start !important;
+  width: 100%;
+  gap: 10px;
+}
+.active {
+  box-shadow: inset 0 0 0 2px $primary-main;
+}
+.userDetails {
+  display: flex;
+  flex-direction: column;
+}
+.bigText {
+  width: 100%;
+  word-break: break-all;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  overflow: hidden;
+}
+.bigUser {
+  margin-bottom: 10px;
+}
+
+.roleWrapper {
+  width: 300px;
+  margin-bottom: 8px;
+}
+.role {
+  width: calc(100% + 20px) !important;
+  cursor: pointer;
+  text-align: center;
+}
+
+.main {
+  border-left: 1px solid $background-main;
+  padding: 20px;
+  width: calc(100% - 40px);
+
+  height: calc(100% - 40px);
+  & > div {
+    height: 100%;
+  }
+}
+.mainOverflow {
+  overflow: auto;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  width: calc(100% - 40px);
+  margin-bottom: 30px;
+}
+.formButtons {
+  display: flex;
+  gap: 20px;
+}
+.formBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.formBlockWithInputs {
+  display: flex;
+        gap: 10px;
+  & input {
+    width: 30%;
+  }
+}
+.formButton {
+  width: max-content;
+}
+
+.codes {
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+.codesPanelWrapper {
+}
+.codesPanel {
+  display: grid;
+  gap: 10px;
+}
+.code {
+  display: flex;
+  gap: 10px;
+}
+
+.otherWrapper {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+.table {
+  overflow: auto;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-collapse: collapse;
+
+  thead tr th {
+    background: mix($text-helper, $text-primary, 30%);
+  }
+  thead, tbody {
+    width: 100%;
+  }
+
+  th, td {
+    background: $text-primary;
+    color: $background-main;
+    border: 1px solid black;
+    padding: 4px 20px;
+  }
+}
+.timetableWrapper {
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+}
+.timetable {
+  display: grid;
+  grid-template-columns: 50px 70%;
+  width: 100%;
+  justify-content: space-between;
+  justify-items: center;
+  & div {
+    width: 100%;
+    text-align: center;
+    background: $background-main;
+    border-radius: 20px;
+    padding: 10px;
+  }
+}
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.input {
+  width: 400px;
+}
+.textArea {
+  width: calc(100% - 40px);
+}
+.button {
+    width: 300px;
+    margin-top: 10px;
+}
+.flex {
+  display: flex;
+  gap: 10px
+}
+.dop {
+    display: flex;
+    gap: 50px;
+    margin-top: 10px;
+}
+.stata {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+
+}
+.buttonWrapper {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}

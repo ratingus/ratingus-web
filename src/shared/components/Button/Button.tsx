@@ -25,7 +25,7 @@ const Button = ({
   className,
   children,
   variant = "primary",
-  sizeVariant = "medium",
+  sizeVariant,
   isActive,
   isDisable,
   isLoading,
@@ -36,11 +36,11 @@ const Button = ({
     <button
       className={cl(
         baseClasses,
-        className,
         styles[variant],
-        styles[sizeVariant],
+        sizeVariant && styles[sizeVariant],
         styles[isActive ? "active" : ""],
         styles[isDisable ? "disable" : ""],
+        className,
       )}
       {...props}
     >

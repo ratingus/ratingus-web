@@ -1,1 +1,1 @@
-export type Attendance = "was" | "validAbsent" | "invalidAbsent";
+export type Attendance = "late" | "validAbsent" | "invalidAbsent";

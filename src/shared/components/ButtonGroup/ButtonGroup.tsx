@@ -18,7 +18,13 @@ export const ButtonGroup = ({
   sizeVariant,
 }: ButtonGroupProps) => {
   return (
-    <div className={cl(baseClasses, className)}>
+    <div
+      className={cl(
+        baseClasses,
+        buttons.length === 1 ? styles.one : "",
+        className,
+      )}
+    >
       {buttons.map(
         (
           {

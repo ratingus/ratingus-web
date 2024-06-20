@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import ReactModal from "react-modal";
 import cl from "classnames";
 
@@ -14,11 +14,26 @@ type ModalProps = {
   className?: string;
   children: ReactNode;
   modalName: ModalName;
+  maxContent?: boolean;
 };
 
-export const Modal = ({ className, children, modalName }: ModalProps) => {
+export const Modal = ({
+  className,
+  children,
+  modalName,
+  maxContent,
+}: ModalProps) => {
   const isModalActive = useAppSelector(selectIsModalActive(modalName));
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (isModalActive) {
+      document.querySelector("body")?.classList.add("modal-open");
+      return () => {
+        document.querySelector("body")?.classList.remove("modal-open");
+      };
+    }
+  }, [isModalActive]);
 
   if (!isModalActive) {
     return null;
@@ -30,7 +45,7 @@ export const Modal = ({ className, children, modalName }: ModalProps) => {
 
   return (
     <ReactModal
-      className={cl(styles.base, className)}
+      className={cl(styles.base, maxContent && styles.maxContent, className)}
       overlayClassName={styles.overlay}
       isOpen
     >

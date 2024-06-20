@@ -5,18 +5,15 @@ import api from "@/shared/api/axios";
 
 const authService = {
   login: async (credentials: UserLogin) => {
-    const response = await api.post(LOGIN_PATH, credentials);
-    return response.data;
+    return await api.post(LOGIN_PATH, credentials);
   },
 
   logout: async () => {
-    const response = await api.post(LOGOUT_PATH);
-    return response.data;
+    await api.post(LOGOUT_PATH);
   },
 
   register: async (credentials: UserLogin) => {
-    const response = await api.post(REGISTER_PATH, credentials);
-    return response.data;
+    await api.post(REGISTER_PATH, credentials);
   },
 };
 

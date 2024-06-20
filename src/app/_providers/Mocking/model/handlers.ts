@@ -1,4 +1,4 @@
-import { default as announcementHandlers } from "@/entity/Announcement/mock";
-import { authHandler } from "@/entity/Auth";
+// import { default as announcementHandlers } from "@/entity/Announcement/mock";
 
-export const handlers = [authHandler, ...announcementHandlers];
+// export const handlers = [...announcementHandlers];
+export const handlers = [];

@@ -5,19 +5,26 @@
   flex-direction: column;
   gap: 12px;
 }
+.flex {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
 
 .calendar {
   overflow: auto;
-  height: calc(100% - 12px * 2 - 68px);
+  height: calc(100% - 12px * 2);
+  width: 100%;
   display: flex;
   gap: 10px;
 }
 .card {
   border-radius: 20px;
-  border: 1px solid $background-main;
+  border: 1px solid black;
   padding: 10px;
 }
 .dayLesson {
+  min-width: 300px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -29,4 +36,57 @@
   flex-direction: column;
   gap: 10px;
   padding: 10px 0;
+}
+
+.calendarWrapper {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  gap: 10px;
+}
+
+.lessonConstructor {
+  padding: 8px 12px;
+  border: 1px solid black;
+  background: $background-paper;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  & button {
+    border: 1px solid $text-primary;
+    width: 100%;
+  }
+}
+
+.isActive {
+  & button {
+    border: 1px solid $primary-main;
+    width: 100%;
+  }
+}
+
+
+.listWrapper {
+  height: calc(100% - 12px);
+  min-width: 320px;
+  border-radius: 20px;
+  border: 1px solid black;
+  padding: 8px 18px;
+  background: $background-main;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.smallListWrapper {
+  min-width: 200px;
+}
+.list {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
 }

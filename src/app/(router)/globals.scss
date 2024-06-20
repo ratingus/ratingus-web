@@ -13,7 +13,25 @@ main{
 	padding-top: 154px;
 }
 
+ul {
+	list-style-type: none;
+}
+
 a {
+	color: $primary-main;
+	&:hover {
+		color: mix($primary-paper, $primary-main, 50);
+	}
+	&:active {
+		color: $primary-paper;
+	}
+}
+
+.modal-open {
+	height: 100dvh;
+	overflow: hidden;
+	position: fixed;
+	width: 100dvw;
 }
 
 ::-webkit-scrollbar {

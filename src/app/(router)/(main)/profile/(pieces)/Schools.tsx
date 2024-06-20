@@ -2,30 +2,18 @@ import React from "react";
 
 import styles from "./Schools.module.scss";
 
-import MiniSchoolCardInProfile from "@/entity/School/ui/MiniSchoolCardInProfile";
+import { ProfileSchool } from "@/entity/School/model";
+import MiniSchoolCard from "@/entity/School/ui/MiniSchoolCard";
 
-type SchoolsProps = {};
+type SchoolsProps = {
+  schools: ProfileSchool[];
+};
 
-const Schools = ({}: SchoolsProps) => {
-  const schools = [
-    {
-      id: 0,
-      schoolName: "Школа №31415",
-      role: "Ученик",
-      classes: ["Класс 9а"],
-    },
-    {
-      id: 1,
-      schoolName: "Муз. шк.",
-      role: "Ученик",
-      classes: ["Скрипка", "Хор"],
-    },
-  ];
-
+const Schools = ({ schools }: SchoolsProps) => {
   return (
     <div className={styles.base}>
       {schools.map((school) => (
-        <MiniSchoolCardInProfile key={school.schoolName} {...school} />
+        <MiniSchoolCard key={school.id} {...school} />
       ))}
     </div>
   );

@@ -5,17 +5,11 @@ import {
 } from "@reduxjs/toolkit";
 
 interface SchoolState {
-  selectedSchool: {
-    id: number;
-    name: string;
-  } | null;
+  selectedSchool: number | null;
 }
 
 const initialState = {
-  selectedSchool: {
-    id: 0,
-    name: "Школа №31415",
-  },
+  selectedSchool: null,
 } satisfies SchoolState as SchoolState;
 
 export const schoolSlice = createSlice({

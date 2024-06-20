@@ -1,0 +1,226 @@
+.block {
+	position: relative;
+	max-width: 100dvw;
+	width: 100%;
+	height: 100dvh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1;
+	gap: 50px;
+}
+
+.imageBack {
+	z-index: -1;
+	position: absolute;
+	max-width: 100%;
+	width: 100%;
+	height: 100%;
+	filter: blur(8px);
+	opacity: 0.15;
+}
+.image {
+
+}
+
+.text {
+	line-height: 1.5;
+	width: 50%;
+	filter: drop-shadow(0 0 20px black);
+}
+
+.textBlock {
+	width: 555px;
+}
+.textInBlock {
+	text-align: center !important;
+}
+
+.modal {
+	width: 30dvw !important;
+	height: 100%;
+	overflow: auto;
+}
+.applicationModal {
+	width: 30dvw !important;
+	height: max-content !important;
+}
+
+
+/* CSS ANIMATION */
+
+$shape-1: polygon(93% 0, 100% 84%, 13% 100%, 0 11%);
+$shape-2: polygon(100% 6%, 100% 91%, 6% 100%, 0 0);
+$shape-3: polygon(100% 0, 94% 100%, 13% 100%, 0 11%);
+$shape-4: polygon(100% 0, 100% 84%, 3% 100%, 0 15%);
+$shape-5: polygon(100% 16%, 94% 100%, 3% 100%, 0 0);
+$shape-6: polygon(90% 0, 100% 95%, 0 100%, 6% 0);
+$shape-7: polygon(100% 0, 89% 100%, 0 100%, 8% 4%);
+$shape-8: polygon(100% 4%, 89% 100%, 4% 100%, 0 1%);
+$shape-9: polygon(95% 0, 100% 88%, 0 100%, 4% 9%);
+$shape-10: polygon(100% 8%, 96% 90%, 6% 100%, 0 0);
+
+@keyframes morph-1 {
+	0% { clip-path: $shape-1; }
+	20% { clip-path: $shape-2; }
+	40% { clip-path: $shape-3; }
+	60% { clip-path: $shape-4; }
+	80% { clip-path: $shape-5; }
+	100% { clip-path: $shape-1; }
+}
+
+@keyframes morph-2 {
+	0% { clip-path: $shape-2; }
+	20% { clip-path: $shape-5; }
+	40% { clip-path: $shape-6; }
+	60% { clip-path: $shape-7; }
+	80% { clip-path: $shape-8; }
+	100% { clip-path: $shape-2; }
+}
+
+@keyframes morph-3 {
+	0% { clip-path: $shape-3; }
+	20% { clip-path: $shape-8; }
+	40% { clip-path: $shape-9; }
+	60% { clip-path: $shape-10; }
+	80% { clip-path: $shape-1; }
+	100% { clip-path: $shape-3; }
+}
+
+@keyframes morph-4 {
+	0% { clip-path: $shape-4; }
+	20% { clip-path: $shape-10; }
+	40% { clip-path: $shape-9; }
+	60% { clip-path: $shape-8; }
+	80% { clip-path: $shape-7; }
+	100% { clip-path: $shape-4; }
+}
+
+@keyframes morph-5 {
+	0% { clip-path: $shape-5; }
+	20% { clip-path: $shape-7; }
+	40% { clip-path: $shape-6; }
+	60% { clip-path: $shape-5; }
+	80% { clip-path: $shape-4; }
+	100% { clip-path: $shape-5; }
+}
+
+@keyframes morph-6 {
+	0% { clip-path: $shape-6; }
+	20% { clip-path: $shape-4; }
+	40% { clip-path: $shape-3; }
+	60% { clip-path: $shape-2; }
+	80% { clip-path: $shape-1; }
+	100% { clip-path: $shape-6; }
+}
+
+@keyframes morph-7 {
+	0% { clip-path: $shape-7; }
+	20% { clip-path: $shape-10; }
+	40% { clip-path: $shape-1; }
+	60% { clip-path: $shape-9; }
+	80% { clip-path: $shape-2; }
+	100% { clip-path: $shape-7; }
+}
+
+@keyframes morph-8 {
+	0% { clip-path: $shape-8; }
+	20% { clip-path: $shape-7; }
+	40% { clip-path: $shape-3; }
+	60% { clip-path: $shape-6; }
+	80% { clip-path: $shape-4; }
+	100% { clip-path: $shape-8; }
+}
+
+@keyframes morph-9 {
+	0% { clip-path: $shape-9; }
+	20% { clip-path: $shape-8; }
+	40% { clip-path: $shape-4; }
+	60% { clip-path: $shape-10; }
+	80% { clip-path: $shape-7; }
+	100% { clip-path: $shape-9; }
+}
+
+@keyframes morph-10 {
+	0% { clip-path: $shape-10; }
+	20% { clip-path: $shape-5; }
+	40% { clip-path: $shape-3; }
+	60% { clip-path: $shape-8; }
+	80% { clip-path: $shape-5; }
+	100% { clip-path: $shape-10; }
+}
+
+.shape {
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	position: relative;
+	width: 600px;
+	height: 400px;
+
+	> * {
+		width: 600px;
+		height: 400px;
+		animation-duration: 25s;
+		animation-iteration-count: infinite;
+		animation-timing-function: cubic-bezier(.17, .67, .83, .67);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	&[data-index="0"] {
+		.shapeLBig {
+			animation-name: morph-1;
+			background: $background-main;
+			opacity: 0.6;
+		}
+
+		.shapeLMed {
+			animation-name: morph-2;
+			background: $background-paper;
+			opacity: 0.6;
+		}
+
+		.shapeLSmall {
+			animation-name: morph-3;
+		}
+	}
+
+	&[data-index="1"] {
+		.shapeLBig {
+			animation-name: morph-4;
+			background: $primary-paper;
+			opacity: 0.6;
+		}
+
+		.shapeLMed {
+			animation-name: morph-5;
+			background: $primary-main;
+			opacity: 0.6;
+		}
+
+		.shapeLSmall {
+			animation-name: morph-6;
+		}
+	}
+
+	&[data-index="2"] {
+		.shapeLBig {
+			animation-name: morph-7;
+			background: $text-helper;
+			opacity: 0.6;
+		}
+
+		.shapeLMed {
+			animation-name: morph-8;
+			background: $text-primary;
+			opacity: 0.6;
+		}
+
+		.shapeLSmall {
+			animation-name: morph-9;
+		}
+	}
+}

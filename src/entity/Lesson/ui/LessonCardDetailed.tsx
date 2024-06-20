@@ -5,12 +5,13 @@ import styles from "./LessonCardDetailed.module.scss";
 import { Typography } from "@/shared/components/Typography/Typography";
 import DiaryLessonCard from "@/widget/DiaryLessonCard/DiaryLessonCard";
 
-type LessonCardProps = LessonDetailed;
+type LessonCardProps = LessonDetailed & { day: number };
 
-const LessonCardDetailed = (lesson: LessonCardProps) => {
+const LessonCardDetailed = ({ day, ...lesson }: LessonCardProps) => {
   const { homework, note } = lesson;
   return (
     <DiaryLessonCard
+      day={day}
       {...lesson}
       bottomSlot={
         // TODO: такой же блок в LessonBlockDetailed? Генералифицировать!
@@ -18,13 +19,17 @@ const LessonCardDetailed = (lesson: LessonCardProps) => {
           {homework && (
             <div className={styles.flexStart}>
               <Typography>Домашнее задание:</Typography>
-              <Typography variant="caption">{homework}</Typography>
+              <Typography variant="caption" className={styles.bigText}>
+                {homework}
+              </Typography>
             </div>
           )}
           {note && (
             <div className={styles.flexStart}>
               <Typography>Заметки:</Typography>
-              <Typography variant="caption">{note}</Typography>
+              <Typography variant="caption" className={styles.bigText}>
+                {note}
+              </Typography>
             </div>
           )}
         </>

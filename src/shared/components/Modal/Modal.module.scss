@@ -15,6 +15,11 @@
   z-index: 1;
 }
 
+.maxContent {
+  width: max-content;
+  height: max-content;
+}
+
 .overlay {
   position: fixed;
   inset: 0px;

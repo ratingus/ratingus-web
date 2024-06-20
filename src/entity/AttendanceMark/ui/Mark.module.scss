@@ -1,0 +1,11 @@
+.base {
+  position: relative;
+}
+.attendance {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  font-weight: bolder;
+  filter: drop-shadow(0 0 2px black);
+}

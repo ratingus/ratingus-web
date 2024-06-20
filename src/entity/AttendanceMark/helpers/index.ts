@@ -4,17 +4,10 @@ import vars from "@/shared/styles/vars.module.scss";
 export const getColorByMark = (
   mark?: string | Attendance,
 ): keyof typeof vars => {
-  switch (mark) {
-    case "5":
-      return "statusSuccess";
-    case "4":
-      return "statusInfo";
-    case "3":
-      return "statusCaution";
-    case "2":
-    case "1":
-      return "statusWarning";
-    default:
-      return "textHelper";
-  }
+  const markValue = Number(mark);
+  if (markValue >= 4.5) return "statusSuccess";
+  if (markValue >= 3.5) return "statusInfo";
+  if (markValue >= 2.5) return "statusCaution";
+  if (markValue >= 0) return "statusWarning";
+  return "textHelper";
 };

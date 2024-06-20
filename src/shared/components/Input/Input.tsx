@@ -5,7 +5,7 @@ import styles from "./Input.module.scss";
 
 const baseClasses = cl(styles.input);
 
-type BaseInputProps = DetailedHTMLProps<
+export type BaseInputProps = DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 >;
