@@ -16,6 +16,7 @@ type TypographyProps = {
   italic?: boolean;
   passColor?: boolean;
   weight?: TypographyWeight;
+  style?: Record<string, string | number>;
 };
 
 export type TypographyWeight = "bold" | "lighter" | "normal";
