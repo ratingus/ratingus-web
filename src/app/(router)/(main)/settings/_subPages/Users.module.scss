@@ -128,6 +128,7 @@
 .otherWrapper {
   display: flex;
   flex-direction: column;
+  overflow: auto;
 }
 .table {
   overflow: auto;
@@ -155,6 +156,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  padding: 10px;
 }
 .timetable {
   display: grid;
