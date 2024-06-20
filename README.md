@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ratingus-web
+## Как запустить проект?
 
-## Getting Started
+### 1. Локально
+Вы должны установить зависимости из `package.json`, для этого вам понадобится Node.js и npm, yarn, pnpm, bun или любой другой менеджер пакетов.
 
-First, run the development server:
+Способы запустить проект локально:
+- #### В dev режиме
+    ```bash
+    npm run dev
+    # или
+    yarn dev
+    # или
+    pnpm dev
+    # или
+    bun dev
+    ```
+- #### В prod режиме
+    ```bash
+    npm run build
+    npm run start
+    # или
+    yarn build
+    yarn start
+    # или
+    pnpm build
+    pnpm start
+    # или
+    bun build
+    bun start
+    ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+После выполненных комманд откройте [http://localhost:3000](http://localhost:3000) в браузере.
+### 2. В контейнере
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Вы можете поднять проект в контейнере, для этого вам понадобится установленный Docker и Docker Compose. Вы можете использовать наш compose.yml файл, который находится в корне проекта либо создать свой.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[Официальный актуальный контейнер web frontend](https://github.com/ratingus/ratingus-web/pkgs/container/ratingus-web): `ghcr.io/ratingus/ratingus-web:latest`
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Ещё вы можете использовать наш Dockerfile для сборки образа вместо контейнера из ghcr.
 
-## Learn More
+### Общая информация
 
-To learn more about Next.js, take a look at the following resources:
+Для корректного запуска необходимо создать файл .env в корне проекта и заполнить его данными для запуска. Необходимые переменные окружения указаны в файле .env.origin
+- `NEXT_PUBLIC_API_URL` - адрес бэкенда
+- `NEXTAUTH_URL` - адрес сервера авторизации (по умолчанию должен быть тот на котором запущен веб фронтенд)
+- `NEXTAUTH_SECRET` - секрет, который используется для шифрования токена (должен быть идентичным с тем, который указан на бэке)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
