@@ -59,7 +59,7 @@ const AuthRedirectProvider = ({ children }: AuthRedirectProviderProps) => {
             textAlign: "center",
           }}
         >
-          На сайте пока не поддерживаются мобильные устройства
+          Сайт пока не поддерживается на мобильных устройствах
         </Typography>
         <Image
           src="/images/mobile_ratingus.png"
